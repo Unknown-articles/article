@@ -1,0 +1,6 @@
+node_modules/
+backend/data/oidc.db
+backend/data/db.json
+dist/
+.env
+*.log

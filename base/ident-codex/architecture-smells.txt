@@ -1,0 +1,151 @@
+ARCHITECTURE SMELLS — Large System Project
+Generated: 2026-04-06
+================================================================================
+
+Distribuição por severidade: 4 críticos · 5 altos · 9 médios · 5 baixos
+
+--------------------------------------------------------------------------------
+#   SMELL                                  SEV        ARQUIVO(S)
+--------------------------------------------------------------------------------
+
+1   God Module                             CRÍTICO    server.js
+    Um único arquivo concentra: setup do Express, WebSocket, coleta de
+    CPU/memória/disco/rede/GPU/processos, hardware info, cache de métricas
+    e gerenciamento de subscrições — +350 linhas de responsabilidades misturadas.
+
+2   Sem autenticação no GenericAPI         CRÍTICO    routes/genericApi.js
+    Todas as rotas CRUD (GET/POST/PUT/PATCH/DELETE /:collection) são
+    completamente públicas — qualquer cliente não autenticado pode ler,
+    criar ou apagar tasks e mensagens de qualquer usuário.
+
+3   Dois bancos sem abstração unificada    CRÍTICO    db/jsonDb.js
+                                                      db/sqliteDb.js
+    Auth usa SQLite com SQL raw; tasks e chat usam JSON file com query
+    engine própria. Sem camada comum, sem consistência transacional,
+    sem padrão de migração.
+
+4   Valores hardcoded / sem config         CRÍTICO    server.js
+                                                      routes/oidc.js
+                                                      context/AuthContext.jsx
+                                                      context/TodoContext.jsx
+                                                      pages/MetricsPage.jsx
+                                                      pages/ChatPage.jsx
+    Portas (3001, 5173), URLs (http://localhost:3001), client_id,
+    redirect_uri, timeouts (5000 / 8000 / 15000 ms), intervalos (1000 ms)
+    e expiração de tokens (3600 s) espalhados pelo código — inviabiliza
+    qualquer deploy fora do localhost.
+
+5   Lógica de validação de token           ALTO       middleware/auth.js
+    duplicada                                         ws/chat.js
+                                                      routes/oidc.js
+    A mesma query SQLite de validação de token é escrita três vezes com
+    variações mínimas — qualquer mudança na regra exige atualização em
+    três lugares.
+
+6   URLs do backend duplicadas             ALTO       context/AuthContext.jsx
+    no frontend                                       context/TodoContext.jsx
+                                                      pages/MetricsPage.jsx
+                                                      pages/ChatPage.jsx
+    const BACKEND = 'http://localhost:3001' definido separadamente em dois
+    contextos; ws://localhost:3001/ws/* embutidos diretamente em componentes.
+
+7   HTML inline em route handler           ALTO       routes/oidc.js
+    A rota GET /oauth2/authorize retorna uma string HTML de 30 linhas com
+    CSS embutido via template literal — markup, estilo e lógica de rota
+    no mesmo lugar.
+
+8   XSS potencial                          ALTO       routes/oidc.js
+    Parâmetros de query (redirect_uri, state, client_id) são interpolados
+    diretamente em atributos HTML sem escape — uma aspa no valor quebra
+    o HTML e abre vetor de injeção.
+
+9   Export circular                        ALTO       server.js
+                                                      routes/metrics.js
+    metrics.js importa getMetrics de server.js; server.js monta o router
+    de metrics.js — acoplamento bidirecional implícito entre servidor e rota.
+
+10  Código morto comentado                 MÉDIO      server.js
+                                                      routes/metrics.js
+                                                      ws/monitor.js
+    // import { setupMonitorWs } from './ws/monitor.js' em dois arquivos;
+    ws/monitor.js existe mas está vazio — artefatos de uma refatoração
+    incompleta.
+
+11  Mistura de concerns no                 MÉDIO      ws/chat.js
+    WebSocket de chat
+    Um único arquivo faz: validação de token, gestão de clientes conectados,
+    persistência de mensagens, broadcast e eventos de protocolo WS.
+
+12  Lógica de negócio misturada            MÉDIO      context/TodoContext.jsx
+    no contexto React
+    O contexto acumula: chamadas HTTP, undo/redo history, cálculo de
+    isLate, reordenação por drag-and-drop e listener de teclado global —
+    sem separação entre estado, serviço e UI.
+
+13  N chamadas HTTP para reordenar         MÉDIO      context/TodoContext.jsx
+    tasks
+    reorderTasks dispara um PATCH por task em paralelo sem batching —
+    arrastar uma lista de 20 tasks dispara 20 requests simultâneos.
+
+14  Números mágicos sem nome               MÉDIO      server.js
+    % 5 (tick de GPU), 1000 ms (intervalo), 15000 / 5000 / 3000 / 8000 ms
+    (timeouts), 0 e 10 (slice de processos) — sem constantes nomeadas
+    que expliquem o porquê.
+
+15  Sem logging                            MÉDIO      Todo o backend
+    Nenhum sistema de log — falhas silenciosas em catch{} vazios,
+    sem rastreabilidade de erros em produção.
+
+16  Tratamento de erros inconsistente      MÉDIO      server.js
+                                                      routes/genericApi.js
+                                                      routes/oidc.js
+    catch{} vazio em amostragens, e.message exposto diretamente nas
+    respostas HTTP (vaza detalhes internos), detecção de UNIQUE constraint
+    por substring matching.
+
+17  Mensagens do sistema ignoradas         MÉDIO      pages/ChatPage.jsx
+    no chat
+    Eventos type:'system' e type:'error' vindos do servidor são
+    silenciosamente descartados — o usuário não recebe feedback de erros
+    de entrega ou desconexões.
+
+18  onMessage fora das dependências        MÉDIO      hooks/useWebSocket.js
+    do useEffect
+    O callback onMessage não está no array de dependências do useEffect —
+    o hook mantém referência à versão stale da função quando o componente
+    re-renderiza.
+
+19  Sem validação de input                 MÉDIO      Formulários frontend
+                                                      routes/genericApi.js
+    Nenhum limite de tamanho em títulos de tasks ou mensagens de chat;
+    nome de collection no GenericAPI não é validado nem sanitizado.
+
+20  Nomes de campo inconsistentes          BAIXO      routes/oidc.js
+                                                      pages/ChatPage.jsx
+                                                      components/NavBar.jsx
+    user.sub (OIDC JWT), user.id (SQLite) e user.username são usados sem
+    mapeamento claro — ChatPage.jsx usa user?.sub enquanto o resto usa
+    user?.username.
+
+21  key={i} em listas dinâmicas            BAIXO      pages/MetricsPage.jsx
+    Índice do array usado como key em listas de cores, drives, interfaces
+    e processos — instável se a lista mudar de ordem, causa bugs de
+    reconciliação no React.
+
+22  Undo sem tratamento de falha           BAIXO      context/TodoContext.jsx
+    parcial
+    O undo itera sobre tasks e faz PUT individuais sem rollback — se
+    qualquer request falhar, o estado do servidor fica inconsistente
+    com o estado da UI.
+
+23  ws/monitor.js vazio                    BAIXO      ws/monitor.js
+    Arquivo existe no repositório mas está completamente vazio — lixo
+    histórico que confunde quem lê a estrutura do projeto.
+
+================================================================================
+RISCOS IMEDIATOS (top 3)
+================================================================================
+
+1. GenericAPI sem autenticação  → qualquer pessoa acessa e modifica todos os dados
+2. Valores hardcoded            → impossível fazer deploy em qualquer ambiente
+3. XSS no OIDC                 → injeção via parâmetros de query não escapados

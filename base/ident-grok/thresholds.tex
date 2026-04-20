@@ -1,0 +1,11 @@
+Cyclic Dependency: Not present. No dependency cycles were found in the codebase. All imports form a directed acyclic graph.
+
+Hub-Like Dependency: Present with Medium intensity. The AuthContext.jsx component is imported by 5 other modules (App.jsx, TodoContext.jsx, LoginPage.jsx, RegisterPage.jsx, NavBar.jsx), making it a central hub for authentication state management. This exceeds the baseline of 2-3 imports.
+
+God Component: Present with High intensity. The server.js file contains 344 lines and handles multiple responsibilities: Express server setup, WebSocket servers for chat and monitoring, metrics collection and broadcasting, and hardware sampling. This violates the Single Responsibility Principle significantly.
+
+Chatty Component: Not present. While the server.js handles WebSocket connections and broadcasts metrics every second, the communication patterns are not excessively chatty compared to typical real-time applications.
+
+Hotspot: Present with High intensity. The server.js file was modified in 8 out of 15 commits (53% of changes), indicating frequent modifications. This is well above the baseline change frequency.
+
+Architectural Hotspot: Present with High intensity. The server.js file is architecturally critical as it centralizes server initialization, WebSocket handling, and metrics collection. Its frequent changes (8 commits) and central role make it a hotspot.

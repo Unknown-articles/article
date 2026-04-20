@@ -1,0 +1,135 @@
+% Thresholds and justification for each architectural smell
+%
+% Baseline definition: a file touched in 1--2 commits, with 1--2 inbound or outbound
+% dependencies, and fewer than 100 lines of code is considered the baseline (Low-boundary).
+% Medium corresponds to roughly 3--5$\times$ the baseline metric;
+% High corresponds to more than 7$\times$ the baseline metric.
+
+\subsection*{Cyclic Dependency -- 0 occurrences}
+
+No import cycles were detected in either layer. The backend follows a strict
+directed acyclic graph: \texttt{server.js} $\to$ routes/ws $\to$ db. The
+frontend follows React's convention of contexts depending on hooks, pages
+depending on contexts, and components depending on pages. No file imports its
+own ancestor.
+
+\subsection*{Hub-Like Dependency -- 3 occurrences}
+
+A file qualifies as a hub when its fan-out (number of modules it imports) or
+fan-in (number of modules that import it) is significantly above the project
+mean (which is $\approx$1.3 connections per file).
+
+\begin{itemize}
+  \item \textbf{High -- \texttt{backend/src/server.js}}: fan-out of 9 direct
+    internal/external imports (oidc, metrics, genericApi, chat, utils, express,
+    ws, cors, systeminformation). This is 7$\times$ the mean and makes
+    \texttt{server.js} the single wiring point for the entire backend.
+
+  \item \textbf{Medium -- \texttt{frontend/src/context/AuthContext.jsx}}:
+    fan-in of 4--5 consumers (LoginPage, RegisterPage, TodoContext, ChatPage,
+    App). Approximately 3--4$\times$ the mean; any interface change ripples
+    to almost every page.
+
+  \item \textbf{Low -- \texttt{backend/src/db/jsonDb.js}}: fan-in of 2
+    (genericApi.js and chat.js). Slightly above the baseline but still
+    contained.
+\end{itemize}
+
+\subsection*{God Component -- 3 occurrences}
+
+A God Component is a module that accumulates multiple, unrelated
+responsibilities. The threshold used here is $\geq$150 LOC \emph{and} $\geq$3
+distinct responsibilities.
+
+\begin{itemize}
+  \item \textbf{High -- \texttt{backend/src/server.js} (396 LOC)}: at least 9
+    responsibilities: HTTP/Express setup, route mounting, WebSocket server
+    creation, connection upgrade, CPU metrics, memory metrics, disk metrics,
+    network metrics, GPU metrics (with platform-specific branches for Windows
+    PDH and Linux nvidia-smi), subscription management, and broadcast loop.
+    At 4$\times$ the 100-LOC baseline and with more responsibilities than any
+    other file, this is the most severe God Component.
+
+  \item \textbf{High -- \texttt{frontend/src/pages/MetricsPage.jsx} (353 LOC)}:
+    embeds 7 display sub-components (CpuCard, MemoryCard, UptimeCard,
+    DiskCard, NetworkCard, GpuCard, plus bar/badge helpers) and 3 formatting
+    utilities (\texttt{formatUptime}, \texttt{formatBytes},
+    \texttt{formatSpeed}) in a single file. All metric feature work requires
+    editing this file.
+
+  \item \textbf{Medium -- \texttt{backend/src/routes/oidc.js} (194 LOC)}: 5
+    HTTP endpoints (discovery, JWKS, authorize, login, token, userinfo), RSA
+    key-pair generation, HTML form rendering, and all SQLite queries for user
+    and token management. About 2$\times$ the baseline LOC, with 6--7
+    identifiable concerns.
+\end{itemize}
+
+\subsection*{Chatty Component -- 3 occurrences}
+
+A Chatty Component issues many fine-grained calls to a remote resource
+(database, REST API, WebSocket broadcast) instead of batching. The baseline
+is 1--2 I/O operations per user action.
+
+\begin{itemize}
+  \item \textbf{High -- \texttt{frontend/src/context/TodoContext.jsx}}:
+    \texttt{reorderTasks()} and the undo/redo functions issue one
+    \texttt{PATCH}/\texttt{PUT} request \emph{per task} via
+    \texttt{Promise.all}, so an $n$-item list produces $n$ round-trips per
+    action. This is unbounded and degrades linearly with list size -- easily
+    10$\times$ the baseline for a modest list.
+
+  \item \textbf{Medium -- \texttt{backend/src/routes/oidc.js}}: the
+    \texttt{/oauth2/token} handler alone performs 5 SQLite reads and 2 writes
+    (7 sequential DB calls) per single token exchange. Aggregated across all
+    endpoints, the file makes 13+ fine-grained DB calls per authentication
+    flow, approximately 6$\times$ the 2-call baseline.
+
+  \item \textbf{Low -- \texttt{backend/src/ws/chat.js}}: on every incoming
+    message the handler iterates over all connected clients and calls
+    \texttt{JSON.stringify} independently for each one, instead of serializing
+    once and broadcasting the buffer. At current scale this is minor but the
+    pattern does not scale.
+\end{itemize}
+
+\subsection*{Hotspot -- 3 occurrences}
+
+A Hotspot is a file with high change frequency in the git history. Baseline
+is 1--2 commits. Low $\approx$ 3--4 commits; Medium $\approx$ 5--7 commits;
+High $\geq$ 8 commits. Churn was measured over the full git history of the
+repository (24 commits total at the time of analysis).
+
+\begin{itemize}
+  \item \textbf{High -- \texttt{backend/src/server.js}}: 14 commits (58\% of
+    all commits). Every new metric type (GPU, processes, network, disk) was
+    added here, making it the file most likely to receive future changes.
+
+  \item \textbf{Medium -- \texttt{frontend/src/pages/MetricsPage.jsx}}: 5
+    commits (21\% of all commits). Each backend metric addition was mirrored
+    by a UI change in this file, confirming co-evolution with
+    \texttt{server.js}.
+
+  \item \textbf{Low -- \texttt{frontend/src/index.css}}: 4 commits. Styling
+    adjustments accompany nearly every feature addition, keeping this file at
+    a mildly elevated churn rate.
+\end{itemize}
+
+\subsection*{Architectural Hotspot -- 2 occurrences}
+
+An Architectural Hotspot is a file that is simultaneously a Hotspot (high
+churn) and a Hub-Like or God Component (high coupling or high complexity).
+It represents the riskiest intersection of structural debt and active
+development.
+
+\begin{itemize}
+  \item \textbf{High -- \texttt{backend/src/server.js}}: 14 commits (hotspot)
+    $\times$ fan-out of 9 (hub) $\times$ 396 LOC (god component). All three
+    indicators are at their maximum in the project. Every feature iteration
+    touches the file that is already the most interconnected and the largest.
+    Risk of regression with each change is extremely high.
+
+  \item \textbf{Medium -- \texttt{frontend/src/pages/MetricsPage.jsx}}: 5
+    commits (hotspot) combined with 353 LOC and 7 embedded sub-components
+    (god component). Although its external coupling is low (only
+    \texttt{useWebSocket} is imported), internal coupling is high and every
+    backend metrics extension forces a change to this file.
+\end{itemize}

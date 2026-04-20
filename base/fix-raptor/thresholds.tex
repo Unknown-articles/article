@@ -1,0 +1,17 @@
+Cyclic Dependency:
+A direct cycle exists between `backend/src/server.js` and `backend/src/routes/metrics.js`. `server.js` imports the metrics router, while `metrics.js` imports `getMetrics` from `server.js`, creating a two-file import cycle. This is a minimal but real cyclic dependency, so the intensity is low.
+
+Hub-Like Dependency:
+`backend/src/server.js` functions as the central composition point for the backend. It imports and wires together OIDC, generic API, metrics, WebSocket upgrades, and monitoring logic, making it a hub for multiple subsystems. This central coordination is a medium-intensity hub-like dependency.
+
+God Component:
+`backend/src/server.js` is a large monolithic file (344 lines) containing Express setup, metric collection, WebSocket management, hardware info loading, and route composition. Its many responsibilities make it a high-intensity god component.
+
+Chatty Component:
+`frontend/src/context/TodoContext.jsx` orchestrates task state and performs many HTTP interactions: task creation, updates, deletion, reorder operations with multiple PATCH calls, and undo/redo syncs with PUT requests. This repeated fine-grained communication makes it a medium-intensity chatty component.
+
+Hotspot:
+`backend/src/server.js` concentrates complexity and cross-cutting concerns in one location. It is the main source of architectural risk and qualifies as a medium-intensity hotspot due to its size and scope.
+
+Architectural Hotspot:
+The backend entrypoint `backend/src/server.js` accumulates multiple architectural smells in the same file: hub-like dependency, god component, cyclic dependency exposure, and hotspot behavior. That convergence makes it a high-intensity architectural hotspot.

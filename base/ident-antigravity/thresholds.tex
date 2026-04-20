@@ -1,0 +1,38 @@
+\section*{Architectural Smells Analysis}
+
+This document details the reasoning behind the intensity levels assigned to the structural and behavioral architectural smells identified in the project.
+
+\subsection*{Cyclic Dependency}
+\textbf{Status}: Present \\
+\textbf{Intensity}: Low \\
+\textbf{Reasoning}: Foi identificada 1 ocorrência isolada de dependência cíclica afetando 2 arquivos. O módulo \texttt{backend/src/server.js} importa o roteador de \texttt{routes/metrics.js}, e este por sua vez importa funções (\texttt{getMetrics}) diretamente de \texttt{server.js}. Como a ocorrência é restrita a apenas esses dois arquivos e não desencadeia uma cascata através da arquitetura, a intensidade foi classificada como Low.
+
+\subsection*{Hub-Like Dependency}
+\textbf{Status}: Present \\
+\textbf{Intensity}: High \\
+\textbf{Reasoning}: O arquivo \texttt{backend/src/server.js} atua como um nó centralizado excessivo para a arquitetura do backend. Ele instancia roteadores, inicializa os WebSockets, integra serviços de sistema e sistema de arquivos. Por centralizar tantas dependências essenciais do fluxo do aplicativo, ele detém alto acoplamento aferente e eferente, configurando intensidade High pela sua criticidade estrutural.
+
+\subsection*{God Component}
+\textbf{Status}: Present \\
+\textbf{Intensity}: High (1), Medium (1) \\
+\textbf{Reasoning}: 
+Foram identificados 2 God Components:
+\begin{itemize}
+    \item \textbf{High}: \texttt{backend/src/server.js}. Possui extrema mistura de responsabilidades, reunindo rotas Web, infraestrutura WebSocket, coleta nativa de métricas do SO em background e caching em mais de 350 linhas de código altamente centralizadas.
+    \item \textbf{Medium}: \texttt{frontend/src/context/TodoContext.jsx}. Acumula papéis de provedor de estado da UI global, disparador de tráfego HTTP sem camada de serviço isolada, máquina de estado \textit{undo/redo} global, atalhos de teclado e checagens lógicas. Esta condensação não separa regra de negócio e componentes visuais, gerando o fenômeno God Component em nível menor.
+\end{itemize}
+
+\subsection*{Chatty Component}
+\textbf{Status}: Present \\
+\textbf{Intensity}: High \\
+\textbf{Reasoning}: Ocorreu 1 registro comportamental muito danoso no \texttt{frontend/src/context/TodoContext.jsx}. Na função \texttt{reorderTasks}, bem como nas funções \texttt{undo} e \texttt{redo}, o componente envia requisições HTTP individuais não-agrupadas (\textit{POST/PATCH/PUT}) em cascata sobre uma lista inteira num loop de \texttt{Promise.all()}. Escala excessivamente mal uma vez que o cliente faz N requisições concorrentes diretamente proporcionais à dimensão dos dados processados, resultando em impacto de gargalo High para rede e API.
+
+\subsection*{Hotspot}
+\textbf{Status}: Present \\
+\textbf{Intensity}: High \\
+\textbf{Reasoning}: Pela análise dos commits gerados, \texttt{backend/src/server.js} atua como um franco Hotspot de Código. Das atualizações realizadas sob a perspectiva do histórico git lido, \texttt{server.js} sofreu agressivas intervenções constantes por ter de acomodar novas funcionalidades (aparece modificado em 11 de 11 commits que tangem sua área). O grau de volatilidade do módulo reflete intensidade High frente a um baseline onde uma classe normal do sistema deveria sofrer alterações raras após o deploy.
+
+\subsection*{Arch Hotspot}
+\textbf{Status}: Present \\
+\textbf{Intensity}: High \\
+\textbf{Reasoning}: Uma vez que \texttt{backend/src/server.js} simultaneamente detém densos atributos defeituosos arquiteturais (é um God Component contendo conexões Cyclic e Hub-Like Dependency) acoplados ao fato de tratar-se do Hotspot primário com maior churn/estatística de revisão pelo git, o módulo constitui classicamente um Architectural Hotspot. Em virtude do raio de colisão da propensão a bugs ao se edificar uma estrutura pesada em uma página de alta volatilidade associada, sua intensidade alcança invariavelmente High.
