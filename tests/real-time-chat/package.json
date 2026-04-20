@@ -1,0 +1,15 @@
+{
+  "name": "real-time-chat-e2e-tests",
+  "version": "1.0.0",
+  "description": "E2E tests for the Real-Time Chat app (frontend + backend)",
+  "scripts": {
+    "test": "playwright test",
+    "test:frontend": "playwright test tests/frontend",
+    "test:backend": "playwright test tests/backend",
+    "test:headed": "playwright test --headed tests/frontend",
+    "test:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0"
+  }
+}

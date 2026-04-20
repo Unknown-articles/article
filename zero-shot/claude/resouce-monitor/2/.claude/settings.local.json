@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(git init *)",
+      "Bash(git config *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(node src/server.js)",
+      "Bash(curl -s http://localhost:3000/health)",
+      "Bash(curl -s http://localhost:3000/metrics)",
+      "Bash(node -e \"const d=require\\('fs'\\).readFileSync\\('/dev/stdin','utf8'\\);const j=JSON.parse\\(d\\);console.log\\(JSON.stringify\\({timestamp:j.timestamp,cpu_keys:Object.keys\\(j.cpu\\),memory_keys:Object.keys\\(j.memory\\),disk_keys:Object.keys\\(j.disk\\),uptime_keys:Object.keys\\(j.uptime\\)},null,2\\)\\)\")",
+      "Bash(curl -s http://localhost:3000/metrics/cpu)",
+      "Bash(curl -s http://localhost:3000/metrics/invalid)",
+      "Bash(curl -s http://localhost:3000/unknown-route)",
+      "Bash(node --input-type=module)"
+    ]
+  }
+}

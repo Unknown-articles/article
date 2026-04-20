@@ -1,0 +1,12 @@
+{
+  "name": "resource-monitor-tests",
+  "version": "1.0.0",
+  "description": "Test suite for Resource Monitor API",
+  "type": "module",
+  "scripts": {
+    "test": "node src/runner.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}

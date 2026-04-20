@@ -1,0 +1,13 @@
+{
+  "_users": [
+    {
+      "id": "f144c888-ca81-40bd-9d5a-a0d01f8a1291",
+      "username": "admin",
+      "role": "admin",
+      "passwordHash": "$2a$10$BGhbRiDV46O0b25lpDgo7edwhWcmEfGfZ9LUaBWSF4QbgLRVDh2Ou",
+      "createdAt": "2026-04-17T00:12:54.479Z",
+      "updatedAt": "2026-04-17T00:12:54.479Z"
+    }
+  ],
+  "_teams": []
+}

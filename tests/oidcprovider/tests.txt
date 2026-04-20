@@ -1,0 +1,87 @@
+OIDC Provider — Test Names (69 tests, 8 suites)
+================================================
+
+[SUITE] GET /.well-known/openid-configuration (Discovery Endpoint)
+  responds with HTTP 200
+  returns Content-Type: application/json
+  contains all required OIDC metadata fields
+  issuer is a valid HTTPS or HTTP URL
+  authorization_endpoint points to /oauth2/authorize
+  token_endpoint points to /oauth2/token
+  userinfo_endpoint points to /userinfo
+  jwks_uri points to /.well-known/jwks.json
+  response_types_supported is an array containing "code"
+  subject_types_supported is an array
+  id_token_signing_alg_values_supported contains RS256
+
+[SUITE] GET /.well-known/jwks.json (JWKS Endpoint)
+  responds with HTTP 200
+  returns Content-Type: application/json
+  response has a "keys" array
+  contains at least one key
+  keys use RSA key type (kty: RSA)
+  keys have required RSA public key fields (n, e)
+  keys have a "use" field set to "sig"
+  keys have an "alg" field set to RS256
+  keys have a "kid" (key ID) field
+
+[SUITE] GET /oauth2/authorize (Authorization Endpoint — Login Form)
+  returns 200 with HTML login form for valid params
+  returns 400 when client_id is missing
+  returns 400 when redirect_uri is missing
+  returns 400 when response_type is missing
+  returns 400 when response_type is not "code"
+  returns 400 when scope does not include "openid"
+  returns 400 for unknown client_id
+  returns 400 for unregistered redirect_uri
+  login form contains hidden fields for OAuth params
+
+[SUITE] POST /oauth2/authorize (Authorization Endpoint — Issue Code)
+  redirects (302) with authorization code on valid credentials
+  authorization code is returned in redirect to correct redirect_uri
+  state is echoed back in the redirect
+  returns 401/form with error on wrong password
+  works without PKCE (plain authorization code flow)
+  second redirect URI is also accepted (http://localhost:3001/callback)
+
+[SUITE] POST /oauth2/token (Token Endpoint)
+  returns 400 when grant_type is missing
+  returns 400 for unsupported grant_type
+  returns 400 when code is missing
+  returns 400 when redirect_uri is missing
+  returns 401 when client_id is missing
+  returns 401 for unknown client
+  returns 401 for wrong client_secret
+  returns 400 for invalid/unknown authorization code
+  returns tokens successfully (without PKCE)
+  returns tokens successfully with PKCE (S256)
+  returns 400 when PKCE code_verifier is wrong
+  returns 400 when auth code is reused (replay prevention)
+  returns 400 when redirect_uri does not match
+  accepts client credentials via HTTP Basic auth header
+  id_token is a valid JWT with required claims
+  id_token aud matches the client_id
+  response has Cache-Control: no-store header
+
+[SUITE] GET /userinfo (UserInfo Endpoint)
+  returns 401 when no Authorization header is provided
+  returns 401 for an invalid/fake Bearer token
+  returns 401 when Authorization scheme is not Bearer
+  returns 200 with valid Bearer token
+  returns JSON content type
+  response contains "sub" claim
+  response contains "email" claim (scope includes email)
+  response contains user identifier that is non-empty string
+
+[SUITE] POST /userinfo (UserInfo Endpoint — POST method)
+  returns 200 with valid Bearer token via POST
+
+[SUITE] Full OIDC Authorization Code Flow (End-to-End)
+  Step 1 — Discovery: server exposes required OIDC metadata
+  Step 2 — JWKS: server exposes valid RSA public keys
+  Step 3 — Authorization: user authenticates and receives code (with PKCE)
+  Step 4 — Token: exchanges code for tokens
+  Step 5 — ID Token: is a valid JWT with correct structure
+  Step 6 — ID Token: RS256 signature verifies against JWKS
+  Step 7 — UserInfo: access_token grants access to user claims
+  Step 8 — Security: access_token cannot be reused as an authorization code

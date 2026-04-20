@@ -1,0 +1,55 @@
+{
+  "_users": [
+    {
+      "id": "efc6f370-0525-4ff7-9e60-c3c465c32821",
+      "username": "admin",
+      "password": "$2a$10$Tb2qDX1ZwXqa04UOazbBNO/1XNm3wK3L9hPMG2FI2wWCLIHGF3l4W",
+      "role": "admin",
+      "createdAt": "2026-04-15T03:30:44.795Z"
+    }
+  ],
+  "_teams": [],
+  "products": [
+    {
+      "id": "8ad01614-48b4-4bed-ad2e-c175d7551b0b",
+      "ownerId": "efc6f370-0525-4ff7-9e60-c3c465c32821",
+      "createdAt": "2026-04-15T03:30:44.801Z",
+      "name": "Alpha",
+      "price": 20,
+      "active": true
+    },
+    {
+      "id": "21e46764-998b-49a5-9116-8e168664a6f7",
+      "ownerId": "efc6f370-0525-4ff7-9e60-c3c465c32821",
+      "createdAt": "2026-04-15T03:30:44.806Z",
+      "name": "Bravo",
+      "price": 40,
+      "active": true
+    },
+    {
+      "id": "b4a795ad-cc7a-4c00-8fe1-f9bed1ac6974",
+      "ownerId": "efc6f370-0525-4ff7-9e60-c3c465c32821",
+      "createdAt": "2026-04-15T03:30:44.813Z",
+      "name": "Charlie",
+      "price": 10,
+      "active": false
+    },
+    {
+      "id": "634bfcf4-1280-4ebf-910f-8e51ec9b33a2",
+      "ownerId": "efc6f370-0525-4ff7-9e60-c3c465c32821",
+      "createdAt": "2026-04-15T03:30:44.820Z",
+      "name": "Delta",
+      "price": 30,
+      "active": true
+    }
+  ],
+  "orders": [
+    {
+      "id": "abb9902a-8bdc-456f-a772-f6af9b921e29",
+      "ownerId": "efc6f370-0525-4ff7-9e60-c3c465c32821",
+      "createdAt": "2026-04-15T03:30:44.913Z",
+      "name": "order-0",
+      "note": "n-2"
+    }
+  ]
+}

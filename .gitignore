@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+**/node_modules/
+playwright-report/
+**/playwright-report/
+test-results/
+**/test-results/
+
+# Database
+*.db
+*.db-shm
+*.db-wal
+
+# Environment
+.env
+**/.env
+
+# Build output
+dist/
+frontend/dist/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db

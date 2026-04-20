@@ -1,0 +1,127 @@
+.app {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.add-task-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.add-task-form input {
+  flex: 1;
+  padding: 8px;
+}
+
+.add-task-form button {
+  padding: 8px 16px;
+}
+
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filters button {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+}
+
+.filters button.active {
+  background: #007bff;
+  color: white;
+}
+
+.task-list {
+  margin-bottom: 20px;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 5px;
+  background: white;
+  cursor: grab;
+}
+
+.task-item.dragging {
+  opacity: 0.5;
+}
+
+.task-item.completed .title {
+  text-decoration: line-through;
+}
+
+.task-item.late {
+  border-color: red;
+}
+
+.task-item.late .late-label {
+  color: red;
+  font-weight: bold;
+}
+
+.task-content {
+  flex: 1;
+}
+
+.task-content .title {
+  display: block;
+}
+
+.task-content .date {
+  display: block;
+  font-size: 0.8em;
+  color: #666;
+}
+
+.edit-form {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.edit-form input {
+  flex: 1;
+}
+
+.action-log {
+  border-top: 1px solid #ccc;
+  padding-top: 20px;
+}
+
+.action-log ul {
+  list-style: none;
+  padding: 0;
+}
+
+.action-log li {
+  padding: 5px 0;
+  font-size: 0.9em;
+}
+
+/* Mobile styles */
+@media (max-width: 600px) {
+  .add-task-form {
+    flex-direction: column;
+  }
+  .task-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .edit-form {
+    flex-direction: column;
+  }
+  .filters {
+    flex-wrap: wrap;
+  }
+}

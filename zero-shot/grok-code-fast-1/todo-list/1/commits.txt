@@ -1,0 +1,38 @@
+f9e5d0df54f617f875a0f32c4af1fc25c011a308 2026-04-04 20:42:56 -0300 Diegton
+
+94	151	src/App.css
+42	115	src/App.tsx
+22	0	src/components/ActionLog.tsx
+39	0	src/components/AddTaskForm.tsx
+22	0	src/components/Filters.tsx
+86	0	src/components/TaskItem.tsx
+59	0	src/components/TaskList.tsx
+187	0	src/hooks/useTasks.ts
+15	0	src/types.ts
+218dde4ec1496fe4512c9b5cd536065d5cfc879e 2026-04-04 20:42:09 -0300 Diegton
+
+0	0	src/hooks/useTasks.ts
+c0ad05444510a813025463799bfd3de22dd9cf04 2026-04-04 20:41:56 -0300 Diegton
+
+0	0	src/types.ts
+4f523c17c874396fb669919b34af3fdd39292cdf 2026-04-04 20:41:55 -0300 Diegton
+
+24	0	.gitignore
+73	0	README.md
+23	0	eslint.config.js
+13	0	index.html
+3045	0	package-lock.json
+35	0	package.json
+1	0	public/favicon.svg
+24	0	public/icons.svg
+184	0	src/App.css
+121	0	src/App.tsx
+-	-	src/assets/hero.png
+1	0	src/assets/react.svg
+1	0	src/assets/vite.svg
+111	0	src/index.css
+10	0	src/main.tsx
+28	0	tsconfig.app.json
+7	0	tsconfig.json
+26	0	tsconfig.node.json
+7	0	vite.config.ts

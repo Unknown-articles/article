@@ -1,0 +1,14 @@
+{
+  "name": "todo-list-e2e-tests",
+  "version": "1.0.0",
+  "description": "E2E tests for Todo List app validating all requirements from prompt.md",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:report": "playwright show-report",
+    "test:ui": "playwright test --ui"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0"
+  }
+}

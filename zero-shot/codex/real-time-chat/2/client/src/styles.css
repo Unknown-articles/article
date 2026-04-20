@@ -1,0 +1,259 @@
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+:root {
+  color: #f4efe8;
+  background:
+    radial-gradient(circle at top, rgba(233, 140, 78, 0.35), transparent 32%),
+    linear-gradient(135deg, #1c2431 0%, #0f131b 55%, #24140f 100%);
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.shell {
+  min-height: 100vh;
+  padding: 24px;
+  display: grid;
+  place-items: center;
+}
+
+.auth-card,
+.chat-shell {
+  width: min(100%, 960px);
+  border: 1px solid rgba(244, 239, 232, 0.16);
+  background: rgba(12, 15, 21, 0.78);
+  backdrop-filter: blur(22px);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+}
+
+.auth-card {
+  max-width: 440px;
+  overflow: hidden;
+  border-radius: 28px;
+}
+
+.auth-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.auth-tabs button {
+  padding: 18px;
+  border: 0;
+  background: rgba(255, 255, 255, 0.03);
+  color: inherit;
+}
+
+.auth-tabs button.active {
+  background: rgba(233, 140, 78, 0.22);
+}
+
+.auth-form {
+  display: grid;
+  gap: 18px;
+  padding: 32px;
+}
+
+.auth-form h1,
+.chat-header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 3.2rem);
+}
+
+.auth-copy {
+  margin: 0;
+  color: rgba(244, 239, 232, 0.72);
+}
+
+.auth-form label {
+  display: grid;
+  gap: 10px;
+  color: rgba(244, 239, 232, 0.84);
+}
+
+.auth-form input,
+.chat-shell button {
+  border-radius: 16px;
+}
+
+.auth-form input {
+  border: 1px solid rgba(244, 239, 232, 0.18);
+  background: rgba(255, 255, 255, 0.05);
+  color: inherit;
+  padding: 14px 16px;
+}
+
+.auth-form button,
+.chat-shell button {
+  border: 0;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, #ff9c5b, #ffd166);
+  color: #16120f;
+  font-weight: 700;
+}
+
+.error-text {
+  margin: 0;
+  color: #ff9f9f;
+}
+
+.chat-shell {
+  min-height: 70vh;
+  padding: 28px;
+  border-radius: 32px;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 18px;
+}
+
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: center;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.status-pill,
+.current-user {
+  margin: 0;
+}
+
+.status-pill {
+  display: inline-flex;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(244, 239, 232, 0.78);
+}
+
+.status-pill.online {
+  background: rgba(91, 196, 140, 0.2);
+  color: #abf5c9;
+}
+
+.connection-error {
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 120, 120, 0.12);
+  color: #ffb4b4;
+}
+
+.message-list {
+  min-height: 420px;
+  max-height: 55vh;
+  overflow-y: auto;
+  display: grid;
+  gap: 14px;
+  padding-right: 8px;
+}
+
+.message-empty {
+  margin: auto;
+  color: rgba(244, 239, 232, 0.7);
+}
+
+.message-item {
+  width: min(100%, 78%);
+  padding: 16px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.message-item.own {
+  margin-left: auto;
+  background: rgba(233, 140, 78, 0.16);
+  border-color: rgba(255, 209, 102, 0.2);
+}
+
+.message-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.message-username {
+  font-weight: 700;
+}
+
+.message-timestamp {
+  color: rgba(244, 239, 232, 0.62);
+}
+
+.message-content {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.message-input-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+}
+
+.message-input-row input {
+  border: 1px solid rgba(244, 239, 232, 0.18);
+  background: rgba(255, 255, 255, 0.05);
+  color: inherit;
+  border-radius: 16px;
+  padding: 14px 16px;
+}
+
+.message-input-row button:disabled,
+.auth-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 720px) {
+  .shell {
+    padding: 16px;
+  }
+
+  .chat-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .message-item,
+  .message-input-row {
+    width: 100%;
+  }
+
+  .message-input-row {
+    grid-template-columns: 1fr;
+  }
+}

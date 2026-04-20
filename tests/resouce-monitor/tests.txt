@@ -1,0 +1,43 @@
+[REST API]
+  - GET /health → 200 { status: "ok" }
+  - GET /metrics → 200 with all metric fields
+  - GET /metrics → cpu data has expected shape
+  - GET /metrics → memory data has expected shape
+  - GET /metrics → disk data has expected shape
+  - GET /metrics → uptime data has expected shape
+  - GET /metrics/cpu → 200 with type, timestamp and data
+  - GET /metrics/memory → 200 with type, timestamp and data
+  - GET /metrics/disk → 200 with type, timestamp and data
+  - GET /metrics/uptime → 200 with type, timestamp and data
+  - GET /metrics/invalid → 400 with error message
+  - GET /metrics/randomgarbage → 400
+  - GET /nonexistent → 404
+  - GET /metrics timestamps are ISO 8601
+  - GET /metrics called twice returns fresh timestamps
+
+[WebSocket]
+  - Connect /ws → receive "connected" welcome event
+  - Welcome message lists all valid types
+  - Connect /ws with no path → subscribedTo is empty
+  - Connect /ws/cpu → welcome shows subscribedTo ["cpu"] and immediate data
+  - Connect /ws/memory → welcome + immediate memory-only snapshot
+  - Connect /ws/disk → welcome + immediate disk-only snapshot
+  - Connect /ws/uptime → welcome + immediate uptime-only snapshot
+  - Connect /ws/all → welcome + immediate full snapshot
+  - Dynamic subscribe → receive ack with correct fields
+  - Dynamic subscribe → receive immediate snapshot after ack
+  - Subscribe to multiple metrics at once → snapshot has all of them
+  - Unsubscribe removes type from subscribedTo
+  - Invalid JSON → error event
+  - Invalid action → error event
+  - Unknown metric type → error event
+  - Empty metrics array → error event
+  - Connected client receives at least 2 broadcast updates within 3 seconds
+  - Consecutive broadcast snapshots have different timestamps
+
+[Broadcast Model]
+  - Two simultaneous clients receive the same snapshot (same timestamp)
+  - Three concurrent clients all receive valid metric snapshots
+  - Broadcast interval is roughly 1 second (500ms–2000ms between updates)
+  - Disconnected client is cleaned up — remaining clients still receive updates
+  - Metrics data is cached — REST and WS snapshots share the same timestamp

@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm create:*)",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(npm init:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(npm --version)",
+      "Bash(npx playwright *)",
+      "Bash(curl *)",
+      "Bash(npm start *)",
+      "Bash(cat vite.config.*)",
+      "Bash(npx vite *)",
+      "Bash(python -m json.tool)",
+      "Bash(netstat -ano)",
+      "Bash(wmic process *)",
+      "Bash(powershell *)"
+    ]
+  }
+}

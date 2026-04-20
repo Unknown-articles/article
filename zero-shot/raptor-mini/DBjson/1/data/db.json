@@ -1,0 +1,337 @@
+{
+  "_users": [
+    {
+      "id": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "username": "admin_1776223938990",
+      "password": "$2a$10$QaA1UWNXpV3JQCBASXhF0O6DtM0kqg4WKDHtN5EgUBQz3p8ZWVwVu",
+      "role": "admin",
+      "createdAt": "2026-04-15T03:32:19.071Z"
+    },
+    {
+      "id": "77007245-3c14-422f-8b95-3a1b57351f3d",
+      "username": "user_1776223938990",
+      "password": "$2a$10$xE/GLijihoTOu/XJdbVHc.kfCPBDEDMfw0rrH2eKXAnHHF6iiechC",
+      "role": "user",
+      "createdAt": "2026-04-15T03:32:19.146Z"
+    }
+  ],
+  "products": [
+    {
+      "id": "7925f700-3ef9-4c89-adf6-c0905b6fa3da",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.385Z",
+      "name": "Widget Pro",
+      "price": 24.99,
+      "category": "tech"
+    },
+    {
+      "id": "a8b188cf-a51c-4d99-aa59-7dbb88634c32",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.393Z",
+      "name": "Gadget"
+    },
+    {
+      "id": "896dca09-5dbf-45f8-8c3c-c68c7766de1a",
+      "ownerId": "77007245-3c14-422f-8b95-3a1b57351f3d",
+      "createdAt": "2026-04-15T03:32:19.398Z",
+      "name": "My Product v2"
+    }
+  ],
+  "posts": [
+    {
+      "id": "1e83d138-8963-49e6-8c75-a60f5f610b72",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.389Z",
+      "title": "Test Post",
+      "tags": [
+        "a",
+        "b"
+      ],
+      "meta": {
+        "views": 0
+      }
+    }
+  ],
+  "widgets": [],
+  "private_col": [
+    {
+      "id": "021c24e2-9707-47c4-b4cf-3fa4ef9031fb",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.468Z",
+      "secret": "admin"
+    },
+    {
+      "id": "54d27990-8c08-4291-bd29-9d08cc4fe59d",
+      "ownerId": "77007245-3c14-422f-8b95-3a1b57351f3d",
+      "createdAt": "2026-04-15T03:32:19.473Z",
+      "secret": "user"
+    }
+  ],
+  "notes": [
+    {
+      "id": "ddf3e674-c12b-44d4-98f4-f5a98d39a7c5",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.486Z",
+      "text": "admin note"
+    },
+    {
+      "id": "57c0065e-3ed2-45d9-a7c2-3218e7d35029",
+      "ownerId": "77007245-3c14-422f-8b95-3a1b57351f3d",
+      "createdAt": "2026-04-15T03:32:19.490Z",
+      "text": "updated"
+    }
+  ],
+  "docs": [],
+  "items": [
+    {
+      "id": "cb2da321-e1fb-4040-9291-b2a161d3257f",
+      "ownerId": "77007245-3c14-422f-8b95-3a1b57351f3d",
+      "createdAt": "2026-04-15T03:32:19.524Z",
+      "label": "test"
+    }
+  ],
+  "shared_docs": [
+    {
+      "id": "40257699-5e24-4a15-8cc5-e3403510151c",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.533Z",
+      "title": "Shared Read",
+      "sharedWith": []
+    },
+    {
+      "id": "22e66ce6-af45-4ca2-a1a7-64f5de5a2f3e",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.540Z",
+      "title": "Shared Write",
+      "sharedWith": []
+    }
+  ],
+  "_teams": [
+    {
+      "id": "097f1e3c-4a79-45e9-8a5e-77b561fa1ad1",
+      "name": "Team Beta",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "members": [
+        "77ce1c11-8ef4-425c-a060-d9e5855cfff1"
+      ],
+      "createdAt": "2026-04-15T03:32:19.550Z"
+    }
+  ],
+  "team_docs": [
+    {
+      "id": "ad9f4c51-30f8-487e-8d6b-7d198545e6d2",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.557Z",
+      "title": "Team Doc",
+      "sharedWithTeams": [
+        {
+          "teamId": "097f1e3c-4a79-45e9-8a5e-77b561fa1ad1",
+          "access": "write"
+        }
+      ]
+    }
+  ],
+  "catalog": [
+    {
+      "id": "3b1d689d-0ff2-4f5e-a42c-1d61c1144931",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.582Z",
+      "name": "Apple",
+      "price": 1.5,
+      "category": "fruit",
+      "stock": 100,
+      "active": true
+    },
+    {
+      "id": "e3d73aa3-0058-4135-964e-d5eee53ca3fb",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.585Z",
+      "name": "Banana",
+      "price": 0.5,
+      "category": "fruit",
+      "stock": 200,
+      "active": true
+    },
+    {
+      "id": "794804d4-ccf5-4ed3-bda4-132944750834",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.588Z",
+      "name": "Carrot",
+      "price": 2,
+      "category": "veggie",
+      "stock": 50,
+      "active": false
+    },
+    {
+      "id": "6ab91e37-49ad-4b3d-9b93-98fe7ec010c5",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.593Z",
+      "name": "Date",
+      "price": 5,
+      "category": "fruit",
+      "stock": 30,
+      "active": true
+    },
+    {
+      "id": "3a6799ef-1112-46d5-ad60-f6611123e32e",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.599Z",
+      "name": "Eggplant",
+      "price": 3.5,
+      "category": "veggie",
+      "stock": 80,
+      "active": true
+    }
+  ],
+  "concurrent_items": [
+    {
+      "id": "09b780ee-ed4f-447f-a649-bcfafdec8c4d",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.660Z",
+      "index": 0,
+      "value": 0.37028244677910893
+    },
+    {
+      "id": "cd99db58-a15f-4fe7-b09a-506f8d549243",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.660Z",
+      "index": 1,
+      "value": 0.35418897854569265
+    },
+    {
+      "id": "04f09b1e-f94d-4a81-aa7b-b77f0fce6512",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.661Z",
+      "index": 2,
+      "value": 0.9887747733275897
+    },
+    {
+      "id": "d211eb51-ceb6-458b-b942-ee27fca9727c",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.661Z",
+      "index": 3,
+      "value": 0.06525763460488743
+    },
+    {
+      "id": "82990cd1-a70b-4865-80c1-97c422cd439f",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.661Z",
+      "index": 4,
+      "value": 0.07602167077629696
+    },
+    {
+      "id": "fa49abba-3ef4-4e11-80c7-2ddacb08fa8b",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.661Z",
+      "index": 5,
+      "value": 0.09775759036025455
+    },
+    {
+      "id": "c1f8ee51-3253-4545-af4f-9597b2135d1e",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.661Z",
+      "index": 6,
+      "value": 0.552973452953992
+    },
+    {
+      "id": "69ff8efc-6e8f-4205-9529-bf6fc205bb33",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.661Z",
+      "index": 7,
+      "value": 0.38012611389914286
+    },
+    {
+      "id": "b69e669c-3e31-40c7-b580-fb757cf16f34",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.661Z",
+      "index": 8,
+      "value": 0.6150882773622505
+    },
+    {
+      "id": "b494a2b9-2e52-48e0-97cf-9c591f5da69e",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.661Z",
+      "index": 9,
+      "value": 0.6509489242988985
+    },
+    {
+      "id": "6dc63fc6-ac26-4f78-a846-488d51b79e16",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.662Z",
+      "index": 10,
+      "value": 0.7138846577504591
+    },
+    {
+      "id": "cc8b827e-56c4-4dd6-9d83-1e44bc08c5cf",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.662Z",
+      "index": 11,
+      "value": 0.07248330252332169
+    },
+    {
+      "id": "5b8a247e-625e-4c0f-b181-d9c6debc7975",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.662Z",
+      "index": 12,
+      "value": 0.4990202020580521
+    },
+    {
+      "id": "b91d8fce-d0d2-43d9-88b3-de1486437bfc",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.662Z",
+      "index": 13,
+      "value": 0.3243338159339919
+    },
+    {
+      "id": "abff3442-969e-414b-80d1-1e92741c882f",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.662Z",
+      "index": 14,
+      "value": 0.7782373332936056
+    },
+    {
+      "id": "fc5645f2-f343-4798-9922-a8212deec643",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.662Z",
+      "index": 15,
+      "value": 0.6479199164957371
+    },
+    {
+      "id": "e564fbe9-c4b9-449b-9eb1-803323368e72",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.662Z",
+      "index": 16,
+      "value": 0.46393693430622396
+    },
+    {
+      "id": "967f85c8-80a0-4a97-8828-abba09505ca0",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.662Z",
+      "index": 17,
+      "value": 0.8908219593977812
+    },
+    {
+      "id": "bbc516c1-c1ea-4e6f-98ee-327ba2ef02f3",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.662Z",
+      "index": 18,
+      "value": 0.30539463316089144
+    },
+    {
+      "id": "d1363a1a-ce59-442c-9cd5-f0e1ffcaa8b0",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.663Z",
+      "index": 19,
+      "value": 0.5746645001924878
+    }
+  ],
+  "counters": [
+    {
+      "id": "d4527be2-9b1e-4f1e-8d76-96d1f3789e0b",
+      "ownerId": "77ce1c11-8ef4-425c-a060-d9e5855cfff1",
+      "createdAt": "2026-04-15T03:32:19.888Z",
+      "value": 14
+    }
+  ],
+  "trash": []
+}

@@ -1,0 +1,15 @@
+{
+  "name": "resource-monitor-api",
+  "version": "1.0.0",
+  "description": "Resource monitor API with Express REST endpoints and WebSocket streaming.",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.4",
+    "ws": "^8.13.0"
+  }
+}

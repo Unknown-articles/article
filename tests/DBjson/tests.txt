@@ -1,0 +1,120 @@
+1. Health Check
+--------------------------------------------------
+[PASS] GET /health returns 200 with status ok
+
+2. Authentication
+--------------------------------------------------
+[PASS] POST /auth/register – first user becomes admin
+[PASS] POST /auth/register – second user gets "user" role
+[PASS] POST /auth/register – rejects duplicate username
+[PASS] POST /auth/register – rejects missing fields
+[PASS] POST /auth/login – admin can login and receives JWT
+[PASS] POST /auth/login – regular user can login and receives JWT
+[PASS] POST /auth/login – wrong password returns 401
+[PASS] POST /auth/login – unknown username returns 401
+[PASS] GET /auth/me – returns caller profile
+[PASS] GET /auth/me – rejects unauthenticated request
+[PASS] GET /auth/users – admin can list all users
+[PASS] GET /auth/users – regular user is forbidden
+[PASS] PATCH /auth/users/:id/role – admin can promote user to admin
+[PASS] PATCH /auth/users/:id/role – admin can demote back to user
+[PASS] PATCH /auth/users/:id/role – invalid role is rejected
+[PASS] PATCH /auth/users/:id/role – non-admin is forbidden
+
+3. CRUD – Dynamic Resources
+--------------------------------------------------
+[PASS] POST /:resource – creates new collection and resource
+[PASS] POST /:resource – any arbitrary JSON payload is accepted
+[PASS] POST /:resource – client-supplied id is ignored (system generates one)
+[PASS] POST /:resource – client-supplied ownerId is ignored
+[PASS] GET /:resource – lists resources (admin sees all)
+[PASS] GET /:resource – returns 401 without token
+[PASS] GET /:resource/:id – retrieves a single item
+[PASS] GET /:resource/:id – returns 404 for unknown id
+[PASS] PUT /:resource/:id – fully replaces resource fields
+[PASS] PUT /:resource/:id – returns 404 for unknown id
+[PASS] PATCH /:resource/:id – updates only supplied fields
+[PASS] PATCH /:resource/:id – returns 404 for unknown id
+[PASS] DELETE /:resource/:id – owner can delete own resource
+[PASS] DELETE /:resource/:id – admin can delete any resource
+[PASS] DELETE /:resource/:id – returns 404 for unknown id
+[PASS] Reserved collection "_users" is rejected
+[PASS] Reserved collection "auth" is rejected by dynamic router
+
+4. Role-Based Access Control (RBAC)
+--------------------------------------------------
+[PASS] Admin can GET single item owned by another user
+[PASS] Admin can PATCH item owned by another user
+[PASS] Admin can DELETE item owned by another user
+[PASS] User cannot GET item owned by another user (no sharing)
+[PASS] User cannot PUT item owned by another user
+[PASS] User cannot PATCH item owned by another user
+[PASS] User cannot DELETE item owned by another user
+[PASS] User can GET their own resource
+[PASS] User can PATCH their own resource
+[PASS] User can PUT their own resource
+[PASS] GET list – user only sees own items (no sharing)
+[PASS] GET list – admin sees all items
+
+5. Data Ownership
+--------------------------------------------------
+[PASS] Every created resource has ownerId equal to creator
+[PASS] Owner can modify their own resource
+[PASS] Non-owner user cannot modify another user's resource
+[PASS] Only owner or admin can delete – shared-write user cannot delete
+[PASS] System fields (id, ownerId, createdAt) cannot be overwritten by client
+
+6. Shared Ownership
+--------------------------------------------------
+[PASS] Owner can share resource with another user (read access)
+[PASS] User with read access can GET the shared item
+[PASS] Shared item appears in list for the grantee
+[PASS] User with read-only access cannot PATCH the shared item
+[PASS] Owner can share resource with write access
+[PASS] User with write access can PATCH the shared item
+[PASS] User with write access can PUT the shared item
+[PASS] User with write access cannot DELETE the shared item (owner-only)
+[PASS] Owner can update sharing config via PATCH
+[PASS] POST /auth/teams – owner can create a team
+[PASS] POST /auth/teams/:id/members – admin can add user to team
+[PASS] Resource shared with team is visible to team member
+[PASS] Team doc appears in list for team member
+[PASS] Team member with read access cannot PATCH team-shared item
+[PASS] Team member with write access can PATCH team-shared item
+[PASS] GET /auth/teams – member can list their teams
+[PASS] GET /auth/teams/:id – member can view team details
+[PASS] DELETE /auth/teams/:id/members/:userId – owner can remove member
+[PASS] After removal team doc is no longer accessible
+[PASS] PATCH /auth/teams/:id – owner can rename team
+[PASS] DELETE /auth/teams/:id – owner can delete team
+
+7. Advanced Querying
+--------------------------------------------------
+[PASS] Filter: equality (field=value)
+[PASS] Filter: equality on boolean
+[PASS] Filter: inequality (field__ne=value)
+[PASS] Filter: greater than (field__gt)
+[PASS] Filter: greater than or equal (field__gte)
+[PASS] Filter: less than (field__lt)
+[PASS] Filter: less than or equal (field__lte)
+[PASS] Filter: between (field__between=lo,hi, inclusive)
+[PASS] Filter: contains (case-insensitive substring)
+[PASS] Filter: startswith
+[PASS] Filter: endswith
+[PASS] Filter: in (comma-separated list)
+[PASS] Filter: AND logic (default) – all conditions must match
+[PASS] Filter: OR logic (_or=true) – any condition matches
+[PASS] Sort: ascending by price
+[PASS] Sort: descending by price
+[PASS] Sort: ascending by name (alphabetical)
+[PASS] Pagination: _limit restricts number of results
+[PASS] Pagination: _offset skips items
+[PASS] Pagination: _limit + _offset together
+[PASS] Combined: filter + sort + pagination
+
+8. Concurrency Control
+--------------------------------------------------
+[PASS] Concurrent POSTs all succeed with unique IDs (no data loss)
+[PASS] Concurrent GETs return consistent data without corrupted JSON
+[PASS] Concurrent PATCHes on same item – all succeed, last write wins (no corruption)
+[PASS] Concurrent DELETEs on different items – all succeed

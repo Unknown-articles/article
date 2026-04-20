@@ -1,0 +1,14 @@
+{
+  "name": "dbjson-api-tests",
+  "version": "1.0.0",
+  "description": "Integration tests for the Dynamic JSON API",
+  "type": "commonjs",
+  "scripts": {
+    "test": "node run.js",
+    "test:runner": "node tests/runner.js",
+    "reset-db": "node scripts/reset-db.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.2"
+  }
+}

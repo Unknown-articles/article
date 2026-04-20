@@ -1,0 +1,20 @@
+{
+  "name": "oidcprovider",
+  "version": "1.0.0",
+  "description": "OpenID Connect provider REST API built with Express and SQLite",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node test/discovery.test.js && node test/jwks.test.js && node test/authorization.test.js && node test/token.test.js && node test/userinfo.test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "express": "^5.2.1",
+    "jose": "^6.2.2",
+    "sqlite3": "^6.0.1",
+    "supertest": "^7.2.2"
+  }
+}

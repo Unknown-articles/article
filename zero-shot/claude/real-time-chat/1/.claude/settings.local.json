@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(node:*)",
+      "Bash(curl -s -X POST http://localhost:3000/auth/register -H 'Content-Type: application/json' -d '{\"username\":\"alice\",\"password\":\"secret123\"}')",
+      "Bash(curl -s -X POST http://localhost:3000/auth/login -H 'Content-Type: application/json' -d '{\"username\":\"alice\",\"password\":\"secret123\"}')",
+      "Bash(curl -s -X POST http://localhost:3000/auth/register -H 'Content-Type: application/json' -d '{\"username\":\"alice\",\"password\":\"other123\"}')",
+      "Bash(kill %1)",
+      "Bash(rm -f chat.db chat.db-shm chat.db-wal)"
+    ]
+  }
+}
