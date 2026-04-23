@@ -1,0 +1,12 @@
+{
+  "name": "dbjson-server",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "set DB_PATH=db.json&& set JWT_SECRET=mysecret&& set PORT=3000&& node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2"
+  }
+}
