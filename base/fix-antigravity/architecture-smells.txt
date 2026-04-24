@@ -1,5 +1,5 @@
 ARCHITECTURE SMELLS — Large System Project
-Generated: 2026-04-06
+Generated: 
 ================================================================================
 
 Distribuição por severidade: 4 críticos · 5 altos · 9 médios · 5 baixos
