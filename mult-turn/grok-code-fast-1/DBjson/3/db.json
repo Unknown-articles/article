@@ -1,0 +1,191 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "pass",
+      "role": "admin"
+    },
+    {
+      "id": 2,
+      "username": "user1",
+      "password": "pass1",
+      "role": "user"
+    }
+  ],
+  "teams": [
+    {
+      "id": 1,
+      "name": "Developers",
+      "ownerId": 1,
+      "members": [
+        1,
+        2
+      ]
+    }
+  ],
+  "products": [
+    {
+      "name": "Team Shared Product",
+      "price": 600,
+      "sharedWithTeams": [
+        {
+          "teamId": 1,
+          "access": "write"
+        }
+      ],
+      "id": 1,
+      "ownerId": 1,
+      "createdAt": "2026-04-21T01:24:05.175Z",
+      "updatedAt": "2026-04-21T01:24:15.176Z"
+    },
+    {
+      "name": "Product1",
+      "price": 101,
+      "id": 2,
+      "ownerId": 1,
+      "createdAt": "2026-04-21T01:27:34.147Z"
+    },
+    {
+      "name": "Product2",
+      "price": 102,
+      "id": 3,
+      "ownerId": 1,
+      "createdAt": "2026-04-21T01:27:34.237Z"
+    },
+    {
+      "name": "Product3",
+      "price": 103,
+      "id": 4,
+      "ownerId": 1,
+      "createdAt": "2026-04-21T01:27:34.354Z"
+    },
+    {
+      "name": "Product4",
+      "price": 104,
+      "id": 5,
+      "ownerId": 1,
+      "createdAt": "2026-04-21T01:27:34.454Z"
+    },
+    {
+      "name": "Product5",
+      "price": 105,
+      "id": 6,
+      "ownerId": 1,
+      "createdAt": "2026-04-21T01:27:34.568Z"
+    },
+    {
+      "name": "Product6",
+      "price": 106,
+      "id": 7,
+      "ownerId": 1,
+      "createdAt": "2026-04-21T01:27:34.672Z"
+    },
+    {
+      "name": "Product7",
+      "price": 107,
+      "id": 8,
+      "ownerId": 1,
+      "createdAt": "2026-04-21T01:27:34.771Z"
+    },
+    {
+      "name": "Product8",
+      "price": 108,
+      "id": 9,
+      "ownerId": 1,
+      "createdAt": "2026-04-21T01:27:34.871Z"
+    },
+    {
+      "name": "Product9",
+      "price": 109,
+      "id": 10,
+      "ownerId": 1,
+      "createdAt": "2026-04-21T01:27:34.981Z"
+    },
+    {
+      "name": "Product10",
+      "price": 110,
+      "id": 11,
+      "ownerId": 1,
+      "createdAt": "2026-04-21T01:27:35.091Z"
+    },
+    {
+      "name": "Product11",
+      "price": 111,
+      "id": 12,
+      "ownerId": 1,
+      "createdAt": "2026-04-21T01:27:35.194Z"
+    },
+    {
+      "name": "Product12",
+      "price": 112,
+      "id": 13,
+      "ownerId": 1,
+      "createdAt": "2026-04-21T01:27:35.303Z"
+    },
+    {
+      "name": "Product13",
+      "price": 113,
+      "id": 14,
+      "ownerId": 1,
+      "createdAt": "2026-04-21T01:27:35.406Z"
+    },
+    {
+      "name": "Product14",
+      "price": 114,
+      "id": 15,
+      "ownerId": 1,
+      "createdAt": "2026-04-21T01:27:35.496Z"
+    },
+    {
+      "name": "Product15",
+      "price": 115,
+      "id": 16,
+      "ownerId": 1,
+      "createdAt": "2026-04-21T01:27:35.601Z"
+    },
+    {
+      "name": "Product16",
+      "price": 116,
+      "id": 17,
+      "ownerId": 1,
+      "createdAt": "2026-04-21T01:27:35.718Z"
+    },
+    {
+      "name": "Product17",
+      "price": 117,
+      "id": 18,
+      "ownerId": 1,
+      "createdAt": "2026-04-21T01:27:35.805Z"
+    },
+    {
+      "name": "Product18",
+      "price": 118,
+      "id": 19,
+      "ownerId": 1,
+      "createdAt": "2026-04-21T01:27:35.895Z"
+    },
+    {
+      "name": "Product19",
+      "price": 119,
+      "id": 20,
+      "ownerId": 1,
+      "createdAt": "2026-04-21T01:27:35.979Z"
+    },
+    {
+      "name": "Product20",
+      "price": 120,
+      "id": 21,
+      "ownerId": 1,
+      "createdAt": "2026-04-21T01:27:36.038Z"
+    }
+  ],
+  "_users": [
+    {
+      "id": 1,
+      "username": "testuser",
+      "password": "testpass",
+      "role": "admin"
+    }
+  ]
+}
