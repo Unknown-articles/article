@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(mkdir -p \"/c/Users/diegt/Documents/architecture-projects - Copia/mult-turn/antigravity/DBjson/2\")",
-      "Bash(mkdir -p \"/c/Users/diegt/Documents/architecture-projects - Copia/mult-turn/antigravity/DBjson/3\")"
-    ]
-  }
-}

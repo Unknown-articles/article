@@ -1,0 +1,17 @@
+{
+  "name": "2",
+  "version": "1.0.0",
+  "description": "Express resource monitor API variant 2",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1",
+    "ws": "^8.20.0"
+  }
+}
