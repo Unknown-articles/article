@@ -1,76 +1,95 @@
+import test from 'node:test';
 import assert from 'node:assert/strict';
-import crypto from 'node:crypto';
 import request from 'supertest';
-import { bootstrap } from '../src/bootstrap.js';
-import { closeDatabase, removeFileIfExists } from './test-helpers.js';
+import { createApp } from '../src/app.js';
+import { initializeDatabase } from '../src/db/init.js';
 
-function createPkceChallenge(verifier) {
-  return crypto.createHash('sha256').update(verifier).digest('base64url');
+const validParams = {
+  client_id: 'test-client',
+  client_secret: 'test-secret',
+  redirect_uri: 'http://localhost:8080/callback',
+  response_type: 'code',
+  scope: 'openid email',
+};
+
+async function issueAccessToken(app, scope = 'openid email') {
+  const authorizationResponse = await request(app)
+    .post('/oauth2/authorize')
+    .type('form')
+    .send({
+      ...validParams,
+      scope,
+      username: 'testuser',
+      password: 'password123',
+    })
+    .expect(302);
+
+  const code = new URL(authorizationResponse.headers.location).searchParams.get('code');
+
+  const tokenResponse = await request(app)
+    .post('/oauth2/token')
+    .type('form')
+    .send({
+      grant_type: 'authorization_code',
+      code,
+      redirect_uri: validParams.redirect_uri,
+      client_id: validParams.client_id,
+      client_secret: validParams.client_secret,
+    })
+    .expect(200);
+
+  return tokenResponse.body.access_token;
 }
 
-async function run() {
-  const databaseFile = 'data/test-userinfo.sqlite';
-  await removeFileIfExists(databaseFile);
+test('GET /userinfo returns claims for a valid bearer token', async () => {
+  await initializeDatabase();
+  const app = createApp();
+  const accessToken = await issueAccessToken(app);
 
-  const { app, database } = await bootstrap({
-    issuer: 'http://127.0.0.1:3500',
-    databaseFile,
-  });
+  const response = await request(app)
+    .get('/userinfo')
+    .set('Authorization', `Bearer ${accessToken}`)
+    .expect(200)
+    .expect('Content-Type', /application\/json/);
 
-  try {
-    const codeVerifier = 'userinfo-verifier-value-1234567890';
-    const codeChallenge = createPkceChallenge(codeVerifier);
+  assert.equal(response.body.sub, 'user-testuser');
+  assert.equal(response.body.email, 'testuser@example.com');
+});
 
-    const authorizationResponse = await request(app)
-      .get('/oauth2/authorize')
-      .query({
-        response_type: 'code',
-        client_id: 'oidc-client',
-        redirect_uri: 'http://127.0.0.1:4000/callback',
-        scope: 'openid profile email',
-        login_hint: 'alice@example.com',
-        password: 'password123',
-        code_challenge: codeChallenge,
-        code_challenge_method: 'S256',
-      })
-      .expect(200);
+test('GET /userinfo returns 401 without an authorization header', async () => {
+  await initializeDatabase();
+  const app = createApp();
 
-    const tokenResponse = await request(app)
-      .post('/oauth2/token')
-      .send({
-        grant_type: 'authorization_code',
-        code: authorizationResponse.body.code,
-        client_id: 'oidc-client',
-        redirect_uri: 'http://127.0.0.1:4000/callback',
-        code_verifier: codeVerifier,
-      })
-      .expect(200);
+  const response = await request(app).get('/userinfo').expect(401);
 
-    const userinfoResponse = await request(app)
-      .get('/userinfo')
-      .set('Authorization', `Bearer ${tokenResponse.body.access_token}`)
-      .expect(200);
+  assert.equal(response.body.error, 'invalid_token');
+});
 
-    assert.equal(userinfoResponse.body.sub, 'user-123');
-    assert.equal(userinfoResponse.body.email, 'alice@example.com');
-    assert.equal(userinfoResponse.body.name, 'Alice Example');
-    assert.equal(userinfoResponse.body.email_verified, true);
+test('GET /userinfo rejects invalid auth schemes and tokens', async () => {
+  await initializeDatabase();
+  const app = createApp();
 
-    const invalidTokenResponse = await request(app)
-      .get('/userinfo')
-      .set('Authorization', 'Bearer invalid-token')
-      .expect(401);
+  const wrongScheme = await request(app)
+    .get('/userinfo')
+    .set('Authorization', 'Basic abc')
+    .expect(401);
 
-    assert.equal(invalidTokenResponse.body.error, 'invalid_token');
+  assert.equal(wrongScheme.body.error, 'invalid_token');
 
-    console.log('userinfo.test.js: ok');
-  } finally {
-    await closeDatabase(database);
-  }
-}
+  const invalidToken = await request(app)
+    .get('/userinfo')
+    .set('Authorization', 'Bearer not-a-real-token')
+    .expect(401);
 
-run().catch((error) => {
-  console.error('userinfo.test.js: failed');
-  console.error(error);
-  process.exitCode = 1;
+  assert.equal(invalidToken.body.error, 'invalid_token');
+});
+
+test('POST /userinfo returns 405', async () => {
+  await initializeDatabase();
+  const app = createApp();
+
+  await request(app)
+    .post('/userinfo')
+    .expect(405)
+    .expect('Content-Type', /application\/json/);
 });

@@ -1,10 +1,9 @@
 import { Router } from 'express';
-import express from 'express';
-import { showAuthorizationForm, handleAuthorization } from '../controllers/authorizationController.js';
+import { getAuthorize, postAuthorize } from '../controllers/authorizationController.js';
 
 const router = Router();
 
-router.get( '/authorize', showAuthorizationForm);
-router.post('/authorize', express.urlencoded({ extended: false }), handleAuthorization);
+router.get('/oauth2/authorize', getAuthorize);
+router.post('/oauth2/authorize', postAuthorize);
 
 export default router;

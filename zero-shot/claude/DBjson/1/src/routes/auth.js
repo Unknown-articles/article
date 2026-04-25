@@ -1,263 +1,275 @@
 'use strict';
-
-const express  = require('express');
-const bcrypt   = require('bcryptjs');
-const jwt      = require('jsonwebtoken');
-const { v4: uuidv4 } = require('uuid');
-
-const db            = require('../db/fileDb');
-const config        = require('../config');
-const ApiError      = require('../errors/ApiError');
-const { authenticate } = require('../middleware/auth');
+const express = require('express');
+const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
+const { transaction, readOnly } = require('../db');
+const { generateToken, authenticate, requireAdmin } = require('../middleware/auth');
 
 const router = express.Router();
+const VALID_ROLES = ['admin', 'user'];
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-function safe(user) {
-  const { password: _, ...rest } = user;
+function stripPassword(user) {
+  const { password, ...rest } = user;
   return rest;
 }
 
-function requireAdmin(req) {
-  if (req.user.role !== 'admin') throw new ApiError(403, 'Admin role required');
-}
+// ── Register ──────────────────────────────────────────────────────────────────
 
-// ---------------------------------------------------------------------------
-// POST /auth/register
-// ---------------------------------------------------------------------------
 router.post('/register', async (req, res, next) => {
   try {
-    const { username, password } = req.body;
+    const { username, password } = req.body || {};
     if (!username || !password) {
-      throw new ApiError(400, 'username and password are required');
+      return res.status(400).json({ error: 'Username and password are required' });
     }
 
-    // Hash BEFORE acquiring the mutex so the synchronous transaction stays fast
-    const hashed = await bcrypt.hash(password, config.BCRYPT_ROUNDS);
+    const hashedPassword = await bcrypt.hash(String(password), 10);
 
-    const newUser = db.transaction(data => {
-      if (!data._users) data._users = [];
-
-      if (data._users.find(u => u.username === username)) {
-        throw new ApiError(409, 'Username already taken');
+    const user = await transaction(db => {
+      if (db._users.find(u => u.username === username)) {
+        const err = new Error('Username already taken');
+        err.status = 409;
+        throw err;
       }
-
-      // First ever user automatically becomes admin
-      const isFirst = data._users.length === 0;
-      const user = {
-        id:        uuidv4(),
-        username,
-        password:  hashed,
-        role:      isFirst ? 'admin' : 'user',
+      const newUser = {
+        id: crypto.randomUUID(),
+        username: String(username),
+        password: hashedPassword,
+        role: db._users.length === 0 ? 'admin' : 'user',
         createdAt: new Date().toISOString(),
       };
-      data._users.push(user);
-      return user;
+      db._users.push(newUser);
+      return newUser;
     });
 
-    res.status(201).json({ user: safe(await newUser) });
-  } catch (err) { next(err); }
+    res.status(201).json(stripPassword(user));
+  } catch (err) {
+    if (err.status) return res.status(err.status).json({ error: err.message });
+    next(err);
+  }
 });
 
-// ---------------------------------------------------------------------------
-// POST /auth/login
-// ---------------------------------------------------------------------------
+// ── Login ─────────────────────────────────────────────────────────────────────
+
 router.post('/login', async (req, res, next) => {
   try {
-    const { username, password } = req.body;
+    const { username, password } = req.body || {};
     if (!username || !password) {
-      throw new ApiError(400, 'username and password are required');
+      return res.status(400).json({ error: 'Username and password are required' });
     }
 
-    const data = await db.read();
-    const user = (data._users || []).find(u => u.username === username);
-    if (!user) throw new ApiError(401, 'Invalid credentials');
+    let user;
+    await readOnly(db => { user = db._users.find(u => u.username === username); });
 
-    const valid = await bcrypt.compare(password, user.password);
-    if (!valid) throw new ApiError(401, 'Invalid credentials');
+    if (!user) return res.status(401).json({ error: 'Invalid credentials' });
 
-    const token = jwt.sign(
-      { id: user.id, username: user.username, role: user.role },
-      config.JWT_SECRET,
-      { expiresIn: config.JWT_EXPIRES_IN }
-    );
+    const valid = await bcrypt.compare(String(password), user.password);
+    if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
 
-    res.json({ token, user: safe(user) });
-  } catch (err) { next(err); }
+    res.json({ token: generateToken(user) });
+  } catch (err) {
+    next(err);
+  }
 });
 
-// ---------------------------------------------------------------------------
-// GET /auth/me
-// ---------------------------------------------------------------------------
+// ── Me ────────────────────────────────────────────────────────────────────────
+
 router.get('/me', authenticate, async (req, res, next) => {
   try {
-    const data = await db.read();
-    const user = (data._users || []).find(u => u.id === req.user.id);
-    if (!user) throw new ApiError(404, 'User not found');
-    res.json({ user: safe(user) });
-  } catch (err) { next(err); }
+    let user;
+    await readOnly(db => { user = db._users.find(u => u.id === req.user.id); });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    res.json(stripPassword(user));
+  } catch (err) {
+    next(err);
+  }
 });
 
-// ---------------------------------------------------------------------------
-// GET /auth/users  (admin only)
-// ---------------------------------------------------------------------------
-router.get('/users', authenticate, async (req, res, next) => {
+// ── User management (admin only) ──────────────────────────────────────────────
+
+router.get('/users', authenticate, requireAdmin, async (req, res, next) => {
   try {
-    requireAdmin(req);
-    const data = await db.read();
-    res.json({ users: (data._users || []).map(safe) });
-  } catch (err) { next(err); }
+    let users;
+    await readOnly(db => { users = db._users.map(stripPassword); });
+    res.json({ users });
+  } catch (err) {
+    next(err);
+  }
 });
 
-// ---------------------------------------------------------------------------
-// PATCH /auth/users/:id/role  (admin only – promote / demote)
-// ---------------------------------------------------------------------------
-router.patch('/users/:id/role', authenticate, async (req, res, next) => {
+router.patch('/users/:id/role', authenticate, requireAdmin, async (req, res, next) => {
   try {
-    requireAdmin(req);
-    const { role } = req.body;
-    if (!['admin', 'user'].includes(role)) {
-      throw new ApiError(400, 'role must be "admin" or "user"');
+    const { role } = req.body || {};
+    if (!role || !VALID_ROLES.includes(role)) {
+      return res.status(400).json({ error: `Role must be one of: ${VALID_ROLES.join(', ')}` });
     }
-    const updated = await db.transaction(data => {
-      const idx = (data._users || []).findIndex(u => u.id === req.params.id);
-      if (idx === -1) throw new ApiError(404, 'User not found');
-      data._users[idx].role = role;
-      return data._users[idx];
+
+    const updated = await transaction(db => {
+      const idx = db._users.findIndex(u => u.id === req.params.id);
+      if (idx === -1) {
+        const err = new Error('User not found');
+        err.status = 404;
+        throw err;
+      }
+      db._users[idx] = { ...db._users[idx], role };
+      return db._users[idx];
     });
-    res.json({ user: safe(updated) });
-  } catch (err) { next(err); }
+
+    res.json(stripPassword(updated));
+  } catch (err) {
+    if (err.status) return res.status(err.status).json({ error: err.message });
+    next(err);
+  }
 });
 
-// ---------------------------------------------------------------------------
-// Teams
-// ---------------------------------------------------------------------------
+// ── Teams ─────────────────────────────────────────────────────────────────────
 
-// POST /auth/teams
 router.post('/teams', authenticate, async (req, res, next) => {
   try {
-    const { name } = req.body;
-    if (!name) throw new ApiError(400, 'name is required');
+    const { name } = req.body || {};
+    if (!name) return res.status(400).json({ error: 'Team name is required' });
 
-    const team = await db.transaction(data => {
-      if (!data._teams) data._teams = [];
-      const t = {
-        id:        uuidv4(),
-        name,
-        ownerId:   req.user.id,
-        members:   [req.user.id],
+    const team = await transaction(db => {
+      const newTeam = {
+        id: crypto.randomUUID(),
+        name: String(name),
+        ownerId: req.user.id,
+        members: [req.user.id],
         createdAt: new Date().toISOString(),
       };
-      data._teams.push(t);
-      return t;
+      db._teams.push(newTeam);
+      return newTeam;
     });
-    res.status(201).json({ team });
-  } catch (err) { next(err); }
+
+    res.status(201).json(team);
+  } catch (err) {
+    next(err);
+  }
 });
 
-// GET /auth/teams  – teams the caller owns or is a member of
 router.get('/teams', authenticate, async (req, res, next) => {
   try {
-    const data  = await db.read();
-    const teams = (data._teams || []).filter(t =>
-      req.user.role === 'admin' ||
-      t.ownerId === req.user.id ||
-      t.members.includes(req.user.id)
-    );
-    res.json({ teams });
-  } catch (err) { next(err); }
+    let teams;
+    await readOnly(db => {
+      teams = db._teams.filter(t => t.members.includes(req.user.id));
+    });
+    res.json(teams);
+  } catch (err) {
+    next(err);
+  }
 });
 
-// GET /auth/teams/:id
 router.get('/teams/:id', authenticate, async (req, res, next) => {
   try {
-    const data = await db.read();
-    const team = (data._teams || []).find(t => t.id === req.params.id);
-    if (!team) throw new ApiError(404, 'Team not found');
-    if (
-      req.user.role !== 'admin' &&
-      team.ownerId !== req.user.id &&
-      !team.members.includes(req.user.id)
-    ) throw new ApiError(403, 'Forbidden');
-    res.json({ team });
-  } catch (err) { next(err); }
+    let team;
+    await readOnly(db => { team = db._teams.find(t => t.id === req.params.id); });
+    if (!team) return res.status(404).json({ error: 'Team not found' });
+    if (!team.members.includes(req.user.id) && req.user.role !== 'admin') {
+      return res.status(403).json({ error: 'Not a team member' });
+    }
+    res.json(team);
+  } catch (err) {
+    next(err);
+  }
 });
 
-// PATCH /auth/teams/:id  – rename (owner / admin)
 router.patch('/teams/:id', authenticate, async (req, res, next) => {
   try {
-    const updated = await db.transaction(data => {
-      const idx = (data._teams || []).findIndex(t => t.id === req.params.id);
-      if (idx === -1) throw new ApiError(404, 'Team not found');
-      const team = data._teams[idx];
-      if (req.user.role !== 'admin' && team.ownerId !== req.user.id) {
-        throw new ApiError(403, 'Forbidden');
+    const { name } = req.body || {};
+
+    const updated = await transaction(db => {
+      const idx = db._teams.findIndex(t => t.id === req.params.id);
+      if (idx === -1) {
+        const err = new Error('Team not found'); err.status = 404; throw err;
       }
-      if (req.body.name) team.name = req.body.name;
-      return team;
+      const team = db._teams[idx];
+      if (team.ownerId !== req.user.id && req.user.role !== 'admin') {
+        const err = new Error('Only team owner can update the team'); err.status = 403; throw err;
+      }
+      db._teams[idx] = { ...team, ...(name ? { name: String(name) } : {}) };
+      return db._teams[idx];
     });
-    res.json({ team: updated });
-  } catch (err) { next(err); }
+
+    res.json(updated);
+  } catch (err) {
+    if (err.status) return res.status(err.status).json({ error: err.message });
+    next(err);
+  }
 });
 
-// DELETE /auth/teams/:id  (owner / admin)
-router.delete('/teams/:id', authenticate, async (req, res, next) => {
-  try {
-    await db.transaction(data => {
-      const idx = (data._teams || []).findIndex(t => t.id === req.params.id);
-      if (idx === -1) throw new ApiError(404, 'Team not found');
-      const team = data._teams[idx];
-      if (req.user.role !== 'admin' && team.ownerId !== req.user.id) {
-        throw new ApiError(403, 'Forbidden');
-      }
-      data._teams.splice(idx, 1);
-    });
-    res.status(204).send();
-  } catch (err) { next(err); }
-});
-
-// POST /auth/teams/:id/members  – add member (owner / admin)
 router.post('/teams/:id/members', authenticate, async (req, res, next) => {
   try {
-    const { userId } = req.body;
-    if (!userId) throw new ApiError(400, 'userId is required');
+    const { userId } = req.body || {};
+    if (!userId) return res.status(400).json({ error: 'userId is required' });
 
-    const updated = await db.transaction(data => {
-      const team = (data._teams || []).find(t => t.id === req.params.id);
-      if (!team) throw new ApiError(404, 'Team not found');
-      if (req.user.role !== 'admin' && team.ownerId !== req.user.id) {
-        throw new ApiError(403, 'Forbidden');
+    const updated = await transaction(db => {
+      const teamIdx = db._teams.findIndex(t => t.id === req.params.id);
+      if (teamIdx === -1) {
+        const err = new Error('Team not found'); err.status = 404; throw err;
       }
-      if (!data._users.find(u => u.id === userId)) {
-        throw new ApiError(404, 'User not found');
+      const team = db._teams[teamIdx];
+      if (team.ownerId !== req.user.id && req.user.role !== 'admin') {
+        const err = new Error('Only admin or team owner can add members'); err.status = 403; throw err;
       }
-      if (!team.members.includes(userId)) team.members.push(userId);
-      return team;
+      if (!db._users.find(u => u.id === userId)) {
+        const err = new Error('User not found'); err.status = 404; throw err;
+      }
+      if (!team.members.includes(userId)) {
+        db._teams[teamIdx] = { ...team, members: [...team.members, userId] };
+      }
+      return db._teams[teamIdx];
     });
-    res.json({ team: updated });
-  } catch (err) { next(err); }
+
+    res.json(updated);
+  } catch (err) {
+    if (err.status) return res.status(err.status).json({ error: err.message });
+    next(err);
+  }
 });
 
-// DELETE /auth/teams/:id/members/:userId  (owner / admin)
 router.delete('/teams/:id/members/:userId', authenticate, async (req, res, next) => {
   try {
-    const updated = await db.transaction(data => {
-      const team = (data._teams || []).find(t => t.id === req.params.id);
-      if (!team) throw new ApiError(404, 'Team not found');
-      if (req.user.role !== 'admin' && team.ownerId !== req.user.id) {
-        throw new ApiError(403, 'Forbidden');
+    const updated = await transaction(db => {
+      const teamIdx = db._teams.findIndex(t => t.id === req.params.id);
+      if (teamIdx === -1) {
+        const err = new Error('Team not found'); err.status = 404; throw err;
       }
-      team.members = team.members.filter(id => id !== req.params.userId);
-      return team;
+      const team = db._teams[teamIdx];
+      if (team.ownerId !== req.user.id && req.user.role !== 'admin') {
+        const err = new Error('Only team owner can remove members'); err.status = 403; throw err;
+      }
+      db._teams[teamIdx] = {
+        ...team,
+        members: team.members.filter(m => m !== req.params.userId),
+      };
+      return db._teams[teamIdx];
     });
-    res.json({ team: updated });
-  } catch (err) { next(err); }
+
+    res.json(updated);
+  } catch (err) {
+    if (err.status) return res.status(err.status).json({ error: err.message });
+    next(err);
+  }
+});
+
+router.delete('/teams/:id', authenticate, async (req, res, next) => {
+  try {
+    await transaction(db => {
+      const idx = db._teams.findIndex(t => t.id === req.params.id);
+      if (idx === -1) {
+        const err = new Error('Team not found'); err.status = 404; throw err;
+      }
+      const team = db._teams[idx];
+      if (team.ownerId !== req.user.id && req.user.role !== 'admin') {
+        const err = new Error('Only team owner can delete the team'); err.status = 403; throw err;
+      }
+      db._teams.splice(idx, 1);
+    });
+
+    res.status(204).send();
+  } catch (err) {
+    if (err.status) return res.status(err.status).json({ error: err.message });
+    next(err);
+  }
 });
 
 module.exports = router;
-
-// Ownership note: every resource item stores ownerId = req.user.id on creation.
-// Only the owner or admin can DELETE; shared-write users can PUT/PATCH.

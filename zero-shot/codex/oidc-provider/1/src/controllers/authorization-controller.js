@@ -1,41 +1,91 @@
-import { createAuthorizationCode, requireAuthenticatedUser, validateAuthorizationRequest } from '../services/authorization-service.js';
-import { findClientById } from '../services/client-service.js';
+import { createAuthorizationCode, validateAuthorizationRequest } from '../services/authorization-service.js';
 import { authenticateUser } from '../services/user-service.js';
-import { badRequest } from '../utils/errors.js';
+import { escapeHtml } from '../utils/html.js';
 
-export async function authorize(request, response, next) {
-  try {
-    const { client_id: clientId, login_hint: email, password } = request.query;
-    if (!clientId) {
-      throw badRequest('invalid_request', 'client_id is required');
-    }
+function renderLoginPage(params, errorMessage = '') {
+  const hiddenValue = (value) => escapeHtml(value ?? '');
+  const errorBlock = errorMessage
+    ? `<p style="color: red;">${escapeHtml(errorMessage)}</p>`
+    : '';
 
-    const client = await findClientById(request.app.locals.database, clientId);
-    if (!client) {
-      throw badRequest('invalid_client', 'Unknown client_id');
-    }
+  return `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>OIDC Login</title>
+  </head>
+  <body>
+    <h1>Sign in</h1>
+    ${errorBlock}
+    <form method="post" action="/oauth2/authorize">
+      <input type="hidden" name="client_id" value="${hiddenValue(params.client_id)}" />
+      <input type="hidden" name="redirect_uri" value="${hiddenValue(params.redirect_uri)}" />
+      <input type="hidden" name="response_type" value="${hiddenValue(params.response_type)}" />
+      <input type="hidden" name="scope" value="${hiddenValue(params.scope)}" />
+      <input type="hidden" name="state" value="${hiddenValue(params.state)}" />
+      <input type="hidden" name="code_challenge" value="${hiddenValue(params.code_challenge)}" />
+      <input type="hidden" name="code_challenge_method" value="${hiddenValue(params.code_challenge_method)}" />
+      <label for="username">Username</label>
+      <input id="username" name="username" type="text" />
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" />
+      <button type="submit">Authorize</button>
+    </form>
+  </body>
+</html>`;
+}
 
-    validateAuthorizationRequest({ client, query: request.query });
+export async function getAuthorizationPage(req, res) {
+  const validation = await validateAuthorizationRequest(req.query);
 
-    const user = await authenticateUser(request.app.locals.database, email, password);
-    requireAuthenticatedUser(user);
-
-    const authorizationCode = await createAuthorizationCode(request.app.locals.database, {
-      clientId: client.clientId,
-      userId: user.id,
-      redirectUri: request.query.redirect_uri,
-      scope: request.query.scope,
-      codeChallenge: request.query.code_challenge,
-      codeChallengeMethod: request.query.code_challenge_method,
+  if (!validation.valid) {
+    res.status(400).json({
+      error: validation.error,
+      error_description: validation.message,
     });
-
-    response.json({
-      code: authorizationCode.code,
-      expires_at: authorizationCode.expiresAt,
-      state: request.query.state ?? null,
-      redirect_to: `${request.query.redirect_uri}?code=${authorizationCode.code}${request.query.state ? `&state=${request.query.state}` : ''}`,
-    });
-  } catch (error) {
-    next(error);
+    return;
   }
+
+  res.type('text/html').status(200).send(renderLoginPage(req.query));
+}
+
+export async function authorizeUser(req, res) {
+  const validation = await validateAuthorizationRequest(req.body);
+
+  if (!validation.valid) {
+    res.status(400).json({
+      error: validation.error,
+      error_description: validation.message,
+    });
+    return;
+  }
+
+  const user = await authenticateUser(req.body.username, req.body.password);
+
+  if (!user) {
+    res
+      .type('text/html')
+      .status(401)
+      .send(renderLoginPage(req.body, 'Invalid username or password.'));
+    return;
+  }
+
+  const code = await createAuthorizationCode({
+    client: validation.client,
+    user,
+    redirectUri: req.body.redirect_uri,
+    scope: req.body.scope,
+    state: req.body.state,
+    codeChallenge: req.body.code_challenge,
+    codeChallengeMethod: req.body.code_challenge_method,
+  });
+
+  const redirectUrl = new URL(req.body.redirect_uri);
+  redirectUrl.searchParams.set('code', code);
+
+  if (req.body.state) {
+    redirectUrl.searchParams.set('state', req.body.state);
+  }
+
+  res.redirect(302, redirectUrl.toString());
 }

@@ -1,21 +1,13 @@
 {
   "name": "oidc-provider",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "main": "src/index.js",
   "type": "module",
+  "scripts": {
+    "start": "node src/index.js"
+  },
   "dependencies": {
-    "cors": "^2.8.6",
     "express": "^5.2.1",
-    "jose": "^6.2.2",
-    "sqlite": "^5.1.1",
     "sqlite3": "^6.0.1"
   }
 }

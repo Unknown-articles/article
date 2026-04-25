@@ -1,35 +1,39 @@
-import { useAuth } from '../context/AuthContext.jsx';
 import { useWebSocket } from '../hooks/useWebSocket.js';
-import { MessageList } from './MessageList.jsx';
-import { MessageInput } from './MessageInput.jsx';
+import MessageList from './MessageList.jsx';
+import MessageInput from './MessageInput.jsx';
 
-export function Chat() {
-  const { user, logout } = useAuth();
-  const { messages, connected, error, sendMessage } = useWebSocket(user.token);
+export default function Chat({ token, user, onLogout }) {
+  const { messages, connected, error, sendMessage } = useWebSocket(token);
 
   return (
-    <div className="chat-container" data-testid="chat-container">
+    <div data-testid="chat-container" className="chat-wrapper">
       <header className="chat-header">
-        <h2>Chat Room</h2>
-        <div className="header-right">
+        <div className="chat-header-left">
           <span
-            className={`status ${connected ? 'online' : 'offline'}`}
             data-testid="connection-status"
-            data-connected={connected}
-          >
-            {connected ? 'Connected' : 'Reconnecting…'}
-          </span>
-          <span className="username-display" data-testid="current-username">
-            {user.username}
-          </span>
-          <button className="logout-btn" onClick={logout} data-testid="btn-logout">
-            Logout
-          </button>
+            data-connected={connected ? 'true' : 'false'}
+            className={`status-dot ${connected ? 'online' : ''}`}
+            title={connected ? 'Connected' : 'Disconnected'}
+          />
+          <span className="status-label">{connected ? 'Online' : 'Offline'}</span>
         </div>
+
+        <span data-testid="current-username" className="current-username">
+          {user.username}
+        </span>
+
+        <button
+          type="button"
+          data-testid="btn-logout"
+          className="btn-logout"
+          onClick={onLogout}
+        >
+          Logout
+        </button>
       </header>
 
       {error && (
-        <div className="connection-error" data-testid="connection-error">
+        <div data-testid="connection-error" className="connection-error-banner">
           {error}
         </div>
       )}

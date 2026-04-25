@@ -1,18 +1,22 @@
-import { get } from '../database/db.js';
+import { all, get } from '../db/sqlite.js';
 
-export async function findClientById(database, clientId) {
-  const row = await get(database, 'SELECT * FROM clients WHERE client_id = ?', [clientId]);
-  if (!row) {
+export async function findClientByClientId(clientId) {
+  const client = await get(
+    'SELECT id, client_id, client_secret FROM clients WHERE client_id = ?',
+    [clientId],
+  );
+
+  if (!client) {
     return null;
   }
 
+  const redirectUris = await all(
+    'SELECT redirect_uri FROM client_redirect_uris WHERE client_id = ? ORDER BY id ASC',
+    [client.id],
+  );
+
   return {
-    id: row.id,
-    clientId: row.client_id,
-    clientSecret: row.client_secret,
-    redirectUris: JSON.parse(row.redirect_uris),
-    grants: JSON.parse(row.grants),
-    responseTypes: JSON.parse(row.response_types),
-    scopes: JSON.parse(row.scopes),
+    ...client,
+    redirect_uris: redirectUris.map((row) => row.redirect_uri),
   };
 }

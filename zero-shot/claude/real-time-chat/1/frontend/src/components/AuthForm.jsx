@@ -1,91 +1,120 @@
 import { useState } from 'react';
-import { useAuth } from '../context/AuthContext.jsx';
-import { api } from '../services/api.js';
 
-export function AuthForm() {
-  const { login } = useAuth();
-  const [mode,     setMode]     = useState('login');
+const API = 'http://localhost:3000';
+
+export default function AuthForm({ onSuccess }) {
+  const [mode, setMode] = useState('login');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error,    setError]    = useState('');
-  const [loading,  setLoading]  = useState(false);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  function switchMode(next) {
-    setMode(next);
-    setError('');
+  function switchTab(newMode) {
+    setMode(newMode);
+    setError(null);
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setError('');
     setLoading(true);
+    setError(null);
+
+    const endpoint = mode === 'login' ? '/auth/login' : '/auth/register';
 
     try {
-      const data = mode === 'login'
-        ? await api.login(username, password)
-        : await api.register(username, password);
+      const res = await fetch(`${API}${endpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
 
-      login(data.token, data.userId, data.username);
-    } catch (err) {
-      setError(err.message);
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error ?? 'Something went wrong');
+      } else {
+        onSuccess(data);
+      }
+    } catch {
+      setError('Cannot reach the server. Is the backend running?');
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h1>Real-Time Chat</h1>
+    <div className="auth-wrapper">
+      <h1 className="auth-title">Real-time Chat</h1>
 
-        <div className="auth-tabs">
-          <button
-            className={mode === 'login' ? 'active' : ''}
-            onClick={() => switchMode('login')}
-            data-testid="tab-login"
-          >
-            Sign In
-          </button>
-          <button
-            className={mode === 'register' ? 'active' : ''}
-            onClick={() => switchMode('register')}
-            data-testid="tab-register"
-          >
-            Register
-          </button>
-        </div>
+      <div className="auth-tabs">
+        <button
+          type="button"
+          data-testid="tab-login"
+          className={`tab-btn ${mode === 'login' ? 'active' : ''}`}
+          onClick={() => switchTab('login')}
+        >
+          Login
+        </button>
+        <button
+          type="button"
+          data-testid="tab-register"
+          className={`tab-btn ${mode === 'register' ? 'active' : ''}`}
+          onClick={() => switchTab('register')}
+        >
+          Register
+        </button>
+      </div>
 
-        <form onSubmit={handleSubmit} data-testid="auth-form" data-mode={mode}>
+      <form
+        data-testid="auth-form"
+        data-mode={mode}
+        className="auth-form-fields"
+        onSubmit={handleSubmit}
+      >
+        <div className="field-group">
+          <label htmlFor="auth-username">Username</label>
           <input
+            id="auth-username"
             type="text"
-            placeholder="Username"
+            data-testid="input-username"
+            minLength="3"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            required
-            minLength={3}
-            maxLength={30}
-            autoFocus
+            placeholder="Enter username"
             autoComplete="username"
-            data-testid="input-username"
+            required
           />
+        </div>
+
+        <div className="field-group">
+          <label htmlFor="auth-password">Password</label>
           <input
+            id="auth-password"
             type="password"
-            placeholder="Password"
+            data-testid="input-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
-            minLength={6}
+            placeholder="Enter password"
             autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-            data-testid="input-password"
+            required
           />
+        </div>
 
-          {error && <div className="error" data-testid="auth-error">{error}</div>}
+        <button
+          type="submit"
+          data-testid="btn-submit"
+          className="btn-primary"
+          disabled={loading}
+        >
+          {loading ? 'Please wait…' : mode === 'login' ? 'Login' : 'Register'}
+        </button>
 
-          <button type="submit" disabled={loading} data-testid="btn-submit">
-            {loading ? 'Loading…' : mode === 'login' ? 'Sign In' : 'Create Account'}
-          </button>
-        </form>
-      </div>
+        {error && (
+          <div data-testid="auth-error" className="auth-error">
+            {error}
+          </div>
+        )}
+      </form>
     </div>
   );
 }

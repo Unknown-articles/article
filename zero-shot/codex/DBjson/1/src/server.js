@@ -1,23 +1,10 @@
+const path = require("node:path");
 const { createApp } = require("./app");
-const { PORT, DATA_FILE } = require("./config");
-const { FileStore } = require("./db/fileStore");
-const { AuthService } = require("./services/authService");
-const { DataService } = require("./services/dataService");
 
-async function start() {
-  const store = new FileStore(DATA_FILE);
-  await store.initialize();
+const port = Number(process.env.PORT || 3000);
+const dataFile = process.env.DATA_FILE || path.join(process.cwd(), "data", "db.json");
+const app = createApp({ dataFile, jwtSecret: process.env.JWT_SECRET || "dev-secret" });
 
-  const authService = new AuthService(store);
-  const dataService = new DataService(store);
-  const app = createApp({ dataService, authService });
-
-  app.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`);
-  });
-}
-
-start().catch((error) => {
-  console.error("Failed to start server", error);
-  process.exit(1);
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });

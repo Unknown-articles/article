@@ -1,131 +1,142 @@
 'use strict';
 
-/**
- * Advanced query engine for in-memory collections.
- *
- * Filter operators (appended to the field name with "__"):
- *   eq           ?name=John                  (default, no suffix needed)
- *   ne           ?age__ne=5
- *   gt / gte     ?age__gt=18  ?age__gte=18
- *   lt / lte     ?price__lt=100
- *   between      ?age__between=18,65         (inclusive)
- *   contains     ?name__contains=oh          (case-insensitive substring)
- *   startswith   ?name__startswith=Jo
- *   endswith     ?name__endswith=hn
- *   in           ?status__in=active,draft    (comma-separated list)
- *
- * Logic:
- *   Default: all filter conditions are AND-ed.
- *   ?_or=true  switches to OR logic (any condition matches).
- *
- * Sorting:
- *   ?_sort=field&_order=asc|desc
- *
- * Pagination:
- *   ?_limit=20&_offset=0
- */
-
 const RESERVED = new Set(['_sort', '_order', '_limit', '_offset', '_or']);
-const OP_RE = /^(.+?)__(ne|gte?|lte?|between|contains|startswith|endswith|in)$/;
 
-function parseFilters(rawQuery) {
+// Ordered longest-first so __startswith is tested before a hypothetical __start
+const SUFFIXES = [
+  '__between',
+  '__startswith',
+  '__endswith',
+  '__contains',
+  '__gte',
+  '__lte',
+  '__gt',
+  '__lt',
+  '__ne',
+  '__in',
+];
+
+function parseFilters(query) {
   const filters = [];
-  for (const [key, rawVal] of Object.entries(rawQuery)) {
+  for (const [key, raw] of Object.entries(query)) {
     if (RESERVED.has(key)) continue;
-    const match = key.match(OP_RE);
-    if (match) {
-      filters.push({ field: match[1], op: match[2], value: rawVal });
-    } else {
-      filters.push({ field: key, op: 'eq', value: rawVal });
+    let field = key;
+    let op = 'eq';
+    for (const suffix of SUFFIXES) {
+      if (key.endsWith(suffix)) {
+        field = key.slice(0, -suffix.length);
+        op = suffix.slice(2); // strip '__'
+        break;
+      }
     }
+    filters.push({ field, op, raw });
   }
   return filters;
 }
 
-function coerce(itemVal, filterVal) {
-  if (itemVal === undefined || itemVal === null) return { iv: itemVal, fv: filterVal };
-  if (typeof itemVal === 'number') return { iv: itemVal, fv: Number(filterVal) };
-  if (typeof itemVal === 'boolean') return { iv: itemVal, fv: filterVal === 'true' };
-  return { iv: String(itemVal), fv: String(filterVal) };
+function coerceFor(raw, itemVal) {
+  if (typeof itemVal === 'boolean') {
+    if (raw === 'true') return true;
+    if (raw === 'false') return false;
+  }
+  if (typeof itemVal === 'number') {
+    const n = Number(raw);
+    if (!isNaN(n)) return n;
+  }
+  if (raw === 'true') return true;
+  if (raw === 'false') return false;
+  const n = Number(raw);
+  if (!isNaN(n) && raw.trim() !== '') return n;
+  return raw;
 }
 
-function matchFilter(item, { field, op, value }) {
-  const raw = item[field];
+function matchesFilter(item, { field, op, raw }) {
+  const iv = item[field];
+
   switch (op) {
     case 'eq': {
-      const { iv, fv } = coerce(raw, value);
-      return iv == fv; // loose equality handles number/string mismatch
+      const v = coerceFor(raw, iv);
+      return iv === v || String(iv) === String(v);
     }
     case 'ne': {
-      const { iv, fv } = coerce(raw, value);
-      return iv != fv;
+      const v = coerceFor(raw, iv);
+      return iv !== v && String(iv) !== String(v);
     }
-    case 'gt':  return Number(raw) >  Number(value);
-    case 'gte': return Number(raw) >= Number(value);
-    case 'lt':  return Number(raw) <  Number(value);
-    case 'lte': return Number(raw) <= Number(value);
+    case 'gt':  return Number(iv) > Number(raw);
+    case 'gte': return Number(iv) >= Number(raw);
+    case 'lt':  return Number(iv) < Number(raw);
+    case 'lte': return Number(iv) <= Number(raw);
     case 'between': {
-      const [lo, hi] = value.split(',').map(Number);
-      const n = Number(raw);
-      return n >= lo && n <= hi;
+      const parts = raw.split(',');
+      const lo = Number(parts[0]);
+      const hi = Number(parts[1]);
+      return Number(iv) >= lo && Number(iv) <= hi;
     }
     case 'contains':
-      return String(raw).toLowerCase().includes(String(value).toLowerCase());
+      return typeof iv === 'string' && iv.toLowerCase().includes(raw.toLowerCase());
     case 'startswith':
-      return String(raw).toLowerCase().startsWith(String(value).toLowerCase());
+      return typeof iv === 'string' && iv.toLowerCase().startsWith(raw.toLowerCase());
     case 'endswith':
-      return String(raw).toLowerCase().endsWith(String(value).toLowerCase());
+      return typeof iv === 'string' && iv.toLowerCase().endsWith(raw.toLowerCase());
     case 'in': {
-      const list = String(value).split(',').map(v => v.trim());
-      return list.includes(String(raw));
+      const vals = raw.split(',').map(v => v.trim());
+      return vals.some(v => {
+        const coerced = coerceFor(v, iv);
+        return iv === coerced || String(iv) === v;
+      });
     }
     default:
       return true;
   }
 }
 
-/**
- * Filter, sort, and paginate an array of items.
- *
- * @param {object[]} items
- * @param {object}   rawQuery  Express `req.query`
- * @returns {{ data: object[], total: number, limit: number, offset: number }}
- */
-function applyQuery(items, rawQuery) {
-  const filters = parseFilters(rawQuery);
-  const useOr   = rawQuery._or === 'true';
+function applyQuery(items, query) {
+  const filters = parseFilters(query);
+  const useOr = query._or === 'true';
+  const sortField = query._sort;
+  const sortOrder = (query._order || 'asc').toLowerCase();
+  const usePagination = query._limit !== undefined || query._offset !== undefined;
+  const limit  = query._limit  !== undefined ? parseInt(query._limit,  10) : undefined;
+  const offset = query._offset !== undefined ? parseInt(query._offset, 10) : 0;
 
-  // --- Filter ---
-  let result = filters.length === 0
-    ? items.slice()
-    : items.filter(item =>
-        useOr
-          ? filters.some(f  => matchFilter(item, f))
-          : filters.every(f => matchFilter(item, f))
-      );
+  // Apply filters
+  let result = items;
+  if (filters.length > 0) {
+    result = items.filter(item =>
+      useOr
+        ? filters.some(f  => matchesFilter(item, f))
+        : filters.every(f => matchesFilter(item, f))
+    );
+  }
 
   const total = result.length;
 
-  // --- Sort ---
-  if (rawQuery._sort) {
-    const field = rawQuery._sort;
-    const dir   = rawQuery._order === 'desc' ? -1 : 1;
-    result = result.slice().sort((a, b) => {
-      const va = a[field];
-      const vb = b[field];
-      if (va === undefined) return 1;
-      if (vb === undefined) return -1;
-      if (typeof va === 'number' && typeof vb === 'number') return (va - vb) * dir;
-      return String(va).localeCompare(String(vb)) * dir;
+  // Sort
+  if (sortField) {
+    result = [...result].sort((a, b) => {
+      const av = a[sortField];
+      const bv = b[sortField];
+      if (av == null && bv == null) return 0;
+      if (av == null) return 1;
+      if (bv == null) return -1;
+      if (av < bv) return sortOrder === 'asc' ? -1 : 1;
+      if (av > bv) return sortOrder === 'asc' ?  1 : -1;
+      return 0;
     });
   }
 
-  // --- Pagination ---
-  const offset = Math.max(0, parseInt(rawQuery._offset, 10) || 0);
-  const limit  = rawQuery._limit ? Math.max(1, parseInt(rawQuery._limit, 10)) : undefined;
-  result = result.slice(offset, limit !== undefined ? offset + limit : undefined);
+  // Pagination
+  if (usePagination) {
+    const sliced = result.slice(offset, limit !== undefined ? offset + limit : undefined);
+    return {
+      data:   sliced,
+      total,
+      limit:  limit !== undefined ? limit : result.length,
+      offset,
+    };
+  }
 
-  return { data: result, total, offset, limit: limit ?? total };
+  return result;
 }
 
 module.exports = { applyQuery };

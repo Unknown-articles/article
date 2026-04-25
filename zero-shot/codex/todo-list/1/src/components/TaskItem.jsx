@@ -1,117 +1,235 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { isTaskLate } from '../utils/tasks';
 
-function formatDate(date) {
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(new Date(`${date}T00:00:00`));
-}
-
-export function TaskItem({
-  draggingTaskId,
-  onDeleteTask,
-  onDragEnd,
-  onDragOverTask,
-  onDragStart,
-  onEditTask,
-  onToggleTask,
-  task,
-}) {
-  const touchStartXRef = useRef(0);
-  const shouldTrackSwipeRef = useRef(false);
+export function TaskItem({ task, onDeleteTask, onEditTask, onReorderTasks, onToggleTask }) {
+  const late = isTaskLate(task);
+  const statusLabel = task.completed ? 'Mark incomplete' : 'Mark complete';
+  const editInputRef = useRef(null);
+  const deleteTimerRef = useRef(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [draftTitle, setDraftTitle] = useState(task.title);
+  const [touchState, setTouchState] = useState({ active: false, startX: 0, startY: 0, deltaX: 0, deltaY: 0 });
   const [swipeOffset, setSwipeOffset] = useState(0);
+  const [isSwipingAway, setIsSwipingAway] = useState(false);
 
-  const resetSwipe = () => {
-    setSwipeOffset(0);
-    shouldTrackSwipeRef.current = false;
-  };
+  useEffect(() => {
+    setDraftTitle(task.title);
+  }, [task.title]);
+
+  useEffect(() => {
+    if (isEditing) {
+      editInputRef.current?.focus();
+      editInputRef.current?.select();
+    }
+  }, [isEditing]);
+
+  useEffect(() => {
+    return () => {
+      if (deleteTimerRef.current) {
+        clearTimeout(deleteTimerRef.current);
+      }
+    };
+  }, []);
+
+  function startEditing() {
+    setDraftTitle(task.title);
+    setIsEditing(true);
+  }
+
+  function cancelEditing() {
+    setDraftTitle(task.title);
+    setIsEditing(false);
+  }
+
+  function saveEdit() {
+    const normalizedTitle = draftTitle.trim();
+    if (!normalizedTitle) {
+      cancelEditing();
+      return;
+    }
+
+    if (normalizedTitle !== task.title) {
+      onEditTask(task.id, normalizedTitle);
+    }
+
+    setIsEditing(false);
+  }
+
+  function handleInlineSubmit(event) {
+    event.preventDefault();
+    saveEdit();
+  }
+
+  function handleInlineKeyDown(event) {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      cancelEditing();
+    }
+  }
+
+  function handleDragStart(event) {
+    event.dataTransfer.effectAllowed = 'move';
+    event.dataTransfer.setData('text/task-id', task.id);
+  }
+
+  function handleDrop(event) {
+    event.preventDefault();
+    const sourceTaskId = event.dataTransfer.getData('text/task-id');
+    if (sourceTaskId) {
+      onReorderTasks(sourceTaskId, task.id);
+    }
+  }
+
+  function handleTouchStart(event) {
+    if (isEditing || event.target.closest('button, input, form')) {
+      return;
+    }
+
+    const touch = event.touches[0];
+    setIsSwipingAway(false);
+    setTouchState({
+      active: true,
+      startX: touch.clientX,
+      startY: touch.clientY,
+      deltaX: 0,
+      deltaY: 0,
+    });
+  }
+
+  function handleTouchMove(event) {
+    if (!touchState.active) {
+      return;
+    }
+
+    const touch = event.touches[0];
+    const deltaX = touch.clientX - touchState.startX;
+    const deltaY = touch.clientY - touchState.startY;
+
+    setTouchState((currentState) => ({
+      ...currentState,
+      deltaX,
+      deltaY,
+    }));
+    setSwipeOffset(deltaX);
+  }
+
+  function handleTouchEnd() {
+    if (!touchState.active) {
+      return;
+    }
+
+    const horizontalDistance = Math.abs(touchState.deltaX);
+    const verticalDistance = Math.abs(touchState.deltaY);
+    const isTap = horizontalDistance < 10 && verticalDistance < 10;
+    const crossedDeleteThreshold = horizontalDistance > 100 && horizontalDistance > verticalDistance;
+
+    if (crossedDeleteThreshold) {
+      const finalOffset = touchState.deltaX < 0 ? -140 : 140;
+      setIsSwipingAway(true);
+      setSwipeOffset(finalOffset);
+      deleteTimerRef.current = setTimeout(() => onDeleteTask(task.id), 220);
+    } else {
+      setSwipeOffset(0);
+      if (isTap) {
+        onToggleTask(task.id);
+      }
+    }
+
+    setTouchState({ active: false, startX: 0, startY: 0, deltaX: 0, deltaY: 0 });
+  }
 
   return (
-    <div className="task-card-shell">
-      <div className="swipe-delete-indicator">Release to delete</div>
-      <article
-        className={`task-card ${task.completed ? 'task-card-completed' : ''} ${
-          task.isLate ? 'task-card-late' : ''
-        } ${draggingTaskId === task.id ? 'task-card-dragging' : ''}`}
-        draggable
-        onDragEnd={onDragEnd}
-        onDragOver={(event) => {
-          event.preventDefault();
-          onDragOverTask(task.id);
-        }}
-        onDragStart={(event) => {
-          event.dataTransfer.effectAllowed = 'move';
-          onDragStart();
-        }}
-        onTouchEnd={() => {
-          if (swipeOffset <= -120) {
-            onDeleteTask(task.id);
-            return;
-          }
-
-          resetSwipe();
-        }}
-        onTouchMove={(event) => {
-          if (!shouldTrackSwipeRef.current) {
-            return;
-          }
-
-          const nextOffset = event.touches[0].clientX - touchStartXRef.current;
-          setSwipeOffset(Math.min(0, Math.max(nextOffset, -160)));
-        }}
-        onTouchStart={(event) => {
-          if (event.target.closest('button')) {
-            shouldTrackSwipeRef.current = false;
-            return;
-          }
-
-          shouldTrackSwipeRef.current = true;
-          touchStartXRef.current = event.touches[0].clientX;
-        }}
-        style={{
-          transform: swipeOffset ? `translateX(${swipeOffset}px)` : undefined,
-        }}
-      >
+    <article
+      className={`task-card${task.completed ? ' is-completed' : ''}${late ? ' is-late' : ''}${isSwipingAway ? ' is-swiping-away' : ''}`}
+      data-completed={task.completed ? 'true' : 'false'}
+      data-late={late ? 'true' : 'false'}
+      data-task-id={task.id}
+      data-testid="task-item"
+      onDragOver={(event) => event.preventDefault()}
+      onDrop={handleDrop}
+      onTouchEnd={handleTouchEnd}
+      onTouchMove={handleTouchMove}
+      onTouchStart={handleTouchStart}
+      style={{ transform: `translateX(${swipeOffset}px)` }}
+    >
+      <div className="task-card-main">
         <button
-          aria-label={`Mark ${task.title} as ${
-            task.completed ? 'incomplete' : 'complete'
-          }`}
-          className={`status-toggle ${task.completed ? 'status-toggle-checked' : ''}`}
+          aria-checked={task.completed ? 'true' : 'false'}
+          aria-label={statusLabel}
+          className={`checkbox-btn${task.completed ? ' checked' : ''}`}
+          data-testid="task-checkbox"
           onClick={() => onToggleTask(task.id)}
+          role="checkbox"
           type="button"
         >
-          <span />
+          <span className="checkbox-mark" />
         </button>
-        <button
-          aria-label={`Toggle completion for ${task.title}`}
-          className="task-copy"
-          onClick={() => onToggleTask(task.id)}
-          type="button"
-        >
-          <div className="task-copy-row">
-            <h3>{task.title}</h3>
-            <span className="task-badge">{task.completed ? 'Completed' : 'Active'}</span>
+
+        <div className="task-copy">
+          {isEditing ? (
+            <form className="inline-edit-form" onSubmit={handleInlineSubmit}>
+              <input
+                ref={editInputRef}
+                className="text-input inline-edit-input"
+                data-testid="inline-edit-input"
+                onChange={(event) => setDraftTitle(event.target.value)}
+                onKeyDown={handleInlineKeyDown}
+                type="text"
+                value={draftTitle}
+              />
+              <div className="inline-edit-actions">
+                <button
+                  className="primary-btn inline-btn"
+                  data-testid="inline-edit-save"
+                  type="submit"
+                >
+                  Save
+                </button>
+                <button
+                  className="secondary-btn inline-btn"
+                  data-testid="inline-edit-cancel"
+                  onClick={cancelEditing}
+                  type="button"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          ) : (
+            <h2 className="task-title" data-testid="task-title">
+              {task.title}
+            </h2>
+          )}
+          <div className="task-meta">
+            <span>Created {new Date(task.createdAt).toLocaleString()}</span>
+            <span>{task.date ? `Due ${task.date}` : 'No due date'}</span>
+            {late ? <span className="late-pill">Late</span> : null}
           </div>
-          <p>
-            Due <strong>{formatDate(task.date)}</strong>
-            {task.isLate ? <span className="late-label"> Late</span> : null}
-          </p>
-        </button>
-        <div className="task-actions">
-          <span className="drag-hint">Drag</span>
-          <button className="ghost-button" onClick={() => onEditTask(task.id)} type="button">
-            Edit
-          </button>
-          <button
-            className="ghost-button ghost-button-danger"
-            onClick={() => onDeleteTask(task.id)}
-            type="button"
-          >
-            Delete
-          </button>
         </div>
-      </article>
-    </div>
+      </div>
+
+      <div className="task-actions">
+        <button className="ghost-btn" data-testid="task-edit-btn" onClick={startEditing} type="button">
+          Edit
+        </button>
+        <button
+          className="danger-btn"
+          data-testid="task-delete-btn"
+          onClick={() => onDeleteTask(task.id)}
+          type="button"
+        >
+          Delete
+        </button>
+        <button
+          className="drag-handle"
+          data-testid="task-drag-handle"
+          draggable
+          onDragStart={handleDragStart}
+          type="button"
+        >
+          Drag
+        </button>
+      </div>
+    </article>
   );
 }

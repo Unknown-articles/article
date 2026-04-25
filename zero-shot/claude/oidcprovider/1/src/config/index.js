@@ -1,9 +1,10 @@
-const config = {
-  port: process.env.PORT || 3000,
-  issuer: process.env.ISSUER || 'http://localhost:3000',
-  dbPath: process.env.DB_PATH || './data/oidc.db',
-  accessTokenExpiresIn: 3600,  // seconds (1 hour)
-  authCodeExpiresIn: 600,       // seconds (10 minutes)
-};
+const PORT = process.env.PORT || 3000;
+const ISSUER = process.env.ISSUER || `http://localhost:${PORT}`;
 
-export default config;
+export default {
+  PORT,
+  ISSUER,
+  DB_PATH: process.env.DB_PATH || ':memory:',
+  ACCESS_TOKEN_TTL: 3600,
+  AUTH_CODE_TTL: 600,
+};

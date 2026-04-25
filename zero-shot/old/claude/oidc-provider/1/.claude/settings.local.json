@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(timeout 8 node src/server.js)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(git init:*)",
+      "Bash(git config:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m ':*)",
+      "Bash(node --test src/tests/*.test.js)",
+      "Bash(npm test *)",
+      "Bash(node --test --test-reporter=./src/reporter.js src/tests/*.test.js)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(grep -h \"^\\\\s*it\\('\" /c/Users/diegt/Documents/architecture-projects/zero-shot/tests/oidcprovider/src/tests/*.test.js)",
+      "Bash(grep -h \"^\\\\s*\\\\\\(describe\\\\|it\\\\\\)\\('\" /c/Users/diegt/Documents/architecture-projects/zero-shot/tests/oidcprovider/src/tests/*.test.js)"
+    ]
+  }
+}

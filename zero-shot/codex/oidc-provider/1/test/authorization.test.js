@@ -1,59 +1,107 @@
+import test from 'node:test';
 import assert from 'node:assert/strict';
 import request from 'supertest';
-import { bootstrap } from '../src/bootstrap.js';
-import { closeDatabase, removeFileIfExists } from './test-helpers.js';
+import { createApp } from '../src/app.js';
+import { initializeDatabase } from '../src/db/init.js';
+import { findAuthorizationCode } from '../src/services/authorization-service.js';
 
-async function run() {
-  const databaseFile = 'data/test-authorization.sqlite';
-  await removeFileIfExists(databaseFile);
+const validParams = {
+  client_id: 'test-client',
+  redirect_uri: 'http://localhost:8080/callback',
+  response_type: 'code',
+  scope: 'openid email',
+  state: 'abc123',
+};
 
-  const { app, database } = await bootstrap({
-    issuer: 'http://127.0.0.1:3300',
-    databaseFile,
-  });
+test('GET /oauth2/authorize renders the login form for valid requests', async () => {
+  await initializeDatabase();
+  const app = createApp();
 
-  try {
-    const response = await request(app)
-      .get('/oauth2/authorize')
-      .query({
-        response_type: 'code',
-        client_id: 'oidc-client',
-        redirect_uri: 'http://127.0.0.1:4000/callback',
-        scope: 'openid profile email',
-        state: 'abc123',
-        login_hint: 'alice@example.com',
-        password: 'password123',
-        code_challenge: 'E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM',
-        code_challenge_method: 'S256',
-      })
-      .expect(200);
+  const response = await request(app)
+    .get('/oauth2/authorize')
+    .query(validParams)
+    .expect(200)
+    .expect('Content-Type', /text\/html/);
 
-    assert.ok(response.body.code);
-    assert.equal(response.body.state, 'abc123');
-    assert.match(response.body.redirect_to, /code=/);
+  assert.match(response.text, /<form/i);
+  assert.match(response.text, /name="client_id"/);
+  assert.match(response.text, /name="redirect_uri"/);
+  assert.match(response.text, /name="state"/);
+});
 
-    const invalidScopeResponse = await request(app)
-      .get('/oauth2/authorize')
-      .query({
-        response_type: 'code',
-        client_id: 'oidc-client',
-        redirect_uri: 'http://127.0.0.1:4000/callback',
-        scope: 'profile',
-        login_hint: 'alice@example.com',
-        password: 'password123',
-      })
-      .expect(400);
+test('GET /oauth2/authorize rejects invalid requests', async () => {
+  await initializeDatabase();
+  const app = createApp();
 
-    assert.equal(invalidScopeResponse.body.error, 'invalid_scope');
+  const response = await request(app)
+    .get('/oauth2/authorize')
+    .query({ ...validParams, scope: 'profile' })
+    .expect(400)
+    .expect('Content-Type', /application\/json/);
 
-    console.log('authorization.test.js: ok');
-  } finally {
-    await closeDatabase(database);
-  }
-}
+  assert.equal(response.body.error, 'invalid_scope');
+});
 
-run().catch((error) => {
-  console.error('authorization.test.js: failed');
-  console.error(error);
-  process.exitCode = 1;
+test('POST /oauth2/authorize redirects with code and state for valid credentials', async () => {
+  await initializeDatabase();
+  const app = createApp();
+
+  const response = await request(app)
+    .post('/oauth2/authorize')
+    .type('form')
+    .send({
+      ...validParams,
+      username: 'testuser',
+      password: 'password123',
+      code_challenge: 'challenge',
+      code_challenge_method: 'S256',
+    })
+    .expect(302);
+
+  const redirectUrl = new URL(response.headers.location);
+  const code = redirectUrl.searchParams.get('code');
+
+  assert.equal(redirectUrl.origin + redirectUrl.pathname, validParams.redirect_uri);
+  assert.equal(redirectUrl.searchParams.get('state'), validParams.state);
+  assert.ok(code);
+
+  const storedCode = await findAuthorizationCode(code);
+  assert.equal(storedCode.code_challenge, 'challenge');
+  assert.equal(storedCode.code_challenge_method, 'S256');
+});
+
+test('POST /oauth2/authorize accepts the second registered redirect URI', async () => {
+  await initializeDatabase();
+  const app = createApp();
+
+  const response = await request(app)
+    .post('/oauth2/authorize')
+    .type('form')
+    .send({
+      ...validParams,
+      redirect_uri: 'http://localhost:3001/callback',
+      username: 'testuser',
+      password: 'password123',
+    })
+    .expect(302);
+
+  assert.match(response.headers.location, /^http:\/\/localhost:3001\/callback\?/);
+});
+
+test('POST /oauth2/authorize re-renders form on invalid credentials', async () => {
+  await initializeDatabase();
+  const app = createApp();
+
+  const response = await request(app)
+    .post('/oauth2/authorize')
+    .type('form')
+    .send({
+      ...validParams,
+      username: 'testuser',
+      password: 'wrong-password',
+    })
+    .expect(401)
+    .expect('Content-Type', /text\/html/);
+
+  assert.match(response.text, /Invalid|error|incorrect/i);
 });

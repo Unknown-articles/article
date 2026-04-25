@@ -1,40 +1,30 @@
-function formatTimestamp(timestamp) {
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-  }).format(new Date(timestamp));
-}
-
-export function ActionLog({ actions }) {
+export function ActionLog({ actionLog }) {
   return (
-    <aside className="panel action-log-panel">
-      <div className="panel-header">
+    <section className="action-log" data-testid="action-log">
+      <div className="section-heading">
         <div>
-          <p className="panel-kicker">Action log</p>
-          <h2>Timeline of state changes</h2>
+          <p className="section-kicker">Action Log</p>
+          <h2>Recent changes</h2>
         </div>
       </div>
-      {!actions.length ? (
-        <div className="log-empty-state">
-          <p>Actions will appear here as you create, update, and organize tasks.</p>
-        </div>
+
+      {actionLog.length === 0 ? (
+        <p className="log-empty">Your task actions will appear here.</p>
       ) : (
-        <div className="action-log-list">
-          {actions.map((action) => (
-            <article className="action-log-item" key={action.id}>
-              <div className="action-log-meta">
-                <strong>{action.type}</strong>
-                <span>{formatTimestamp(action.timestamp)}</span>
+        <div className="log-list">
+          {actionLog.map((entry) => (
+            <article className="log-entry" data-testid="log-entry" key={entry.timestamp + entry.type}>
+              <div className="log-topline">
+                <strong data-testid="log-type">{entry.type}</strong>
+                <time data-testid="log-timestamp" dateTime={entry.timestamp}>
+                  {entry.timestamp}
+                </time>
               </div>
-              {action.payload ? (
-                <pre>{JSON.stringify(action.payload, null, 2)}</pre>
-              ) : null}
+              <p>{entry.description}</p>
             </article>
           ))}
         </div>
       )}
-    </aside>
+    </section>
   );
 }

@@ -1,51 +1,45 @@
+import test from 'node:test';
 import assert from 'node:assert/strict';
 import request from 'supertest';
-import { bootstrap } from '../src/bootstrap.js';
-import { closeDatabase, removeFileIfExists } from './test-helpers.js';
+import { createApp } from '../src/app.js';
+import { initializeDatabase } from '../src/db/init.js';
+import { listPublicJwks, rotateSigningKey } from '../src/services/key-service.js';
 
-async function run() {
-  const databaseFile = 'data/test-jwks.sqlite';
-  await removeFileIfExists(databaseFile);
+test('GET /.well-known/jwks.json returns RSA signing keys', async () => {
+  await initializeDatabase();
+  const app = createApp();
 
-  const { app, database } = await bootstrap({
-    issuer: 'http://127.0.0.1:3200',
-    databaseFile,
-  });
+  const response = await request(app)
+    .get('/.well-known/jwks.json')
+    .expect(200)
+    .expect('Content-Type', /application\/json/);
 
-  try {
-    const initialResponse = await request(app)
-      .get('/.well-known/jwks.json')
-      .expect(200);
+  assert.ok(Array.isArray(response.body.keys));
+  assert.ok(response.body.keys.length >= 1);
 
-    assert.equal(initialResponse.body.keys.length, 1);
-    assert.equal(initialResponse.body.keys[0].alg, 'RS256');
-    assert.equal(initialResponse.body.keys[0].use, 'sig');
-    assert.ok(initialResponse.body.keys[0].kid);
+  const [firstKey] = response.body.keys;
+  assert.equal(firstKey.kty, 'RSA');
+  assert.equal(firstKey.use, 'sig');
+  assert.equal(firstKey.alg, 'RS256');
+  assert.equal(typeof firstKey.kid, 'string');
+  assert.ok(firstKey.kid.length > 0);
+  assert.equal(typeof firstKey.n, 'string');
+  assert.equal(typeof firstKey.e, 'string');
+});
 
-    const previousKid = initialResponse.body.keys[0].kid;
+test('signing key rotation keeps old keys published in JWKS', async () => {
+  await initializeDatabase();
+  const before = await listPublicJwks();
 
-    const rotateResponse = await request(app)
-      .post('/oauth2/keys/rotate')
-      .expect(201);
+  await rotateSigningKey();
 
-    assert.notEqual(rotateResponse.body.kid, previousKid);
+  const after = await listPublicJwks();
+  const beforeKids = new Set(before.map((key) => key.kid));
+  const afterKids = new Set(after.map((key) => key.kid));
 
-    const rotatedResponse = await request(app)
-      .get('/.well-known/jwks.json')
-      .expect(200);
+  assert.ok(after.length > before.length);
 
-    assert.equal(rotatedResponse.body.keys.length, 2);
-    assert.equal(rotatedResponse.body.keys[0].kid, rotateResponse.body.kid);
-    assert.equal(rotatedResponse.body.keys[1].kid, previousKid);
-
-    console.log('jwks.test.js: ok');
-  } finally {
-    await closeDatabase(database);
+  for (const kid of beforeKids) {
+    assert.ok(afterKids.has(kid));
   }
-}
-
-run().catch((error) => {
-  console.error('jwks.test.js: failed');
-  console.error(error);
-  process.exitCode = 1;
 });

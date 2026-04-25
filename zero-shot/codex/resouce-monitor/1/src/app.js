@@ -1,20 +1,37 @@
 import express from "express";
-import metricsRoutes from "./routes/metricsRoutes.js";
+import { VALID_METRIC_TYPES } from "./constants.js";
 
-export function createApp() {
+export function createApp({ metricsStore } = {}) {
   const app = express();
 
   app.use(express.json());
-  app.use(metricsRoutes);
 
-  app.get("/health", (_req, res) => {
-    res.json({ status: "ok" });
+  app.get("/health", (_request, response) => {
+    response.json({ status: "ok" });
   });
 
-  app.use((req, res) => {
-    res.status(404).json({
-      error: `Route ${req.method} ${req.originalUrl} not found`
+  app.get("/metrics", (_request, response) => {
+    response.json(metricsStore.getSnapshot());
+  });
+
+  app.get("/metrics/:type", (request, response) => {
+    const { type } = request.params;
+
+    if (!VALID_METRIC_TYPES.includes(type)) {
+      response.status(400).json({ error: `Unknown metric type: ${type}` });
+      return;
+    }
+
+    const snapshot = metricsStore.getSnapshot();
+    response.json({
+      type,
+      timestamp: snapshot.timestamp,
+      data: snapshot[type],
     });
+  });
+
+  app.use((_request, response) => {
+    response.status(404).json({ error: "Not Found" });
   });
 
   return app;

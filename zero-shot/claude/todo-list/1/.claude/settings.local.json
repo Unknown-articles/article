@@ -1,21 +1,19 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm create:*)",
-      "Bash(echo \"EXIT:$?\")",
-      "Bash(npm init:*)",
-      "Bash(npm install:*)",
-      "Bash(npm run:*)",
-      "Bash(npm --version)",
-      "Bash(npx playwright *)",
-      "Bash(curl *)",
-      "Bash(npm start *)",
-      "Bash(cat vite.config.*)",
-      "Bash(npx vite *)",
-      "Bash(python -m json.tool)",
-      "Bash(netstat -ano)",
-      "Bash(wmic process *)",
-      "Bash(powershell *)"
+      "Bash(npm create *)",
+      "Bash(cp *)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(git commit -m 'feat: scaffold app with state management and reducer *)",
+      "Bash(git commit -m 'feat: add TaskForm with auto-focus, Enter-to-submit, and due-date input *)",
+      "Bash(git commit -m 'feat: add FilterBar with All/Pending/Completed/Late filters and live counts *)",
+      "Bash(git commit -m 'feat: add InlineEditForm with Enter-to-save and Escape-to-cancel *)",
+      "Bash(git commit -m 'feat: add TaskItem with inline edit, touch swipe-to-delete, tap-to-complete *)",
+      "Bash(git commit -m 'feat: add TaskList with HTML5 drag-and-drop reordering, filter-aware *)",
+      "Bash(git commit -m 'feat: add ActionLog with collapsible panel and all required data-testids *)"
     ]
   }
 }

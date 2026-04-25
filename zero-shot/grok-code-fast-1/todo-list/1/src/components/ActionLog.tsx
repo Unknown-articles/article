@@ -1,22 +1,26 @@
-import { Action } from '../types';
-import { format } from 'date-fns';
+import { useTodo } from '../TodoContext';
 
-interface Props {
-  actions: Action[];
-}
+const ActionLog: React.FC = () => {
+  const { state } = useTodo();
 
-export function ActionLog({ actions }: Props) {
   return (
-    <div className="action-log">
-      <h3>Action Log</h3>
-      <ul>
-        {actions.slice(-10).reverse().map((action, index) => (
-          <li key={index}>
-            {format(action.timestamp, 'HH:mm:ss')} - {action.type}
-            {action.payload && <span> ({JSON.stringify(action.payload)})</span>}
-          </li>
+    <div data-testid="action-log" className="bg-white p-6 rounded-lg shadow-md">
+      <h2 className="text-xl font-semibold mb-4">Action Log</h2>
+      <div className="space-y-2 max-h-64 overflow-y-auto">
+        {state.history.slice().reverse().map((action, index) => (
+          <div key={index} data-testid="log-entry" className="flex justify-between items-center p-2 border rounded">
+            <div>
+              <span data-testid="log-type" className="font-medium">{action.type}</span>
+              <span className="ml-2 text-gray-600">{action.description}</span>
+            </div>
+            <span data-testid="log-timestamp" className="text-sm text-gray-500">
+              {new Date(action.timestamp).toLocaleString()}
+            </span>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
-}
+};
+
+export default ActionLog;

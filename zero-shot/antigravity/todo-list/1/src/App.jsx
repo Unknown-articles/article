@@ -1,37 +1,49 @@
-import React, { useState, useMemo } from 'react';
-import TaskInput from './components/TaskInput';
+import React, { useReducer, useEffect } from 'react';
+import { reducer, initialState, initStore } from './store';
+import TaskForm from './components/TaskForm';
 import TaskList from './components/TaskList';
-import FilterBar from './components/FilterBar';
-import { useTask } from './context/TaskContext';
+import Filters from './components/Filters';
+import ActionLog from './components/ActionLog';
+import { CheckSquare } from 'lucide-react';
+
+export const TodoContext = React.createContext();
 
 function App() {
-  const { tasks } = useTask();
-  const [filter, setFilter] = useState('All');
+  const [state, dispatch] = useReducer(reducer, initialState, initStore);
 
-  const filteredTasks = useMemo(() => {
-    return tasks.filter(task => {
-      if (filter === 'All') return true;
-      if (filter === 'Pending') return !task.completed;
-      if (filter === 'Completed') return task.completed;
-      if (filter === 'Late') {
-        if (task.completed || !task.date) return false;
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const [year, month, day] = task.date.split('-');
-        const dueDate = new Date(year, month - 1, day);
-        return dueDate < today;
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.ctrlKey && !e.shiftKey && e.key.toLowerCase() === 'z') {
+        e.preventDefault();
+        dispatch({ type: 'UNDO', description: 'Undo last action' });
+      } else if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'z') {
+        e.preventDefault();
+        dispatch({ type: 'REDO', description: 'Redo last undone action' });
       }
-      return true;
-    });
-  }, [tasks, filter]);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   return (
-    <div className="app-container animate-slide-in">
-      <h1>Todo List</h1>
-      <TaskInput />
-      <FilterBar filter={filter} setFilter={setFilter} />
-      <TaskList tasks={filteredTasks} />
-    </div>
+    <TodoContext.Provider value={{ state, dispatch }}>
+      <div className="app-container">
+        <main>
+          <div className="header">
+            <h1><CheckSquare size={36} style={{ display: 'inline', verticalAlign: 'text-bottom', marginRight: '8px' }} />Tasks</h1>
+            <p style={{ color: 'var(--text-secondary)' }}>Manage your daily goals</p>
+          </div>
+          
+          <TaskForm />
+          <Filters />
+          <TaskList />
+        </main>
+        
+        <aside>
+          <ActionLog />
+        </aside>
+      </div>
+    </TodoContext.Provider>
   );
 }
 

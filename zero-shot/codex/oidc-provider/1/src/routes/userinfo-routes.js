@@ -1,9 +1,13 @@
 import { Router } from 'express';
-import { getUserInfo } from '../controllers/userinfo-controller.js';
-import { authenticateBearer } from '../middleware/authenticate-bearer.js';
+import {
+  getUserInfo,
+  postUserInfoNotAllowed,
+} from '../controllers/userinfo-controller.js';
+import { requireBearerToken } from '../middleware/bearer-auth.js';
 
 const router = Router();
 
-router.get('/', authenticateBearer, getUserInfo);
+router.get('/userinfo', requireBearerToken, getUserInfo);
+router.post('/userinfo', postUserInfoNotAllowed);
 
 export default router;

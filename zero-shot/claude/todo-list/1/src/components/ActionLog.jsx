@@ -1,47 +1,36 @@
-import { useState } from 'react'
-import { useTasks } from '../context/TaskContext'
+import { useState } from 'react';
 
-function formatTime(iso) {
-  const d = new Date(iso)
-  return d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit' })
-}
-
-export default function ActionLog() {
-  const { actionLog } = useTasks()
-  const [open, setOpen] = useState(true)
+export default function ActionLog({ log }) {
+  const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className="log-panel" data-testid="action-log">
-      <div className="log-header" onClick={() => setOpen(o => !o)} role="button" aria-expanded={open} data-testid="log-header">
-        <span>Action Log</span>
-        <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontSize: '0.75rem', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>
-            {actionLog.length} event{actionLog.length !== 1 ? 's' : ''}
-          </span>
-          <span>{open ? '▲' : '▼'}</span>
-        </span>
+    <div data-testid="action-log" className="action-log">
+      <div
+        className="action-log-header"
+        onClick={() => setCollapsed((c) => !c)}
+        role="button"
+        aria-expanded={!collapsed}
+        tabIndex={0}
+        onKeyDown={(e) => e.key === 'Enter' && setCollapsed((c) => !c)}
+      >
+        Action Log ({log.length})
+        <span className="log-toggle">{collapsed ? '▶' : '▼'}</span>
       </div>
-
-      {open && (
-        <div className="log-entries" role="log" aria-live="polite" aria-label="Action log" data-testid="log-entries">
-          {actionLog.length === 0 ? (
-            <div className="log-empty">No actions yet.</div>
-          ) : (
-            actionLog.map(entry => (
-              <div key={entry.id} className="log-entry" data-testid="log-entry">
-                <span
-                  className={`log-type log-type-${entry.type}`}
-                  data-testid="log-type"
-                >{entry.type}</span>
-                <div className="log-info">
-                  <div className="log-desc">{entry.description}</div>
-                  <div className="log-ts" data-testid="log-timestamp">{formatTime(entry.timestamp)}</div>
-                </div>
-              </div>
-            ))
-          )}
+      {!collapsed && (
+        <div className="log-entries">
+          {log.map((entry, i) => (
+            <div key={i} data-testid="log-entry" className="log-entry">
+              <span data-testid="log-type" className="log-type">
+                {entry.type}
+              </span>
+              <span className="log-description">{entry.description}</span>
+              <span data-testid="log-timestamp" className="log-timestamp">
+                {entry.timestamp}
+              </span>
+            </div>
+          ))}
         </div>
       )}
     </div>
-  )
+  );
 }

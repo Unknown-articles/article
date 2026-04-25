@@ -1,78 +1,62 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-const emptyForm = {
-  title: '',
-  date: '',
-};
-
-export function TaskForm({ editingTask, onCancel, onSubmit }) {
-  const [formValues, setFormValues] = useState(emptyForm);
+export function TaskForm({ onSubmit }) {
+  const titleInputRef = useRef(null);
+  const [title, setTitle] = useState('');
+  const [date, setDate] = useState('');
 
   useEffect(() => {
-    if (!editingTask) {
-      setFormValues(emptyForm);
-      return;
-    }
+    titleInputRef.current?.focus();
+  }, []);
 
-    setFormValues({
-      title: editingTask.title,
-      date: editingTask.date,
-    });
-  }, [editingTask]);
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormValues((currentValues) => ({
-      ...currentValues,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = (event) => {
+  function handleSubmit(event) {
     event.preventDefault();
 
-    if (!formValues.title.trim() || !formValues.date) {
+    const normalizedTitle = title.trim();
+    if (!normalizedTitle) {
+      titleInputRef.current?.focus();
       return;
     }
 
-    onSubmit(formValues);
+    onSubmit({
+      title: normalizedTitle,
+      date,
+    });
 
-    if (!editingTask) {
-      setFormValues(emptyForm);
-    }
-  };
+    setTitle('');
+    setDate('');
+    titleInputRef.current?.focus();
+  }
 
   return (
-    <form className="task-form" onSubmit={handleSubmit}>
+    <form className="task-form" data-testid="task-form" onSubmit={handleSubmit}>
       <label className="field">
         <span className="field-label">Task title</span>
         <input
-          name="title"
-          onChange={handleChange}
-          placeholder="Ship the interaction polish"
+          ref={titleInputRef}
+          className="text-input"
+          data-testid="task-input"
+          onChange={(event) => setTitle(event.target.value)}
+          placeholder="What needs to get done?"
           type="text"
-          value={formValues.title}
+          value={title}
         />
       </label>
+
       <label className="field">
         <span className="field-label">Due date</span>
         <input
-          name="date"
-          onChange={handleChange}
+          className="text-input"
+          data-testid="task-date-input"
+          onChange={(event) => setDate(event.target.value)}
           type="date"
-          value={formValues.date}
+          value={date}
         />
       </label>
-      <div className="task-form-actions">
-        <button className="primary-button" type="submit">
-          {editingTask ? 'Save task' : 'Add task'}
-        </button>
-        {editingTask ? (
-          <button className="ghost-button" onClick={onCancel} type="button">
-            Cancel
-          </button>
-        ) : null}
-      </div>
+
+      <button className="primary-btn" data-testid="task-submit" type="submit">
+        Add task
+      </button>
     </form>
   );
 }

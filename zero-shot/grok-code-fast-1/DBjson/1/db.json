@@ -1,4 +1,373 @@
 {
-  "users": [],
-  "teams": []
+  "_users": [
+    {
+      "id": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "username": "admin_1776391078692",
+      "password": "$2a$10$QEM4249Ma2VmFC80i1esPOaulUEsqZkrfPrGm7k/nFzcNsmd/fm8S",
+      "role": "admin",
+      "createdAt": "2026-04-17T01:57:58.784Z"
+    },
+    {
+      "id": "895c79a1-e960-4249-86b5-ced98774859c",
+      "username": "user_1776391078692",
+      "password": "$2a$10$g96v1qbv.HO32YxLDNjso.J8FK/GycP5WEf6rlYeCJ5Mq7f2LTKcy",
+      "role": "user",
+      "createdAt": "2026-04-17T01:57:58.852Z"
+    }
+  ],
+  "teams": [
+    {
+      "id": "c8ff95a9-d806-44e9-ab38-5a019a817f55",
+      "name": "Team Beta",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "members": [
+        "eae09c19-70b7-4886-8b42-4e27b25391c2"
+      ],
+      "createdAt": "2026-04-17T01:57:59.221Z"
+    }
+  ],
+  "products": [
+    {
+      "name": "Widget Pro",
+      "price": 24.99,
+      "category": "tech"
+    },
+    {
+      "id": "dcf35269-3782-47ee-aee3-9e0a03fa113d",
+      "name": "Gadget",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.089Z"
+    },
+    {
+      "name": "Owned by user",
+      "price": 1
+    }
+  ],
+  "posts": [
+    {
+      "title": "Test Post",
+      "tags": [
+        "a",
+        "b"
+      ],
+      "meta": {
+        "views": 0
+      },
+      "id": "d493e9a5-dc48-4f22-bc92-f7851b61bcd5",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.087Z"
+    }
+  ],
+  "widgets": [],
+  "private_col": [
+    {
+      "secret": "admin",
+      "id": "ac4ff3ad-31a3-43aa-85e5-0d184d0fce3a",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.151Z"
+    },
+    {
+      "secret": "user",
+      "id": "9bafe593-b794-4aa3-9bf5-e6edd5bd7186",
+      "ownerId": "895c79a1-e960-4249-86b5-ced98774859c",
+      "createdAt": "2026-04-17T01:57:59.154Z"
+    }
+  ],
+  "notes": [
+    {
+      "text": "admin note",
+      "id": "6bdedb96-aaa1-4546-9c14-b66cbdb15001",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.158Z"
+    },
+    {
+      "text": "updated"
+    }
+  ],
+  "docs": [],
+  "items": [
+    {
+      "label": "test"
+    }
+  ],
+  "shared_docs": [
+    {
+      "title": "Shared Read",
+      "sharedWith": [
+        {
+          "userId": "895c79a1-e960-4249-86b5-ced98774859c",
+          "access": "write"
+        }
+      ]
+    },
+    {
+      "title": "Shared Write",
+      "sharedWith": [
+        {
+          "userId": "895c79a1-e960-4249-86b5-ced98774859c",
+          "access": "write"
+        }
+      ],
+      "id": "fe7c31ac-2861-4c0c-9183-ce0db85b7532",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.199Z"
+    }
+  ],
+  "team_docs": [
+    {
+      "title": "Team Doc",
+      "sharedWithTeams": [
+        {
+          "teamId": "c8ff95a9-d806-44e9-ab38-5a019a817f55",
+          "access": "write"
+        }
+      ]
+    }
+  ],
+  "catalog": [
+    {
+      "name": "Apple",
+      "price": 1.5,
+      "category": "fruit",
+      "stock": 100,
+      "active": true,
+      "id": "9c28569e-cce3-4ad5-a934-ee453249023d",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.261Z"
+    },
+    {
+      "name": "Banana",
+      "price": 0.5,
+      "category": "fruit",
+      "stock": 200,
+      "active": true,
+      "id": "0a80c0f5-9fc5-4d4f-8848-97bb0d4d9ab5",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.264Z"
+    },
+    {
+      "name": "Carrot",
+      "price": 2,
+      "category": "veggie",
+      "stock": 50,
+      "active": false,
+      "id": "cd3722d3-363f-419e-ab0d-45a190f6df76",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.266Z"
+    },
+    {
+      "name": "Date",
+      "price": 5,
+      "category": "fruit",
+      "stock": 30,
+      "active": true,
+      "id": "6c8993cb-fc13-4979-850e-258e2fb41b3c",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.268Z"
+    },
+    {
+      "name": "Eggplant",
+      "price": 3.5,
+      "category": "veggie",
+      "stock": 80,
+      "active": true,
+      "id": "7fb7c9d7-8853-4a3e-b1d4-6e1568a9a573",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.271Z"
+    }
+  ],
+  "concurrent_items": [
+    {
+      "index": 0,
+      "value": 0.3011409994777292,
+      "id": "543f39e1-af62-4934-831e-5219f54823ca",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.323Z"
+    },
+    {
+      "index": 1,
+      "value": 0.7025078501614335,
+      "id": "9258066d-caf4-4796-be69-387ffe774e43",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.328Z"
+    },
+    {
+      "index": 2,
+      "value": 0.8508873167804822,
+      "id": "fc259a6f-6cde-4369-b2ee-f5644e65a986",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.329Z"
+    },
+    {
+      "index": 3,
+      "value": 0.2763284653066109,
+      "id": "30b1bd89-2cd3-49c7-9e3d-0db72f60b493",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.329Z"
+    },
+    {
+      "index": 4,
+      "value": 0.8047001741036657,
+      "id": "dd5174ee-f604-4fbc-b11d-af8e89f0c5a4",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.330Z"
+    },
+    {
+      "index": 5,
+      "value": 0.6979099782617828,
+      "id": "5e5ac053-3631-4878-af12-9b6edf776c7f",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.330Z"
+    },
+    {
+      "index": 6,
+      "value": 0.5723236716168958,
+      "id": "6845d450-a236-4e92-88f0-f6bc34a98f8a",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.330Z"
+    },
+    {
+      "index": 7,
+      "value": 0.9878688886767444,
+      "id": "329239e6-5b35-4aee-81c2-bb0181abe719",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.331Z"
+    },
+    {
+      "index": 8,
+      "value": 0.7743609735544383,
+      "id": "21423f2c-ceba-4986-a929-f1a1a5c1130a",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.331Z"
+    },
+    {
+      "index": 9,
+      "value": 0.17179132305845413,
+      "id": "bfbbf1fb-21e7-4af1-b8c6-08ac66e0902e",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.332Z"
+    },
+    {
+      "index": 10,
+      "value": 0.824293285030918,
+      "id": "e7f48867-b4d5-4595-b126-c57f7833f745",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.332Z"
+    },
+    {
+      "index": 11,
+      "value": 0.4239608740729838,
+      "id": "35c874f0-5c1a-45ae-bb21-74d111435128",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.332Z"
+    },
+    {
+      "index": 12,
+      "value": 0.6784633482525967,
+      "id": "7d216fa1-9ae6-4ee6-b8e6-e82c37e3d028",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.333Z"
+    },
+    {
+      "index": 13,
+      "value": 0.2199422090365336,
+      "id": "e24c53e4-d365-4766-b879-47782cb4dc94",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.333Z"
+    },
+    {
+      "index": 14,
+      "value": 0.38162040166289124,
+      "id": "7e5a75b9-b001-4951-a1ff-1541f40411a6",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.334Z"
+    },
+    {
+      "index": 15,
+      "value": 0.14175897730002884,
+      "id": "0ceb2a9e-862f-4494-8b80-03335f1451d7",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.334Z"
+    },
+    {
+      "index": 16,
+      "value": 0.2306584711036741,
+      "id": "6d15b316-3f11-4b8f-99c1-5217cc815b54",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.334Z"
+    },
+    {
+      "index": 17,
+      "value": 0.7534270135923157,
+      "id": "c4597c69-20f0-42dc-87d9-01e29deccd9e",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.335Z"
+    },
+    {
+      "index": 18,
+      "value": 0.8675624308891002,
+      "id": "885c8269-64b9-45b7-9f63-ba338d153e35",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.335Z"
+    },
+    {
+      "index": 19,
+      "value": 0.9239430364678849,
+      "id": "c9b2af93-eae4-45a2-91dc-9d43688b1d20",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.335Z"
+    }
+  ],
+  "counters": [
+    {
+      "value": 0
+    }
+  ],
+  "trash": []
+}
+ {
+      "label": "item-9",
+      "id": "68329b41-17b7-45dd-9239-61adbb46e665",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.371Z"
+    }
+  ]
+}
+
+      "label": "item-9",
+      "id": "68329b41-17b7-45dd-9239-61adbb46e665",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.371Z"
+    }
+  ]
+}
+
+      "label": "item-9",
+      "id": "68329b41-17b7-45dd-9239-61adbb46e665",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.371Z"
+    }
+  ]
+}
+
+      "label": "item-8",
+      "id": "305eca64-48c6-4200-8cee-32c6a7e2b324",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.371Z"
+    },
+    {
+      "label": "item-9",
+      "id": "68329b41-17b7-45dd-9239-61adbb46e665",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.371Z"
+    }
+  ]
+}
+
+      "label": "item-9",
+      "id": "68329b41-17b7-45dd-9239-61adbb46e665",
+      "ownerId": "eae09c19-70b7-4886-8b42-4e27b25391c2",
+      "createdAt": "2026-04-17T01:57:59.371Z"
+    }
+  ]
 }

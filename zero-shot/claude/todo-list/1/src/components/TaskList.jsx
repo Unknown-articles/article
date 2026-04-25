@@ -1,87 +1,93 @@
-import {
-  DndContext,
-  closestCenter,
-  PointerSensor,
-  TouchSensor,
-  KeyboardSensor,
-  useSensor,
-  useSensors,
-  DragOverlay,
-} from '@dnd-kit/core'
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-  sortableKeyboardCoordinates,
-  arrayMove,
-} from '@dnd-kit/sortable'
-import { useState } from 'react'
-import { useTasks } from '../context/TaskContext'
-import TaskItem from './TaskItem'
-import TaskDragOverlay from './TaskDragOverlay'
+import { useState, useRef } from 'react';
+import TaskItem from './TaskItem.jsx';
 
-export default function TaskList() {
-  const { filteredTasks, tasks, reorder, filter } = useTasks()
-  const [activeId, setActiveId] = useState(null)
+export default function TaskList({ tasks, allTasks, dispatch }) {
+  const [dragOverId, setDragOverId] = useState(null);
+  const [draggingId, setDraggingId] = useState(null);
+  const dragSourceId = useRef(null);
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
-    useSensor(TouchSensor,   { activationConstraint: { delay: 200, tolerance: 8 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
-  )
-
-  function handleDragStart(e) {
-    setActiveId(e.active.id)
+  function handleDragStart(id) {
+    dragSourceId.current = id;
+    setDraggingId(id);
   }
 
-  function handleDragEnd(e) {
-    const { active, over } = e
-    setActiveId(null)
-    if (!over || active.id === over.id) return
-
-    // Reorder within the full task list (not filtered)
-    const oldIdx = tasks.findIndex(t => t.id === active.id)
-    const newIdx = tasks.findIndex(t => t.id === over.id)
-    if (oldIdx !== -1 && newIdx !== -1) {
-      reorder(arrayMove(tasks, oldIdx, newIdx))
-    }
+  function handleDragOver(e, id) {
+    e.preventDefault();
+    // Only update state when the target changes to avoid thrashing
+    setDragOverId((prev) => (prev === id ? prev : id));
   }
 
-  const activeTask = activeId ? tasks.find(t => t.id === activeId) : null
-
-  if (filteredTasks.length === 0) {
-    const msgs = {
-      all:       { icon: '📋', text: 'No tasks yet — add one above!' },
-      completed: { icon: '🎉', text: 'No completed tasks.' },
-      pending:   { icon: '✅', text: 'No pending tasks.' },
-      late:      { icon: '🕐', text: 'No late tasks. Great job!' },
+  function handleDrop(e, targetId) {
+    e.preventDefault();
+    const sourceId = dragSourceId.current;
+    if (!sourceId || sourceId === targetId) {
+      cleanup();
+      return;
     }
-    const { icon, text } = msgs[filter] ?? msgs.all
+
+    // tasks is the currently-filtered view; allTasks is the full list.
+    // We reorder only within the filtered subset but keep non-filtered items
+    // in their original positions inside allTasks.
+    const filteredIds = tasks.map((t) => t.id);
+    const srcIdx = filteredIds.indexOf(sourceId);
+    const tgtIdx = filteredIds.indexOf(targetId);
+    if (srcIdx === -1 || tgtIdx === -1) { cleanup(); return; }
+
+    // New order for the filtered subset
+    const newFilteredIds = [...filteredIds];
+    newFilteredIds.splice(srcIdx, 1);
+    newFilteredIds.splice(tgtIdx, 0, sourceId);
+
+    // Positions inside allTasks that belong to the filtered subset
+    const filteredPositions = allTasks.reduce((acc, task, idx) => {
+      if (filteredIds.includes(task.id)) acc.push(idx);
+      return acc;
+    }, []);
+
+    // Place filtered tasks in the same slots, in new order
+    const newAllTasks = [...allTasks];
+    newFilteredIds.forEach((id, i) => {
+      newAllTasks[filteredPositions[i]] = allTasks.find((t) => t.id === id);
+    });
+
+    dispatch({ type: 'REORDER', tasks: newAllTasks });
+    cleanup();
+  }
+
+  function handleDragEnd() {
+    cleanup();
+  }
+
+  function cleanup() {
+    dragSourceId.current = null;
+    setDraggingId(null);
+    setDragOverId(null);
+  }
+
+  if (tasks.length === 0) {
     return (
-      <div className="task-list-empty">
-        <span className="empty-icon">{icon}</span>
-        {text}
-      </div>
-    )
+      <>
+        <ul data-testid="task-list" className="task-list" />
+        <p className="task-list-empty">No tasks to show.</p>
+      </>
+    );
   }
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-    >
-      <SortableContext items={filteredTasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
-        <div className="task-list" role="list" data-testid="task-list">
-          {filteredTasks.map(task => (
-            <TaskItem key={task.id} task={task} />
-          ))}
-        </div>
-      </SortableContext>
-
-      <DragOverlay>
-        <TaskDragOverlay task={activeTask} />
-      </DragOverlay>
-    </DndContext>
-  )
+    <ul data-testid="task-list" className="task-list">
+      {tasks.map((task) => (
+        <TaskItem
+          key={task.id}
+          task={task}
+          dispatch={dispatch}
+          isDragOver={dragOverId === task.id}
+          isDragging={draggingId === task.id}
+          onDragStart={() => handleDragStart(task.id)}
+          onDragOver={(e) => handleDragOver(e, task.id)}
+          onDrop={(e) => handleDrop(e, task.id)}
+          onDragEnd={handleDragEnd}
+        />
+      ))}
+    </ul>
+  );
 }

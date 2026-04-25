@@ -1,61 +1,71 @@
 # Dynamic REST API
 
-A generic and dynamic REST API built with Node.js and Express, using a JSON file as the database.
-
-## Features
-
-- Dynamic resource creation and management
-- CRUD operations for any resource
-- Token-based authentication (JWT)
-- Role-based access control (admin, user)
-- Data ownership and sharing
-- Advanced querying with filters, sorting, pagination
-- Concurrency control with file locking
+A Node.js Express API with file-based JSON database, JWT authentication, RBAC, and dynamic resource handling.
 
 ## Installation
 
-1. Clone or download the project.
-2. Run `npm install` to install dependencies.
+```bash
+npm install
+```
 
-## Usage
+## Running
 
-1. Start the server: `npm start`
-2. For development: `npm run dev`
+```bash
+npm start
+```
+
+Or for development:
+
+```bash
+npm run dev
+```
+
+## Endpoints
+
+### Health
+- `GET /health` - Returns status ok
 
 ### Authentication
+- `POST /auth/register` - Register a new user (first user is admin)
+- `POST /auth/login` - Login and get JWT token
+- `GET /auth/me` - Get current user profile
+- `GET /auth/users` - List all users (admin only)
+- `PATCH /auth/users/:id/role` - Change user role (admin only)
 
-- Register: `POST /auth/register` with `{ "username": "user", "password": "pass", "role": "user" }`
-- Login: `POST /auth/login` with `{ "username": "user", "password": "pass" }` returns JWT token
+### Teams
+- `POST /auth/teams` - Create a team
+- `GET /auth/teams` - List user's teams
+- `GET /auth/teams/:id` - Get team details
+- `PATCH /auth/teams/:id` - Update team name (owner only)
+- `DELETE /auth/teams/:id` - Delete team (owner only)
+- `POST /auth/teams/:id/members` - Add member to team (admin only)
+- `DELETE /auth/teams/:id/members/:userId` - Remove member from team
 
-Use the token in `Authorization: Bearer <token>` header for protected routes.
-
-### API Endpoints
-
-All routes are dynamic. Replace `:resource` with any name (e.g., users, products).
-
-- `GET /:resource` - List items (with query params for filtering/sorting/pagination)
+### Dynamic Resources
+For any resource (e.g., /users, /products), supports:
+- `GET /:resource` - List items (with filtering, sorting, pagination)
 - `GET /:resource/:id` - Get single item
 - `POST /:resource` - Create new item
 - `PUT /:resource/:id` - Replace item
 - `PATCH /:resource/:id` - Update item
 - `DELETE /:resource/:id` - Delete item
 
-### Query Parameters
+## Features
 
-- Filtering: `?field=value`, `?field__op=value` (ops: eq, ne, gt, lt, gte, lte, contains, between)
-- Sorting: `?sort=field:asc` or `?sort=field:desc`
-- Pagination: `?limit=10&offset=0`
+- **Dynamic Collections**: Any route creates collections on the fly
+- **Authentication**: JWT-based
+- **Authorization**: RBAC (admin, user)
+- **Data Ownership**: Each item has ownerId
+- **Sharing**: Share items with users or teams, with read/write permissions
+- **Querying**: Equality, inequality, ranges, contains, in, between, AND/OR logic, sorting, pagination
+- **Concurrency**: Safe file writes using fs-extra
 
-### Data Ownership
+## Database
 
-Each item has an `ownerId`. Only owners or admins can modify/delete.
+Data is stored in `db.json` as a JSON object with collections as keys.
 
-### Sharing
+Reserved collections: `_users`, `auth`, `teams`
 
-Items can have `sharedWith` array of user IDs for shared access.
+## Testing
 
-## Troubleshooting
-
-- Ensure `db.json` is writable.
-- Set `JWT_SECRET` environment variable for production.
-- Check console for errors on startup.
+The API is designed to pass the specified test cases.

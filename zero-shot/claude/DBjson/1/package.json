@@ -1,19 +1,14 @@
 {
-  "name": "dynamic-json-api",
+  "name": "json-rest-api",
   "version": "1.0.0",
-  "description": "Generic dynamic REST API backed by a JSON file database",
+  "description": "Generic dynamic REST API with file-based JSON persistence",
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "start": "node src/index.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "express": "^4.18.2",
-    "jsonwebtoken": "^9.0.2",
-    "uuid": "^9.0.0"
-  },
-  "devDependencies": {
-    "nodemon": "^3.0.2"
+    "jsonwebtoken": "^9.0.2"
   }
 }

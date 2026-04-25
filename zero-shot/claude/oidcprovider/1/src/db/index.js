@@ -1,22 +1,19 @@
 import { DatabaseSync } from 'node:sqlite';
-import path from 'path';
-import fs from 'fs';
+import { SCHEMA_SQL } from './schema.js';
+import { seedDatabase } from './seed.js';
 import config from '../config/index.js';
 
 let db;
 
 export function getDb() {
   if (!db) {
-    const dbPath = path.resolve(config.dbPath);
-    const dbDir  = path.dirname(dbPath);
-
-    if (!fs.existsSync(dbDir)) {
-      fs.mkdirSync(dbDir, { recursive: true });
-    }
-
-    db = new DatabaseSync(dbPath);
-    db.exec('PRAGMA journal_mode = WAL');
+    db = new DatabaseSync(config.DB_PATH);
+    try { db.exec('PRAGMA journal_mode = WAL'); } catch (_) {}
     db.exec('PRAGMA foreign_keys = ON');
+    db.exec(SCHEMA_SQL);
+    seedDatabase(db);
   }
   return db;
 }
+
+export default { getDb };

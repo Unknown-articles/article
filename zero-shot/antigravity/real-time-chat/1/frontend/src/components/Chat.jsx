@@ -1,81 +1,98 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { MessageList } from './MessageList.jsx';
+import { MessageInput } from './MessageInput.jsx';
 
-export default function Chat({ session }) {
-  const [messages, setMessages] = useState([]);
-  const [inputVal, setInputVal] = useState('');
-  const wsRef = useRef(null);
-  const messagesEndRef = useRef(null);
+const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:3000';
 
-  useEffect(() => {
-    // Connect to WebSocket server using token
-    const ws = new WebSocket(`ws://localhost:3003/?token=${session.token}`);
-    wsRef.current = ws;
+export function Chat({ session, onLogout }) {
+    const { token, user } = session;
+    const [messages, setMessages] = useState([]);
+    const [isConnected, setIsConnected] = useState(false);
+    const [error, setError] = useState(null);
+    const wsRef = useRef(null);
 
-    ws.onmessage = (event) => {
-      const parsed = JSON.parse(event.data);
-      if (parsed.type === 'history') {
-        setMessages(parsed.data);
-      } else if (parsed.type === 'new_message') {
-        setMessages((prev) => [...prev, parsed.data]);
-      }
+    useEffect(() => {
+        const ws = new WebSocket(`${WS_URL}?token=${token}`);
+        wsRef.current = ws;
+
+        ws.onopen = () => {
+            setIsConnected(true);
+            setError(null);
+        };
+
+        ws.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                if (data.type === 'history') {
+                    setMessages(data.messages);
+                } else if (data.type === 'message') {
+                    setMessages(prev => [...prev, data]);
+                } else if (data.type === 'error') {
+                    setError(data.message);
+                }
+            } catch (err) {
+                console.error('Error parsing message:', err);
+            }
+        };
+
+        ws.onclose = (event) => {
+            setIsConnected(false);
+            if (event.code === 4001 || event.code === 4002) {
+                onLogout(); // Invalid token, force logout
+            } else {
+                setError('Connection lost');
+            }
+        };
+
+        ws.onerror = () => {
+            setError('WebSocket error');
+            setIsConnected(false);
+        };
+
+        return () => {
+            if (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING) {
+                ws.close();
+            }
+        };
+    }, [token, onLogout]);
+
+    const handleSendMessage = (content) => {
+        if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+            wsRef.current.send(JSON.stringify({ type: 'message', content }));
+        }
     };
 
-    ws.onerror = (error) => {
-      console.error('WebSocket error observed', error);
-    };
+    return (
+        <div data-testid="chat-container" className="chat-container glass-panel">
+            <header className="chat-header">
+                <div className="user-info">
+                    <div 
+                        data-testid="connection-status" 
+                        data-connected={isConnected}
+                        className={`status-indicator ${isConnected ? 'online' : 'offline'}`}
+                    />
+                    <span data-testid="current-username" className="current-username">
+                        {user.username}
+                    </span>
+                </div>
+                <button data-testid="btn-logout" onClick={onLogout} className="logout-btn">
+                    Logout
+                </button>
+            </header>
 
-    return () => {
-      ws.close();
-    };
-  }, [session.token]);
+            {error && (
+                <div data-testid="connection-error" className="error-banner">
+                    {error}
+                </div>
+            )}
 
-  useEffect(() => {
-    // Auto-scroll to latest message
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+            <main className="chat-main">
+                <MessageList messages={messages} currentUserId={user.userId} />
+            </main>
 
-  const handleSend = (e) => {
-    e.preventDefault();
-    if (!inputVal.trim()) return;
-
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-      wsRef.current.send(JSON.stringify({ type: 'chat_message', content: inputVal }));
-      setInputVal('');
-    }
-  };
-
-  return (
-    <div className="chat-container">
-      <div className="chat-messages">
-        {messages.map((msg) => {
-          const isMe = msg.userId === session.user.id;
-          return (
-            <div key={msg.id} className={`message-wrapper ${isMe ? 'me' : 'them'}`}>
-              <div className="message-content">
-                <span className="message-username">{msg.username}</span>
-                <p className="message-text">{msg.content}</p>
-                <span className="message-time">
-                  {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </span>
-              </div>
-            </div>
-          );
-        })}
-        <div ref={messagesEndRef} />
-      </div>
-
-      <form className="chat-input-form" onSubmit={handleSend}>
-        <input
-          type="text"
-          value={inputVal}
-          onChange={(e) => setInputVal(e.target.value)}
-          placeholder="Type a message..."
-          autoFocus
-        />
-        <button type="submit" className="btn-primary send-btn">
-          Send
-        </button>
-      </form>
-    </div>
-  );
+            <footer className="chat-footer">
+                <MessageInput onSend={handleSendMessage} />
+            </footer>
+        </div>
+    );
 }

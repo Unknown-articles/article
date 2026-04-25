@@ -1,38 +1,36 @@
 'use strict';
+const jwt = require('jsonwebtoken');
 
-const jwt    = require('jsonwebtoken');
-const config = require('../config');
+const SECRET = process.env.JWT_SECRET || 'super-secret-jwt-key-change-in-production';
 
-/**
- * Strict authentication – rejects requests without a valid Bearer token.
- * Attaches the decoded payload as `req.user`.
- */
+function generateToken(user) {
+  return jwt.sign(
+    { id: user.id, username: user.username, role: user.role },
+    SECRET,
+    { expiresIn: '7d' }
+  );
+}
+
 function authenticate(req, res, next) {
-  const header = req.headers.authorization;
-  if (!header || !header.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Authorization header with Bearer token required' });
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Authentication required' });
   }
-  const token = header.slice(7);
+
+  const token = authHeader.slice(7).trim();
   try {
-    req.user = jwt.verify(token, config.JWT_SECRET);
+    req.user = jwt.verify(token, SECRET);
     next();
   } catch {
     return res.status(401).json({ error: 'Invalid or expired token' });
   }
 }
 
-/**
- * Optional authentication – sets `req.user` if a valid token is present,
- * but does not reject the request if absent.
- */
-function optionalAuth(req, res, next) {
-  const header = req.headers.authorization;
-  if (header && header.startsWith('Bearer ')) {
-    try {
-      req.user = jwt.verify(header.slice(7), config.JWT_SECRET);
-    } catch { /* ignore */ }
+function requireAdmin(req, res, next) {
+  if (!req.user || req.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Admin access required' });
   }
   next();
 }
 
-module.exports = { authenticate, optionalAuth };
+module.exports = { generateToken, authenticate, requireAdmin };

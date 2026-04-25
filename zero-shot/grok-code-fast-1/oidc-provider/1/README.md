@@ -1,47 +1,21 @@
 # OIDC Provider
 
-A simple OpenID Connect Provider REST API built with Node.js, Express, and SQLite.
+A simple OpenID Connect Provider implementation using Node.js, Express, and SQLite.
 
 ## Setup
 
-1. Install dependencies:
-   ```
-   npm install
-   ```
-
-2. Generate RSA keys:
-   ```
-   npm run generate-keys
-   ```
-
-3. Initialize the database:
-   ```
-   npm run init-db
-   ```
-
-4. Start the server:
-   ```
-   npm start
-   ```
-
-The server will run on http://localhost:3000.
+1. Install dependencies: `npm install`
+2. Run the server: `npm start`
+3. Server listens on port 3000 (or PORT env var)
 
 ## Endpoints
 
 - Discovery: GET /.well-known/openid-configuration
 - JWKS: GET /.well-known/jwks.json
-- Authorization: GET /oauth2/authorize
+- Authorize: GET /oauth2/authorize
 - Token: POST /oauth2/token
 - UserInfo: GET /userinfo
 
-## Default Client
+## Test Data
 
-- client_id: client1
-- client_secret: secret
-- redirect_uri: http://localhost:3001/callback
-
-## Default User
-
-- username: user1
-- email: user@example.com
-- name: User
+Pre-seeded with test client and user.

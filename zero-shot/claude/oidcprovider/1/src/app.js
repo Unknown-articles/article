@@ -1,24 +1,22 @@
 import express from 'express';
-import discoveryRoutes    from './routes/discovery.js';
+import discoveryRoutes from './routes/discovery.js';
 import authorizationRoutes from './routes/authorization.js';
-import tokenRoutes        from './routes/token.js';
-import userinfoRoutes     from './routes/userinfo.js';
-import { errorHandler }   from './middleware/errorHandler.js';
+import tokenRoutes from './routes/token.js';
+import userinfoRoutes from './routes/userinfo.js';
+import { errorHandler } from './middleware/errorHandler.js';
+import { ensureActiveKey } from './keys/keyManager.js';
 
 const app = express();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-// ── Routes ────────────────────────────────────────────────────────────────────
-app.use('/.well-known', discoveryRoutes);
-app.use('/oauth2',      authorizationRoutes);
-app.use('/oauth2',      tokenRoutes);
-app.use('/',            userinfoRoutes);
+ensureActiveKey();
 
-// ── 404 catch-all ─────────────────────────────────────────────────────────────
-app.use((_req, res) => {
-  res.status(404).json({ error: 'not_found', error_description: 'Endpoint not found' });
-});
+app.use(discoveryRoutes);
+app.use(authorizationRoutes);
+app.use(tokenRoutes);
+app.use(userinfoRoutes);
 
 app.use(errorHandler);
 

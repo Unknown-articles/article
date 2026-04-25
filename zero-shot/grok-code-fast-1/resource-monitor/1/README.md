@@ -1,12 +1,12 @@
 # Resource Monitor API
 
-A Node.js API for monitoring system resources with REST and WebSocket support.
+A Node.js API for monitoring system resources using Express and WebSocket.
 
 ## Features
 
-- Collects CPU, memory, and uptime metrics every second
-- REST API for getting latest metrics
-- WebSocket for real-time streaming with dynamic subscriptions
+- REST API for fetching metrics snapshots
+- WebSocket for real-time streaming
+- Collects CPU, memory, disk, and uptime metrics
 
 ## Installation
 
@@ -20,38 +20,23 @@ npm install
 npm start
 ```
 
-## API
+Server listens on port 3000 (or PORT env var)
+
+## Endpoints
 
 ### REST
 
-- `GET /metrics` - Get all metrics
-- `GET /metrics/:type` - Get specific metric (cpu, memory, uptime)
+- GET /health
+- GET /metrics
+- GET /metrics/:type (cpu, memory, disk, uptime)
 
 ### WebSocket
 
-Connect to `ws://localhost:3000`
+- /ws
+- /ws/cpu
+- /ws/memory
+- /ws/disk
+- /ws/uptime
+- /ws/all
 
-Send JSON messages for subscriptions:
-
-Subscribe:
-```json
-{
-  "action": "subscribe",
-  "metrics": ["cpu", "memory"]
-}
-```
-
-Unsubscribe:
-```json
-{
-  "action": "unsubscribe",
-  "metrics": ["cpu"]
-}
-```
-
-## Project Structure
-
-- `server.js` - Main server file
-- `routes/metrics.js` - REST routes
-- `services/metricsService.js` - Metrics collection service
-- `websocket/handlers.js` - WebSocket connection handlers
+For WebSocket protocol, see the code or spec.

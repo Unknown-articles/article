@@ -2,20 +2,14 @@ import { getDb } from '../db/index.js';
 
 export function getClientById(clientId) {
   const db = getDb();
-  const row = db.prepare('SELECT * FROM clients WHERE id = ?').get(clientId);
-  if (!row) return null;
-  return {
-    ...row,
-    redirect_uris: JSON.parse(row.redirect_uris),
-    scopes: JSON.parse(row.scopes),
-  };
+  return db.prepare('SELECT * FROM clients WHERE client_id = ?').get(clientId);
 }
 
 export function validateRedirectUri(client, redirectUri) {
-  return client.redirect_uris.includes(redirectUri);
+  const uris = JSON.parse(client.redirect_uris);
+  return uris.includes(redirectUri);
 }
 
-export function validateScopes(client, requestedScope) {
-  const requested = requestedScope.trim().split(/\s+/);
-  return requested.every((s) => client.scopes.includes(s));
+export function validateClientSecret(client, secret) {
+  return client.client_secret === secret;
 }

@@ -1,54 +1,56 @@
 import express from 'express';
 import cors from 'cors';
-import { WebSocketServer } from 'ws';
-import { createServer } from 'http';
-import authRoutes from './routes/auth.js';
-import { verifyToken } from './auth.js';
-import { saveMessage, getMessages } from './models/message.js';
-import db from './db.js';
+import dotenv from 'dotenv';
+import { registerUser, loginUser } from './auth.js';
+import { setupWebSocket } from './websocket.js';
+
+dotenv.config();
 
 const app = express();
-const server = createServer(app);
-const wss = new WebSocketServer({ server });
+const PORT = process.env.PORT || 3000;
+const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || 'http://localhost:5173';
 
-app.use(cors());
+app.use(cors({ origin: FRONTEND_ORIGIN, credentials: true }));
 app.use(express.json());
-app.use('/auth', authRoutes);
 
-const clients = new Map();
-
-wss.on('connection', (ws, req) => {
-  const token = req.url.split('?token=')[1];
-  const user = verifyToken(token);
-  if (!user) {
-    ws.close();
-    return;
-  }
-
-  clients.set(ws, user);
-
-  // Send recent messages
-  getMessages().then(messages => {
-    ws.send(JSON.stringify({ type: 'messages', data: messages }));
-  });
-
-  ws.on('message', async (data) => {
-    const message = JSON.parse(data);
-    if (message.type === 'message') {
-      const savedMessage = await saveMessage(user.id, user.username, message.content);
-      // Broadcast to all clients
-      for (const [client, clientUser] of clients) {
-        client.send(JSON.stringify({ type: 'message', data: savedMessage }));
-      }
-    }
-  });
-
-  ws.on('close', () => {
-    clients.delete(ws);
-  });
+// Health endpoint
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-const PORT = 3001;
-server.listen(PORT, () => {
+// Auth endpoints
+app.post('/auth/register', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const result = await registerUser(username, password);
+    res.status(201).json(result);
+  } catch (err) {
+    if (err.message === 'Username already taken') {
+      res.status(409).json({ error: err.message });
+    } else {
+      res.status(400).json({ error: err.message });
+    }
+  }
+});
+
+app.post('/auth/login', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const result = await loginUser(username, password);
+    res.status(200).json(result);
+  } catch (err) {
+    if (err.message === 'Invalid credentials') {
+      res.status(401).json({ error: err.message });
+    } else {
+      res.status(400).json({ error: err.message });
+    }
+  }
+});
+
+// Start server
+const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+// Setup WebSocket
+setupWebSocket(server);

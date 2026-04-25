@@ -1,659 +1,981 @@
 {
-  "meta": {
+  "_meta": {
     "version": 1
   },
-  "_auth": {
-    "users": [
-      {
-        "id": "a0106f86-cb87-4645-a486-615e38995f77",
-        "username": "admin_1776215019603",
-        "role": "user",
-        "teamIds": [
-          "42d2a3b3-3bf3-4789-b100-182538aa7ef7",
-          "60be4a9d-acba-4451-82fb-57a3e7503a65"
-        ],
-        "passwordHash": "$2b$10$oZ62R/pj.kPOclUsRQAHye01yOXVuVmDXZS9wRe4J3FwF7NSncLAC",
-        "createdAt": "2026-04-15T01:03:39.614Z",
-        "updatedAt": "2026-04-15T01:03:40.316Z"
-      },
-      {
-        "id": "9444b568-9aee-4d3e-b085-ead70560200b",
-        "username": "user_1776215019603",
-        "role": "user",
-        "teamIds": [],
-        "passwordHash": "$2b$10$LQ9NKqOGzr.DTEeKmnjX1OTn0aWZz/HSyrELmbhYjhCGYRldYwg6e",
-        "createdAt": "2026-04-15T01:03:39.708Z",
-        "updatedAt": "2026-04-15T01:03:39.708Z"
-      },
-      {
-        "id": "c198d122-32c8-4bd2-9da9-4ba003146170",
-        "username": "dihh2",
-        "role": "user",
-        "teamIds": [],
-        "passwordHash": "$2b$10$1ERSNqvCyBnR495oVR5YYuHigz1t3w9XE2Rgt/afYiWGZuPAo7ZiS",
-        "createdAt": "2026-04-15T01:07:17.768Z",
-        "updatedAt": "2026-04-15T01:07:17.768Z"
-      }
-    ],
-    "teams": [
-      {
-        "id": "42d2a3b3-3bf3-4789-b100-182538aa7ef7",
-        "name": "Team Alpha",
-        "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-        "memberIds": [
-          "a0106f86-cb87-4645-a486-615e38995f77"
-        ],
-        "createdAt": "2026-04-15T01:03:40.279Z",
-        "updatedAt": "2026-04-15T01:03:40.279Z"
-      },
-      {
-        "id": "60be4a9d-acba-4451-82fb-57a3e7503a65",
-        "name": "Temp Team",
-        "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-        "memberIds": [
-          "a0106f86-cb87-4645-a486-615e38995f77"
-        ],
-        "createdAt": "2026-04-15T01:03:40.316Z",
-        "updatedAt": "2026-04-15T01:03:40.316Z"
-      }
-    ]
-  },
+  "_users": [
+    {
+      "id": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "username": "admin_1776222107506",
+      "passwordHash": "$2b$10$CLwNz8uQ1vITNS2w.9nxUOdtikD5f/cPKwHp8nftvLsWAGsWnv.4G",
+      "role": "admin",
+      "createdAt": "2026-04-15T03:01:47.612Z"
+    },
+    {
+      "id": "11542d14-3e0b-417c-bf55-d2f1b131eee5",
+      "username": "user_1776222107506",
+      "passwordHash": "$2b$10$JWrwvSVNvvPINJ/2ush6YOL3WKMSn.YXaV21oG9FM/X7DrOIfOeFG",
+      "role": "user",
+      "createdAt": "2026-04-15T03:01:47.677Z"
+    },
+    {
+      "id": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "username": "admin_1776390896868",
+      "passwordHash": "$2b$10$Rvs60wdMC7Xkt/DzWaO3Ke4PUypb3Yu1UdVqFs3yglOuDhJkhZ.t.",
+      "role": "user",
+      "createdAt": "2026-04-17T01:54:56.958Z"
+    },
+    {
+      "id": "08eefabd-47f0-4c60-bf89-e0fbaed2b885",
+      "username": "user_1776390896868",
+      "passwordHash": "$2b$10$tUmLE/q7TMjRMvdlN9d34eFv.rkYaLQI/66zJ7mtNGLkL1ccHPLeC",
+      "role": "user",
+      "createdAt": "2026-04-17T01:54:57.028Z"
+    }
+  ],
+  "_teams": [
+    {
+      "id": "e4297c2a-f22d-40fc-8750-e285aac9b30a",
+      "name": "Team Beta",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "members": [
+        "28cb3e84-a434-424f-af55-2ff1e427682e"
+      ],
+      "createdAt": "2026-04-15T03:01:48.248Z"
+    },
+    {
+      "id": "0ca7de54-1cee-4d2a-b9ab-7d4e1438660d",
+      "name": "Team Alpha",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "members": [
+        "163f600d-e978-4d9d-92a7-af24aeb69f09"
+      ],
+      "createdAt": "2026-04-17T01:54:57.482Z"
+    }
+  ],
   "products": [
     {
-      "id": "b4eab795-2ce2-428e-b342-13d755b6c514",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:39.995Z",
-      "data": {
-        "name": "Widget",
-        "price": 9.99
-      },
-      "updatedAt": "2026-04-15T01:03:39.995Z"
+      "name": "Widget Pro",
+      "price": 24.99,
+      "category": "tech",
+      "id": "3c7cc365-5212-4b82-b044-f0e059c125f5",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:47.924Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "fe84ae84-e6b8-4849-a84b-2f62e17cf049",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.011Z",
-      "data": {
-        "id": "client-id",
-        "name": "Gadget"
-      },
-      "updatedAt": "2026-04-15T01:03:40.011Z"
+      "name": "Gadget",
+      "id": "e75eae7d-fcd5-47ea-a852-f39a73a31693",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:47.943Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "e712359c-6870-4ae7-a0a0-c81619d65071",
-      "ownerId": "9444b568-9aee-4d3e-b085-ead70560200b",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.016Z",
-      "data": {
-        "name": "My Product v2"
-      },
-      "updatedAt": "2026-04-15T01:03:40.125Z"
+      "name": "My Product v2",
+      "id": "c0afa0f5-e68d-4a69-8118-6919c84f1604",
+      "ownerId": "11542d14-3e0b-417c-bf55-d2f1b131eee5",
+      "createdAt": "2026-04-15T03:01:47.951Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "065cf3f0-bbaf-4a5c-b72d-1dbe7d67bc32",
-      "ownerId": "9444b568-9aee-4d3e-b085-ead70560200b",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.057Z",
-      "data": {
-        "name": "ToDelete"
-      },
-      "updatedAt": "2026-04-15T01:03:40.057Z"
+      "name": "Widget Pro",
+      "price": 24.99,
+      "category": "tech",
+      "id": "9904712b-f6a6-4495-86f0-4c2d6f2b7818",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.260Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "name": "Gadget",
+      "id": "d8248fbb-47fe-4239-a9a5-2c796c4e11fd",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.272Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "name": "My Product v2",
+      "id": "9abe3f8e-2d0a-4855-a5d6-61c638c9eee1",
+      "ownerId": "08eefabd-47f0-4c60-bf89-e0fbaed2b885",
+      "createdAt": "2026-04-17T01:54:57.277Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "name": "ToDelete",
+      "id": "b2f9a848-cc62-4248-9a7a-2a32dd06778c",
+      "ownerId": "08eefabd-47f0-4c60-bf89-e0fbaed2b885",
+      "createdAt": "2026-04-17T01:54:57.320Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     }
   ],
   "posts": [
     {
-      "id": "f4e3bcfb-bdf1-453b-8a8c-c5791d201936",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
+      "title": "Test Post",
+      "tags": [
+        "a",
+        "b"
+      ],
+      "meta": {
+        "views": 0
       },
-      "createdAt": "2026-04-15T01:03:40.005Z",
-      "data": {
-        "title": "Test Post",
-        "tags": [
-          "a",
-          "b"
-        ],
-        "meta": {
-          "views": 0
-        }
+      "id": "ba9183ee-7e56-48ad-a2bc-2c64c6214d53",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:47.932Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "title": "Test Post",
+      "tags": [
+        "a",
+        "b"
+      ],
+      "meta": {
+        "views": 0
       },
-      "updatedAt": "2026-04-15T01:03:40.005Z"
+      "id": "c8923986-238e-4f6b-919c-d44203c5e321",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.266Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     }
   ],
   "widgets": [
     {
-      "id": "0777ce4c-4cdb-4e88-b7a9-64d3186ced70",
-      "ownerId": "9444b568-9aee-4d3e-b085-ead70560200b",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.089Z",
-      "data": {
-        "label": "adminDelete"
-      },
-      "updatedAt": "2026-04-15T01:03:40.089Z"
+      "label": "adminDelete",
+      "id": "72278a86-edf0-4571-9b2c-730902b949e2",
+      "ownerId": "08eefabd-47f0-4c60-bf89-e0fbaed2b885",
+      "createdAt": "2026-04-17T01:54:57.345Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     }
   ],
   "private_col": [
     {
-      "id": "c41c41cf-0f07-40a7-9e18-014f809c5df8",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.136Z",
-      "data": {
-        "secret": "admin"
-      },
-      "updatedAt": "2026-04-15T01:03:40.136Z"
+      "secret": "admin",
+      "id": "74aabae8-f5f4-4948-8127-0c7da04c707b",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.117Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "43b13d77-10ce-483d-94fd-348142aaf660",
-      "ownerId": "9444b568-9aee-4d3e-b085-ead70560200b",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.147Z",
-      "data": {
-        "secret": "user"
-      },
-      "updatedAt": "2026-04-15T01:03:40.147Z"
+      "secret": "user",
+      "id": "eb05e95b-0321-4928-8acc-44a527220805",
+      "ownerId": "11542d14-3e0b-417c-bf55-d2f1b131eee5",
+      "createdAt": "2026-04-15T03:01:48.123Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "secret": "admin",
+      "id": "19fe38c6-9dd6-4eb8-843f-95fc5ad48249",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.384Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "secret": "user",
+      "id": "ba0bb5eb-4706-44ad-bd09-a8e1cd68ae4f",
+      "ownerId": "08eefabd-47f0-4c60-bf89-e0fbaed2b885",
+      "createdAt": "2026-04-17T01:54:57.389Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     }
   ],
   "notes": [
     {
-      "id": "fac80764-8e3e-4d39-a0f4-8929792853dd",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.174Z",
-      "data": {
-        "text": "admin note"
-      },
-      "updatedAt": "2026-04-15T01:03:40.174Z"
+      "text": "admin note",
+      "id": "548ff43c-cf03-4493-9ee2-ae410f55cdaa",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.139Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "text": "updated",
+      "id": "c7366a49-61ee-4129-aa75-6facab956180",
+      "ownerId": "11542d14-3e0b-417c-bf55-d2f1b131eee5",
+      "createdAt": "2026-04-15T03:01:48.146Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "text": "admin note",
+      "id": "6d7a2fda-92ce-4db2-acb2-8a924edc4aaf",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.402Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     }
   ],
   "docs": [],
   "items": [
     {
-      "id": "02703663-1387-49be-96bb-6a0536f6bd81",
-      "ownerId": "9444b568-9aee-4d3e-b085-ead70560200b",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.222Z",
-      "data": {
-        "label": "test",
-        "id": "evil-id",
-        "createdAt": "1970-01-01"
-      },
-      "updatedAt": "2026-04-15T01:03:40.226Z"
+      "label": "test",
+      "id": "fb5446cd-594a-4e67-a150-19d76d8993fd",
+      "ownerId": "11542d14-3e0b-417c-bf55-d2f1b131eee5",
+      "createdAt": "2026-04-15T03:01:48.191Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "label": "test",
+      "id": "de73f194-cb84-402d-8ff0-6582e274e2d8",
+      "ownerId": "08eefabd-47f0-4c60-bf89-e0fbaed2b885",
+      "createdAt": "2026-04-17T01:54:57.431Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     }
   ],
   "shared_docs": [
     {
-      "id": "a403a350-4933-43b8-8270-b27c4c95f875",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.235Z",
-      "data": {
-        "title": "Shared Read",
-        "sharedWith": [
-          {
-            "userId": "9444b568-9aee-4d3e-b085-ead70560200b",
-            "access": "write"
-          }
-        ]
-      },
-      "updatedAt": "2026-04-15T01:03:40.273Z"
+      "title": "Shared Read",
+      "sharedWith": [
+        {
+          "userId": "11542d14-3e0b-417c-bf55-d2f1b131eee5",
+          "access": "write"
+        }
+      ],
+      "id": "eacbd03e-1437-4aef-95b0-63728f86a704",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.200Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "8f52efc2-2313-4a47-bd9e-0c67af220ac5",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.252Z",
-      "data": {
-        "title": "Shared Write",
-        "sharedWith": [
-          {
-            "userId": "9444b568-9aee-4d3e-b085-ead70560200b",
-            "access": "write"
-          }
-        ]
-      },
-      "updatedAt": "2026-04-15T01:03:40.252Z"
+      "title": "Shared Write",
+      "sharedWith": [
+        {
+          "userId": "11542d14-3e0b-417c-bf55-d2f1b131eee5",
+          "access": "write"
+        }
+      ],
+      "id": "adfe68b6-1608-489e-8aa6-8c0aba0ece35",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.217Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "title": "Shared Read",
+      "sharedWith": [
+        {
+          "userId": "08eefabd-47f0-4c60-bf89-e0fbaed2b885",
+          "access": "write"
+        }
+      ],
+      "id": "d1728b9e-07ff-4a35-b667-e581a584d34e",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.442Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "title": "Shared Write",
+      "sharedWith": [
+        {
+          "userId": "08eefabd-47f0-4c60-bf89-e0fbaed2b885",
+          "access": "write"
+        }
+      ],
+      "id": "deb3ef8d-2311-4143-a2a6-e4fdd5634d7c",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.457Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     }
   ],
   "team_docs": [
     {
-      "id": "cdbad233-7c69-4740-8930-0bdc6ac6c4ea",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.285Z",
-      "data": {
-        "title": "Team Doc",
-        "sharedWithTeams": [
-          {
-            "access": "write"
-          }
-        ]
-      },
-      "updatedAt": "2026-04-15T01:03:40.298Z"
+      "title": "Team Doc",
+      "sharedWithTeams": [
+        {
+          "teamId": "e4297c2a-f22d-40fc-8750-e285aac9b30a",
+          "access": "write"
+        }
+      ],
+      "id": "429151c1-16ec-434e-8a6b-0c209c9d49c6",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.260Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "title": "Team Doc",
+      "sharedWithTeams": [
+        {
+          "access": "write"
+        }
+      ],
+      "id": "c2c9515e-245d-4151-b400-10a60b95825f",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.492Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     }
   ],
   "catalog": [
     {
-      "id": "a64e39b8-6c38-4923-96ad-9ebb1957ae88",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.322Z",
-      "data": {
-        "name": "Apple",
-        "price": 1.5,
-        "category": "fruit",
-        "stock": 100,
-        "active": true
-      },
-      "updatedAt": "2026-04-15T01:03:40.322Z"
+      "name": "Apple",
+      "price": 1.5,
+      "category": "fruit",
+      "stock": 100,
+      "active": true,
+      "id": "d16a5637-3e2f-475c-949f-5a9259e6ef55",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.344Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "b8204e27-e1b1-483e-b923-7440c0ecc50c",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.326Z",
-      "data": {
-        "name": "Banana",
-        "price": 0.5,
-        "category": "fruit",
-        "stock": 200,
-        "active": true
-      },
-      "updatedAt": "2026-04-15T01:03:40.326Z"
+      "name": "Banana",
+      "price": 0.5,
+      "category": "fruit",
+      "stock": 200,
+      "active": true,
+      "id": "01071efe-7af6-40eb-9370-a9f879c95150",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.354Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "15af3b70-bd83-4cbf-abd8-f85da45338c2",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.331Z",
-      "data": {
-        "name": "Carrot",
-        "price": 2,
-        "category": "veggie",
-        "stock": 50,
-        "active": false
-      },
-      "updatedAt": "2026-04-15T01:03:40.331Z"
+      "name": "Carrot",
+      "price": 2,
+      "category": "veggie",
+      "stock": 50,
+      "active": false,
+      "id": "ba6102a9-a86a-43a9-9a8b-73c997646801",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.363Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "d7d1b92b-b4aa-4333-9ae2-de78b2bb997e",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.336Z",
-      "data": {
-        "name": "Date",
-        "price": 5,
-        "category": "fruit",
-        "stock": 30,
-        "active": true
-      },
-      "updatedAt": "2026-04-15T01:03:40.336Z"
+      "name": "Date",
+      "price": 5,
+      "category": "fruit",
+      "stock": 30,
+      "active": true,
+      "id": "35a963e6-c9e3-4a21-956d-c1bfe9ae3415",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.368Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "38b04c2a-cb1d-4ec0-b881-45b0a1565c35",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.345Z",
-      "data": {
-        "name": "Eggplant",
-        "price": 3.5,
-        "category": "veggie",
-        "stock": 80,
-        "active": true
-      },
-      "updatedAt": "2026-04-15T01:03:40.345Z"
+      "name": "Eggplant",
+      "price": 3.5,
+      "category": "veggie",
+      "stock": 80,
+      "active": true,
+      "id": "a856bc10-2aa0-4c6b-aa7a-ba99f3b9b507",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.372Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "name": "Apple",
+      "price": 1.5,
+      "category": "fruit",
+      "stock": 100,
+      "active": true,
+      "id": "44590f65-012f-4bf6-b371-00a1a3818ebd",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.544Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "name": "Banana",
+      "price": 0.5,
+      "category": "fruit",
+      "stock": 200,
+      "active": true,
+      "id": "26bc6785-7751-4d0e-a52f-387608df3878",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.549Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "name": "Carrot",
+      "price": 2,
+      "category": "veggie",
+      "stock": 50,
+      "active": false,
+      "id": "d664fd90-b0b7-490c-908d-9306da78611f",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.553Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "name": "Date",
+      "price": 5,
+      "category": "fruit",
+      "stock": 30,
+      "active": true,
+      "id": "2a54c11c-671c-40c1-a57f-33b99853554a",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.556Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "name": "Eggplant",
+      "price": 3.5,
+      "category": "veggie",
+      "stock": 80,
+      "active": true,
+      "id": "6067d0f6-86d9-4354-bce5-bc22510a65ae",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.559Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     }
   ],
   "concurrent_items": [
     {
-      "id": "7ea6e8c5-6e47-490b-bcbf-58dd181e034f",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.412Z",
-      "data": {
-        "index": 0,
-        "value": 0.5223208759454743
-      },
-      "updatedAt": "2026-04-15T01:03:40.412Z"
+      "index": 0,
+      "value": 0.4740389765139492,
+      "id": "6cf704f1-5f69-45ef-b867-716ec79f0a14",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.459Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "a806bf10-fc30-4bcf-b631-ecf9eb501c1e",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.429Z",
-      "data": {
-        "index": 1,
-        "value": 0.1166946249805535
-      },
-      "updatedAt": "2026-04-15T01:03:40.429Z"
+      "index": 1,
+      "value": 0.1316351084617633,
+      "id": "6236da8a-b87c-44b0-abf9-98894e88318c",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.477Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "8c38c7d8-3245-43ff-969e-f5583bccec07",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.431Z",
-      "data": {
-        "index": 2,
-        "value": 0.4857972730898811
-      },
-      "updatedAt": "2026-04-15T01:03:40.431Z"
+      "index": 2,
+      "value": 0.7855714047096974,
+      "id": "5d4c6fae-3858-4b93-abaa-fecd957f6146",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.478Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "5977d69d-274c-4b19-b1ef-637c97496e15",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.432Z",
-      "data": {
-        "index": 3,
-        "value": 0.14101770781243372
-      },
-      "updatedAt": "2026-04-15T01:03:40.432Z"
+      "index": 3,
+      "value": 0.4021983809651529,
+      "id": "cc1824fb-eec0-4ac9-9854-1eacf9f45606",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.481Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "f6d4ff0d-d6be-4a92-bfea-df7e3a6fcad6",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.434Z",
-      "data": {
-        "index": 4,
-        "value": 0.011640233334218375
-      },
-      "updatedAt": "2026-04-15T01:03:40.434Z"
+      "index": 4,
+      "value": 0.4944057247999214,
+      "id": "b977f909-f60a-44f0-8792-a9c7f9317509",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.483Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "ae118d8c-177d-4eec-8297-31cd2881f1d5",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.436Z",
-      "data": {
-        "index": 5,
-        "value": 0.5821843985058603
-      },
-      "updatedAt": "2026-04-15T01:03:40.436Z"
+      "index": 5,
+      "value": 0.6365441952723777,
+      "id": "67ac6d04-7a04-48ee-8c6a-d837f9eb1559",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.485Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "228a551d-5b42-49c6-b221-98d892151106",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.437Z",
-      "data": {
-        "index": 6,
-        "value": 0.034066751264626216
-      },
-      "updatedAt": "2026-04-15T01:03:40.437Z"
+      "index": 6,
+      "value": 0.19033419194604362,
+      "id": "31d6e8c7-df78-4e18-a6cd-bd4aa67e3460",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.487Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "86b57815-ba68-4e22-82f0-99766a827ddb",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.439Z",
-      "data": {
-        "index": 7,
-        "value": 0.5156221530870563
-      },
-      "updatedAt": "2026-04-15T01:03:40.439Z"
+      "index": 8,
+      "value": 0.7871505980688708,
+      "id": "93bfbf37-092d-41dc-ba7e-dc2b26837b87",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.489Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "115451ec-a215-4e0b-b19a-303133ee1be1",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.441Z",
-      "data": {
-        "index": 8,
-        "value": 0.13120420780903308
-      },
-      "updatedAt": "2026-04-15T01:03:40.441Z"
+      "index": 7,
+      "value": 0.20664663923469662,
+      "id": "48b2e46e-2567-4e41-92f2-64ad68958111",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.491Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "558380b1-02a2-41eb-9f86-b5030bc5d06a",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.443Z",
-      "data": {
-        "index": 9,
-        "value": 0.07386048906776355
-      },
-      "updatedAt": "2026-04-15T01:03:40.443Z"
+      "index": 10,
+      "value": 0.43777816958749916,
+      "id": "aa20e377-10db-477c-8824-26e3654b7ada",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.494Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "15c15ffa-1542-4b23-9d2a-d3ab9aeb6aa8",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.444Z",
-      "data": {
-        "index": 10,
-        "value": 0.19527042029082176
-      },
-      "updatedAt": "2026-04-15T01:03:40.444Z"
+      "index": 9,
+      "value": 0.8015662656825114,
+      "id": "d9eb69b1-ffaa-4d13-a30b-bd16779c1a99",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.496Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "9cf324f0-c408-4b8a-b6e4-139a7eeecdc4",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.445Z",
-      "data": {
-        "index": 11,
-        "value": 0.7211086282317881
-      },
-      "updatedAt": "2026-04-15T01:03:40.445Z"
+      "index": 11,
+      "value": 0.10247595939071119,
+      "id": "405698b4-a348-4868-95d7-1a2a3219c5ad",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.498Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "d060bda4-038d-4824-b906-9574dc142dab",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.447Z",
-      "data": {
-        "index": 12,
-        "value": 0.7320872778327312
-      },
-      "updatedAt": "2026-04-15T01:03:40.447Z"
+      "index": 12,
+      "value": 0.3737672816621743,
+      "id": "15bc0039-b3d0-452f-9a67-bb809aceca5a",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.501Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "58512745-1663-421a-bd2a-1352cb2ad7e4",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.448Z",
-      "data": {
-        "index": 13,
-        "value": 0.8580113464670461
-      },
-      "updatedAt": "2026-04-15T01:03:40.448Z"
+      "index": 13,
+      "value": 0.012573155871389852,
+      "id": "17bea5db-0984-4b7c-8c5c-929eec55219c",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.504Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "b20d3744-d8b7-4cb8-b0e4-8d286d5f1266",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.450Z",
-      "data": {
-        "index": 14,
-        "value": 0.27055622896238984
-      },
-      "updatedAt": "2026-04-15T01:03:40.450Z"
+      "index": 15,
+      "value": 0.5834376793514029,
+      "id": "817f127a-9e36-4d8d-a47d-f57cd4f9435c",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.506Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "89012bf2-a3ae-4134-b68c-696b8c5a982b",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.452Z",
-      "data": {
-        "index": 15,
-        "value": 0.41845416555961945
-      },
-      "updatedAt": "2026-04-15T01:03:40.452Z"
+      "index": 14,
+      "value": 0.4155750530695085,
+      "id": "d13c2d18-d79e-4d1e-a1bd-bfe0c1a3b063",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.507Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "1af2686a-51b7-4b71-aaef-73a842169018",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.454Z",
-      "data": {
-        "index": 16,
-        "value": 0.3063399047546108
-      },
-      "updatedAt": "2026-04-15T01:03:40.454Z"
+      "index": 16,
+      "value": 0.007785677330117924,
+      "id": "87b430e5-5220-4c35-a5c6-aeb1395a7b9d",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.509Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "f995aef6-fa4f-49be-8b24-e545f5f0b634",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.456Z",
-      "data": {
-        "index": 17,
-        "value": 0.885762069233991
-      },
-      "updatedAt": "2026-04-15T01:03:40.456Z"
+      "index": 17,
+      "value": 0.7663501876192736,
+      "id": "b5d11d7e-986a-4a40-863d-3e9dd99eed66",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.511Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "0eb77d4f-80b9-43e7-8ed0-c0dc0d14124c",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.458Z",
-      "data": {
-        "index": 18,
-        "value": 0.914544376869839
-      },
-      "updatedAt": "2026-04-15T01:03:40.458Z"
+      "index": 18,
+      "value": 0.31676645054223707,
+      "id": "08186006-14dc-4d27-8587-1e3518e09871",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.513Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     },
     {
-      "id": "8aeb4a91-4c2e-4c27-b8a7-047492a9d60d",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.461Z",
-      "data": {
-        "index": 19,
-        "value": 0.7802566063477967
-      },
-      "updatedAt": "2026-04-15T01:03:40.461Z"
+      "index": 19,
+      "value": 0.5796391970278236,
+      "id": "7d7077a5-aa1b-4e3d-ac8e-be9fdf129f7c",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.516Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "index": 0,
+      "value": 0.49158266032749964,
+      "id": "143662a8-0c56-4d48-9775-16f8710d8d84",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.657Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "index": 1,
+      "value": 0.5197862505217903,
+      "id": "0c49153e-fa3a-4d0a-a6fe-ac37264e4d9f",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.684Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "index": 2,
+      "value": 0.08625363505440342,
+      "id": "a218ce4d-121e-4f5b-878e-156aece1c17c",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.686Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "index": 3,
+      "value": 0.14409657935865294,
+      "id": "125a424c-8f39-4603-a9d7-315c33b39622",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.689Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "index": 4,
+      "value": 0.5834469383915643,
+      "id": "a016ce6a-f5aa-4fbc-a6c7-5a59afd4b70b",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.692Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "index": 5,
+      "value": 0.14096183593403522,
+      "id": "8af0f738-9313-4dfa-8620-412c1c25783f",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.694Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "index": 6,
+      "value": 0.31383286468523175,
+      "id": "e57b18f2-20f9-46da-a2e6-8130ba56d40c",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.698Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "index": 7,
+      "value": 0.2644990943213563,
+      "id": "681daa19-414a-4032-9e87-c3ca2efb4566",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.701Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "index": 8,
+      "value": 0.24414636817714153,
+      "id": "a4322a8c-4fe4-4f07-bf62-c8f55c8517e7",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.704Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "index": 9,
+      "value": 0.3044212091934124,
+      "id": "3730536d-92c6-4806-954c-2c7d731bf6e3",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.706Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "index": 10,
+      "value": 0.9890404410527118,
+      "id": "4d543929-8f81-451c-8535-d3025870a083",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.709Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "index": 11,
+      "value": 0.6844839006176007,
+      "id": "74ff446e-c73b-4b9f-a7af-b773bebe7b89",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.711Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "index": 12,
+      "value": 0.3244266514777653,
+      "id": "5b829372-b9f8-4cc1-8083-7279e7324ed1",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.714Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "index": 13,
+      "value": 0.20305905481681685,
+      "id": "55a0a105-e89e-432a-b096-4af272b7d32e",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.717Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "index": 14,
+      "value": 0.8266721606904962,
+      "id": "e8101ca3-9108-4d68-8397-5143888bbccc",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.719Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "index": 15,
+      "value": 0.6099570377213019,
+      "id": "84448d2f-eac0-4aa5-968f-0861e2f2679f",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.721Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "index": 16,
+      "value": 0.18861895790836425,
+      "id": "22c6bf72-c995-4db0-9357-5eb10df845ad",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.723Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "index": 17,
+      "value": 0.1870563642838421,
+      "id": "02e9910f-afe8-438f-ab34-41be2da60823",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.725Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "index": 18,
+      "value": 0.8408846598749854,
+      "id": "04bbe05e-a29b-480a-8dc6-372acb078e78",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.728Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "index": 19,
+      "value": 0.7149633539983172,
+      "id": "db3b855c-7965-4af0-a7b5-345065435424",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.730Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     }
   ],
   "counters": [
     {
-      "id": "05d4dcbf-c979-4636-adcb-1cf0813f5a8b",
-      "ownerId": "a0106f86-cb87-4645-a486-615e38995f77",
-      "sharedWith": {
-        "users": [],
-        "teams": []
-      },
-      "createdAt": "2026-04-15T01:03:40.485Z",
-      "data": {
-        "value": 14
-      },
-      "updatedAt": "2026-04-15T01:03:40.522Z"
+      "value": 14,
+      "id": "f8807c9d-33f5-4549-b17e-62d9481d673e",
+      "ownerId": "28cb3e84-a434-424f-af55-2ff1e427682e",
+      "createdAt": "2026-04-15T03:01:48.543Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
+    },
+    {
+      "value": 14,
+      "id": "c010a8fe-a0ff-4460-8cb3-c13146c07717",
+      "ownerId": "163f600d-e978-4d9d-92a7-af24aeb69f09",
+      "createdAt": "2026-04-17T01:54:57.761Z",
+      "sharing": {
+        "users": {},
+        "teams": {}
+      }
     }
   ],
   "trash": []

@@ -1,84 +1,205 @@
+import test from 'node:test';
 import assert from 'node:assert/strict';
-import crypto from 'node:crypto';
 import request from 'supertest';
-import { decodeJwt } from 'jose';
-import { bootstrap } from '../src/bootstrap.js';
-import { closeDatabase, removeFileIfExists } from './test-helpers.js';
+import { importJWK, jwtVerify } from 'jose';
+import { createApp } from '../src/app.js';
+import { initializeDatabase } from '../src/db/init.js';
+import { listPublicJwks } from '../src/services/key-service.js';
+import { sha256Base64Url } from '../src/utils/encoding.js';
 
-function createPkceChallenge(verifier) {
-  return crypto.createHash('sha256').update(verifier).digest('base64url');
+const validParams = {
+  client_id: 'test-client',
+  client_secret: 'test-secret',
+  redirect_uri: 'http://localhost:8080/callback',
+  response_type: 'code',
+  scope: 'openid email',
+};
+
+async function createAuthorizationCode(app, overrides = {}) {
+  const response = await request(app)
+    .post('/oauth2/authorize')
+    .type('form')
+    .send({
+      ...validParams,
+      username: 'testuser',
+      password: 'password123',
+      ...overrides,
+    })
+    .expect(302);
+
+  return new URL(response.headers.location).searchParams.get('code');
 }
 
-async function run() {
-  const databaseFile = 'data/test-token.sqlite';
-  await removeFileIfExists(databaseFile);
+test('POST /oauth2/token returns tokens for body client auth', async () => {
+  await initializeDatabase();
+  const app = createApp();
+  const code = await createAuthorizationCode(app);
 
-  const { app, database } = await bootstrap({
-    issuer: 'http://127.0.0.1:3400',
-    databaseFile,
+  const response = await request(app)
+    .post('/oauth2/token')
+    .type('form')
+    .send({
+      grant_type: 'authorization_code',
+      code,
+      redirect_uri: validParams.redirect_uri,
+      client_id: validParams.client_id,
+      client_secret: validParams.client_secret,
+    })
+    .expect(200)
+    .expect('Content-Type', /application\/json/);
+
+  assert.equal(response.headers['cache-control'], 'no-store');
+  assert.equal(typeof response.body.access_token, 'string');
+  assert.match(response.body.id_token, /^[^.]+\.[^.]+\.[^.]+$/);
+  assert.equal(response.body.token_type, 'Bearer');
+  assert.equal(typeof response.body.expires_in, 'number');
+
+  const [publicJwk] = await listPublicJwks();
+  const publicKey = await importJWK(publicJwk, 'RS256');
+  const verified = await jwtVerify(response.body.id_token, publicKey, {
+    issuer: 'http://localhost:3000',
+    audience: validParams.client_id,
   });
 
-  try {
-    const codeVerifier = 'verifier-value-for-pkce-1234567890';
-    const codeChallenge = createPkceChallenge(codeVerifier);
+  assert.equal(verified.protectedHeader.alg, 'RS256');
+  assert.equal(verified.protectedHeader.kid, publicJwk.kid);
+  assert.equal(verified.payload.sub, 'user-testuser');
+  assert.equal(verified.payload.iss, 'http://localhost:3000');
+  assert.ok(verified.payload.exp > verified.payload.iat);
+});
 
-    const authorizationResponse = await request(app)
-      .get('/oauth2/authorize')
-      .query({
-        response_type: 'code',
-        client_id: 'oidc-client',
-        redirect_uri: 'http://127.0.0.1:4000/callback',
-        scope: 'openid profile email',
-        login_hint: 'alice@example.com',
-        password: 'password123',
-        code_challenge: codeChallenge,
-        code_challenge_method: 'S256',
-      })
-      .expect(200);
+test('POST /oauth2/token supports HTTP Basic client auth', async () => {
+  await initializeDatabase();
+  const app = createApp();
+  const code = await createAuthorizationCode(app);
+  const basic = Buffer.from('test-client:test-secret').toString('base64');
 
-    const tokenResponse = await request(app)
-      .post('/oauth2/token')
-      .send({
-        grant_type: 'authorization_code',
-        code: authorizationResponse.body.code,
-        client_id: 'oidc-client',
-        redirect_uri: 'http://127.0.0.1:4000/callback',
-        code_verifier: codeVerifier,
-      })
-      .expect(200);
+  const response = await request(app)
+    .post('/oauth2/token')
+    .set('Authorization', `Basic ${basic}`)
+    .type('form')
+    .send({
+      grant_type: 'authorization_code',
+      code,
+      redirect_uri: validParams.redirect_uri,
+    })
+    .expect(200);
 
-    assert.equal(tokenResponse.body.token_type, 'Bearer');
-    assert.equal(tokenResponse.body.expires_in, 3600);
-    assert.ok(tokenResponse.body.access_token);
-    assert.ok(tokenResponse.body.id_token);
+  assert.equal(response.body.token_type, 'Bearer');
+});
 
-    const decodedIdToken = decodeJwt(tokenResponse.body.id_token);
-    assert.equal(decodedIdToken.iss, 'http://127.0.0.1:3400');
-    assert.equal(decodedIdToken.sub, 'user-123');
-    assert.equal(decodedIdToken.aud, 'oidc-client');
-    assert.equal(decodedIdToken.email, 'alice@example.com');
+test('POST /oauth2/token enforces required request fields and grant type', async () => {
+  await initializeDatabase();
+  const app = createApp();
 
-    const invalidPkceResponse = await request(app)
-      .post('/oauth2/token')
-      .send({
-        grant_type: 'authorization_code',
-        code: authorizationResponse.body.code,
-        client_id: 'oidc-client',
-        redirect_uri: 'http://127.0.0.1:4000/callback',
-        code_verifier: 'wrong-verifier',
-      })
-      .expect(400);
+  const missingGrant = await request(app)
+    .post('/oauth2/token')
+    .type('form')
+    .send({})
+    .expect(400);
 
-    assert.equal(invalidPkceResponse.body.error, 'invalid_grant');
+  assert.equal(missingGrant.body.error, 'invalid_request');
 
-    console.log('token.test.js: ok');
-  } finally {
-    await closeDatabase(database);
-  }
-}
+  const unsupportedGrant = await request(app)
+    .post('/oauth2/token')
+    .type('form')
+    .send({ grant_type: 'refresh_token', code: 'x', redirect_uri: validParams.redirect_uri })
+    .expect(400);
 
-run().catch((error) => {
-  console.error('token.test.js: failed');
-  console.error(error);
-  process.exitCode = 1;
+  assert.equal(unsupportedGrant.body.error, 'unsupported_grant_type');
+});
+
+test('POST /oauth2/token rejects invalid clients', async () => {
+  await initializeDatabase();
+  const app = createApp();
+  const code = await createAuthorizationCode(app);
+
+  const response = await request(app)
+    .post('/oauth2/token')
+    .type('form')
+    .send({
+      grant_type: 'authorization_code',
+      code,
+      redirect_uri: validParams.redirect_uri,
+      client_id: 'test-client',
+      client_secret: 'wrong-secret',
+    })
+    .expect(401);
+
+  assert.equal(response.body.error, 'invalid_client');
+});
+
+test('POST /oauth2/token rejects reused authorization codes', async () => {
+  await initializeDatabase();
+  const app = createApp();
+  const code = await createAuthorizationCode(app);
+
+  await request(app)
+    .post('/oauth2/token')
+    .type('form')
+    .send({
+      grant_type: 'authorization_code',
+      code,
+      redirect_uri: validParams.redirect_uri,
+      client_id: validParams.client_id,
+      client_secret: validParams.client_secret,
+    })
+    .expect(200);
+
+  const replay = await request(app)
+    .post('/oauth2/token')
+    .type('form')
+    .send({
+      grant_type: 'authorization_code',
+      code,
+      redirect_uri: validParams.redirect_uri,
+      client_id: validParams.client_id,
+      client_secret: validParams.client_secret,
+    })
+    .expect(400);
+
+  assert.equal(replay.body.error, 'invalid_grant');
+});
+
+test('POST /oauth2/token validates PKCE S256', async () => {
+  await initializeDatabase();
+  const app = createApp();
+  const codeVerifier = 'pkce-verifier-value';
+  const code = await createAuthorizationCode(app, {
+    code_challenge: sha256Base64Url(codeVerifier),
+    code_challenge_method: 'S256',
+  });
+
+  const invalidResponse = await request(app)
+    .post('/oauth2/token')
+    .type('form')
+    .send({
+      grant_type: 'authorization_code',
+      code,
+      redirect_uri: validParams.redirect_uri,
+      client_id: validParams.client_id,
+      client_secret: validParams.client_secret,
+      code_verifier: 'wrong-verifier',
+    })
+    .expect(400);
+
+  assert.equal(invalidResponse.body.error, 'invalid_grant');
+
+  const validCode = await createAuthorizationCode(app, {
+    code_challenge: sha256Base64Url(codeVerifier),
+    code_challenge_method: 'S256',
+  });
+
+  await request(app)
+    .post('/oauth2/token')
+    .type('form')
+    .send({
+      grant_type: 'authorization_code',
+      code: validCode,
+      redirect_uri: validParams.redirect_uri,
+      client_id: validParams.client_id,
+      client_secret: validParams.client_secret,
+      code_verifier: codeVerifier,
+    })
+    .expect(200);
 });

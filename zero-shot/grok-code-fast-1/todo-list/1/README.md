@@ -1,73 +1,102 @@
-# React + TypeScript + Vite
+# To-Do List Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React-based to-do list application with drag-and-drop reordering, undo/redo functionality, and mobile-friendly gestures.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Task Management**: Create, edit, delete, and toggle completion of tasks
+- **Due Dates**: Assign due dates to tasks with automatic "late" detection
+- **Filters**: Filter tasks by All, Completed, Pending, or Late status
+- **Drag-and-Drop**: Reorder tasks via drag-and-drop
+- **Undo/Redo**: Full undo/redo system with keyboard shortcuts (Ctrl+Z, Ctrl+Shift+Z)
+- **Action Log**: Visible log of all user actions
+- **Persistence**: Tasks saved to localStorage
+- **Mobile Gestures**: Swipe to delete, tap to complete
+- **Responsive Design**: Works on desktop and mobile devices
 
-## React Compiler
+## Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Prerequisites
 
-## Expanding the ESLint configuration
+- Node.js (v16 or higher)
+- npm or yarn
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Installation
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+1. Clone the repository
+2. Navigate to the project directory
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Running the Application
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Start the development server:
+```bash
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The application will be available at `http://localhost:5173`
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Building for Production
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run build
 ```
+
+## Usage
+
+### Adding Tasks
+- Enter a task title and select a due date
+- Press Enter or click "Add Task"
+
+### Editing Tasks
+- Click on the task title to enter inline edit mode
+- Press Enter to save, Escape to cancel
+
+### Completing Tasks
+- Click the checkbox or tap the task on mobile
+
+### Deleting Tasks
+- Click the delete button or swipe left on mobile
+
+### Reordering Tasks
+- Drag the handle (⋮⋮) to reorder tasks
+
+### Filtering
+- Use the filter buttons to view specific task types
+
+### Undo/Redo
+- Press Ctrl+Z to undo, Ctrl+Shift+Z to redo
+
+## Project Structure
+
+```
+src/
+├── components/
+│   ├── ActionLog.tsx
+│   ├── Filters.tsx
+│   ├── TaskForm.tsx
+│   ├── TaskItem.tsx
+│   ├── TaskList.tsx
+│   └── TodoApp.tsx
+├── TodoContext.tsx
+├── store.ts
+├── types.ts
+├── App.tsx
+├── index.css
+└── main.tsx
+```
+
+## Technologies Used
+
+- **React 18** with TypeScript
+- **Vite** for build tooling
+- **Tailwind CSS** for styling
+- **@dnd-kit** for drag-and-drop functionality
+- **date-fns** for date handling
+
+## Testing
+
+The application includes comprehensive data-testid attributes for all interactive elements, making it ready for automated testing.

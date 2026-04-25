@@ -1,206 +1,125 @@
-import crypto from 'node:crypto';
-import { jwtVerify, SignJWT } from 'jose';
-import { consumeAuthorizationCode, findAuthorizationCode } from './authorization-service.js';
-import { findClientById } from './client-service.js';
-import { findUserById } from './user-service.js';
-import { getActivePrivateKey } from './key-service.js';
-import { getPublicKeyForToken } from './key-service.js';
-import { get, run, withTransaction } from '../database/db.js';
-import { badRequest, unauthorized } from '../utils/errors.js';
-import { nowInSeconds, isoDateAfterSeconds } from '../utils/time.js';
+import { SignJWT } from 'jose';
+import { config } from '../config/index.js';
+import { get, run } from '../db/sqlite.js';
+import { createRandomToken, sha256Base64Url } from '../utils/encoding.js';
+import { getActiveSigningKey } from './key-service.js';
 
-const ACCESS_TOKEN_LIFETIME_SECONDS = 3600;
-const ID_TOKEN_LIFETIME_SECONDS = 3600;
+export function extractClientCredentials(req) {
+  const header = req.headers.authorization;
 
-export async function exchangeAuthorizationCode({ database, config, requestBody }) {
-  if (requestBody.grant_type !== 'authorization_code') {
-    throw badRequest('unsupported_grant_type', 'Only grant_type=authorization_code is supported');
+  if (header?.startsWith('Basic ')) {
+    const decoded = Buffer.from(header.slice(6), 'base64').toString('utf8');
+    const separatorIndex = decoded.indexOf(':');
+
+    if (separatorIndex === -1) {
+      return { clientId: '', clientSecret: '' };
+    }
+
+    return {
+      clientId: decoded.slice(0, separatorIndex),
+      clientSecret: decoded.slice(separatorIndex + 1),
+    };
   }
-
-  if (!requestBody.code || !requestBody.client_id || !requestBody.redirect_uri) {
-    throw badRequest('invalid_request', 'code, client_id, and redirect_uri are required');
-  }
-
-  const client = await findClientById(database, requestBody.client_id);
-  if (!client) {
-    throw badRequest('invalid_client', 'Unknown client_id');
-  }
-
-  if (requestBody.client_secret && client.clientSecret && requestBody.client_secret !== client.clientSecret) {
-    throw unauthorized('invalid_client', 'Client authentication failed');
-  }
-
-  const authorizationCode = await findAuthorizationCode(database, requestBody.code);
-  if (!authorizationCode) {
-    throw badRequest('invalid_grant', 'Authorization code is invalid');
-  }
-
-  validateAuthorizationCode(authorizationCode, requestBody);
-  validatePkce(authorizationCode, requestBody.code_verifier);
-
-  const user = await findUserById(database, authorizationCode.userId);
-  if (!user) {
-    throw badRequest('invalid_grant', 'Authorization code user is no longer available');
-  }
-
-  const signingKey = await getActivePrivateKey(database);
-  if (!signingKey) {
-    throw badRequest('server_error', 'No active signing key is available');
-  }
-
-  const tokenResponse = await issueTokens({
-    user,
-    client,
-    authorizationCode,
-    issuer: config.issuer,
-    signingKey,
-  });
-
-  await withTransaction(database, async () => {
-    await consumeAuthorizationCode(database, authorizationCode.code);
-    await run(
-      database,
-      `
-        INSERT INTO tokens (access_token, id_token, client_id, user_id, scope, expires_at)
-        VALUES (?, ?, ?, ?, ?, ?)
-      `,
-      [
-        tokenResponse.access_token,
-        tokenResponse.id_token,
-        client.clientId,
-        user.id,
-        authorizationCode.scope,
-        isoDateAfterSeconds(ACCESS_TOKEN_LIFETIME_SECONDS),
-      ],
-    );
-  });
-
-  return tokenResponse;
-}
-
-export async function verifyAccessToken({ database, config, accessToken }) {
-  const storedToken = await getStoredAccessToken(database, accessToken);
-  if (!storedToken) {
-    throw unauthorized('invalid_token', 'Access token is invalid');
-  }
-
-  if (new Date(storedToken.expiresAt).getTime() <= Date.now()) {
-    throw unauthorized('invalid_token', 'Access token has expired');
-  }
-
-  const signingKey = await getPublicKeyForToken(database, accessToken);
-  if (!signingKey) {
-    throw unauthorized('invalid_token', 'No signing key is available for the access token');
-  }
-
-  const verification = await jwtVerify(accessToken, signingKey.publicKey, {
-    issuer: config.issuer,
-  });
 
   return {
-    tokenId: storedToken.id,
-    clientId: storedToken.clientId,
-    subject: verification.payload.sub,
-    email: verification.payload.email,
-    name: verification.payload.name,
-    scope: verification.payload.scope,
+    clientId: req.body.client_id,
+    clientSecret: req.body.client_secret,
   };
 }
 
-function validateAuthorizationCode(authorizationCode, requestBody) {
-  if (authorizationCode.consumedAt) {
-    throw badRequest('invalid_grant', 'Authorization code has already been used');
+export async function authenticateClient(clientId, clientSecret) {
+  if (!clientId) {
+    return null;
   }
 
-  if (new Date(authorizationCode.expiresAt).getTime() <= Date.now()) {
-    throw badRequest('invalid_grant', 'Authorization code has expired');
+  const client = await get(
+    'SELECT id, client_id, client_secret FROM clients WHERE client_id = ?',
+    [clientId],
+  );
+
+  if (!client || client.client_secret !== clientSecret) {
+    return null;
   }
 
-  if (authorizationCode.clientId !== requestBody.client_id) {
-    throw badRequest('invalid_grant', 'Authorization code was not issued to this client');
-  }
-
-  if (authorizationCode.redirectUri !== requestBody.redirect_uri) {
-    throw badRequest('invalid_grant', 'redirect_uri does not match the original authorization request');
-  }
+  return client;
 }
 
-function validatePkce(authorizationCode, codeVerifier) {
-  if (!authorizationCode.codeChallenge) {
-    return;
+export function validateTokenRequestShape(body) {
+  if (!body.grant_type) {
+    return { status: 400, error: 'invalid_request', message: 'grant_type is required.' };
+  }
+
+  if (body.grant_type !== 'authorization_code') {
+    return {
+      status: 400,
+      error: 'unsupported_grant_type',
+      message: 'grant_type must be authorization_code.',
+    };
+  }
+
+  if (!body.code) {
+    return { status: 400, error: 'invalid_request', message: 'code is required.' };
+  }
+
+  if (!body.redirect_uri) {
+    return { status: 400, error: 'invalid_request', message: 'redirect_uri is required.' };
+  }
+
+  return null;
+}
+
+export function validatePkce(authCode, codeVerifier) {
+  if (!authCode.code_challenge) {
+    return true;
+  }
+
+  if (authCode.code_challenge_method !== 'S256') {
+    return false;
   }
 
   if (!codeVerifier) {
-    throw badRequest('invalid_grant', 'code_verifier is required for PKCE-protected authorization codes');
+    return false;
   }
 
-  const challenge = crypto
-    .createHash('sha256')
-    .update(codeVerifier)
-    .digest('base64url');
-
-  if (challenge !== authorizationCode.codeChallenge) {
-    throw badRequest('invalid_grant', 'code_verifier does not match the code_challenge');
-  }
+  return sha256Base64Url(codeVerifier) === authCode.code_challenge;
 }
 
-async function issueTokens({ user, client, authorizationCode, issuer, signingKey }) {
-  const issuedAt = nowInSeconds();
-  const accessTokenExpiration = issuedAt + ACCESS_TOKEN_LIFETIME_SECONDS;
-  const idTokenExpiration = issuedAt + ID_TOKEN_LIFETIME_SECONDS;
-  const scope = authorizationCode.scope;
+export async function markAuthorizationCodeConsumed(id) {
+  await run(
+    `UPDATE authorization_codes
+     SET consumed_at = CURRENT_TIMESTAMP
+     WHERE id = ?`,
+    [id],
+  );
+}
 
-  const accessToken = await new SignJWT({
-    scope,
-    email: user.email,
-    name: user.name,
-  })
-    .setProtectedHeader({ alg: 'RS256', kid: signingKey.kid, typ: 'at+jwt' })
-    .setIssuer(issuer)
-    .setSubject(user.subject)
-    .setAudience(client.clientId)
-    .setIssuedAt(issuedAt)
-    .setExpirationTime(accessTokenExpiration)
-    .sign(signingKey.privateKey);
+export async function issueTokens({ client, authCode }) {
+  const accessToken = createRandomToken(32);
+  const expiresAt = new Date(
+    Date.now() + config.accessTokenTtlSeconds * 1000,
+  ).toISOString();
 
-  const idToken = await new SignJWT({
-    email: user.email,
-    email_verified: true,
-    name: user.name,
-  })
-    .setProtectedHeader({ alg: 'RS256', kid: signingKey.kid, typ: 'JWT' })
-    .setIssuer(issuer)
-    .setSubject(user.subject)
-    .setAudience(client.clientId)
-    .setIssuedAt(issuedAt)
-    .setExpirationTime(idTokenExpiration)
+  await run(
+    `INSERT INTO tokens (access_token, client_id, user_id, scope, expires_at)
+     VALUES (?, ?, ?, ?, ?)`,
+    [accessToken, client.id, authCode.user_id, authCode.scope, expiresAt],
+  );
+
+  const signingKey = await getActiveSigningKey();
+  const now = Math.floor(Date.now() / 1000);
+  const idToken = await new SignJWT({})
+    .setProtectedHeader({ alg: 'RS256', kid: signingKey.kid })
+    .setIssuer(config.issuer)
+    .setAudience(client.client_id)
+    .setSubject(authCode.sub)
+    .setIssuedAt(now)
+    .setExpirationTime(now + config.idTokenTtlSeconds)
     .sign(signingKey.privateKey);
 
   return {
     access_token: accessToken,
     id_token: idToken,
     token_type: 'Bearer',
-    expires_in: ACCESS_TOKEN_LIFETIME_SECONDS,
-    scope,
-  };
-}
-
-async function getStoredAccessToken(database, accessToken) {
-  const row = await get(
-    database,
-    'SELECT id, client_id, user_id, scope, expires_at FROM tokens WHERE access_token = ?',
-    [accessToken],
-  );
-
-  if (!row) {
-    return null;
-  }
-
-  return {
-    id: row.id,
-    clientId: row.client_id,
-    userId: row.user_id,
-    scope: row.scope,
-    expiresAt: row.expires_at,
+    expires_in: config.accessTokenTtlSeconds,
   };
 }

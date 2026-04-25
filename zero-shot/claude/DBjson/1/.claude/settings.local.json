@@ -1,16 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm install:*)",
-      "Bash(node:*)",
-      "Bash(git init:*)",
-      "Bash(git config:*)",
-      "Bash(git add:*)",
-      "Bash(git commit -m ':*)",
-      "Bash(git tag:*)",
-      "Bash(mkdir -p \"/c/Users/diegt/Documents/architecture-projects/zero-shot/tests/DBjson\")",
-      "Read(//c/Users/diegt/Documents/architecture-projects/zero-shot/tests/DBjson/**)",
-      "Bash(echo \"exit: $?\")"
+      "Bash(git -C \"C:/Users/diegt/Documents/architecture-projects/zero-shot/claude/DBjson/2\" status)",
+      "Bash(npm install *)",
+      "Bash(DB_PATH=/tmp/test-db.json node src/index.js)",
+      "Bash(curl -s http://localhost:3002/health)",
+      "Bash(curl -s -X POST http://localhost:3002/auth/login -H 'Content-Type: application/json' -d '{\"username\":\"alice\",\"password\":\"secret\"}')",
+      "Bash(pkill -f \"node src/index.js\")"
     ]
   }
 }

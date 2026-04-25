@@ -1,43 +1,43 @@
 import { useState } from 'react';
 
-export function MessageInput({ onSend, disabled }) {
+export default function MessageInput({ onSend, disabled }) {
   const [content, setContent] = useState('');
 
-  function handleSubmit(e) {
-    e.preventDefault();
+  function submit() {
     const trimmed = content.trim();
-    if (trimmed && !disabled) {
-      onSend(trimmed);
-      setContent('');
-    }
+    if (!trimmed) return;
+    onSend(trimmed);
+    setContent('');
   }
 
   function handleKeyDown(e) {
     if (e.key === 'Enter' && !e.shiftKey) {
-      handleSubmit(e);
+      e.preventDefault();
+      submit();
     }
   }
 
   return (
-    <form className="message-input" onSubmit={handleSubmit}>
+    <div className="message-input-row">
       <input
         type="text"
+        data-testid="input-message"
         value={content}
         onChange={(e) => setContent(e.target.value)}
         onKeyDown={handleKeyDown}
-        placeholder={disabled ? 'Connecting…' : 'Type a message… (Enter to send)'}
+        placeholder="Type a message…"
         disabled={disabled}
-        maxLength={1000}
         autoComplete="off"
-        data-testid="input-message"
       />
       <button
-        type="submit"
-        disabled={disabled || !content.trim()}
+        type="button"
         data-testid="btn-send"
+        className="btn-send"
+        onClick={submit}
+        disabled={disabled || content.trim().length === 0}
       >
         Send
       </button>
-    </form>
+    </div>
   );
 }

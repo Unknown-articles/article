@@ -1,271 +1,308 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Header } from './components/Header';
-import { TaskBoard } from './components/TaskBoard';
 import { ActionLog } from './components/ActionLog';
-import {
-  STORAGE_KEY,
-  createTask,
-  createTimestamp,
-  filterTasks,
-  normalizeTask,
-  readStoredAppState,
-  reorderTasks,
-} from './lib/tasks';
+import { FilterBar } from './components/FilterBar';
+import { TaskForm } from './components/TaskForm';
+import { TaskList } from './components/TaskList';
+import { createTask, isTaskLate, loadStoredTasks, reorderTasks } from './utils/tasks';
 
-function App() {
-  const [storedState] = useState(() => readStoredAppState());
-  const [history, setHistory] = useState(storedState.history);
-  const [actionLog, setActionLog] = useState(storedState.actionLog);
-  const historyRef = useRef(history);
-  const { activeFilter, tasks } = history.present;
+const STORAGE_KEY = 'tasks';
+const FILTERS = ['all', 'pending', 'completed', 'late'];
 
-  const visibleTasks = useMemo(
-    () => filterTasks(tasks, activeFilter),
-    [activeFilter, tasks],
-  );
-
-  const completedCount = tasks.filter((task) => task.completed).length;
-  const lateCount = tasks.filter((task) => !task.completed && task.isLate).length;
+export default function App() {
+  const [history, setHistory] = useState(() => ({
+    past: [],
+    present: {
+      tasks: loadStoredTasks(STORAGE_KEY),
+      filter: 'all',
+    },
+    future: [],
+  }));
+  const [actionLog, setActionLog] = useState([]);
+  const presentRef = useRef(history.present);
+  const { tasks, filter } = history.present;
 
   useEffect(() => {
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify({
-        history,
-        actionLog,
-      }),
-    );
-  }, [actionLog, history]);
+    presentRef.current = history.present;
+  }, [history.present]);
 
   useEffect(() => {
-    historyRef.current = history;
-  }, [history]);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+  }, [tasks]);
 
   useEffect(() => {
-    const handleKeyDown = (event) => {
-      const isUndo = event.ctrlKey && !event.shiftKey && event.key.toLowerCase() === 'z';
-      const isRedo = event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'z';
+    function handleKeyboardShortcuts(event) {
+      const isUndo = (event.ctrlKey || event.metaKey) && !event.shiftKey && event.key.toLowerCase() === 'z';
+      const isRedo = (event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === 'z';
 
       if (isUndo) {
         event.preventDefault();
-        if (historyRef.current.past.length) {
-          handleUndo();
-        }
+        handleUndo();
       }
 
       if (isRedo) {
         event.preventDefault();
-        if (historyRef.current.future.length) {
-          handleRedo();
-        }
+        handleRedo();
       }
+    }
+
+    window.addEventListener('keydown', handleKeyboardShortcuts);
+    return () => window.removeEventListener('keydown', handleKeyboardShortcuts);
+  }, [history.future.length, history.past.length]);
+
+  const filterCounts = useMemo(
+    () => ({
+      all: tasks.length,
+      pending: tasks.filter((task) => !task.completed).length,
+      completed: tasks.filter((task) => task.completed).length,
+      late: tasks.filter((task) => isTaskLate(task)).length,
+    }),
+    [tasks],
+  );
+
+  const visibleTasks = useMemo(() => {
+    switch (filter) {
+      case 'completed':
+        return tasks.filter((task) => task.completed);
+      case 'pending':
+        return tasks.filter((task) => !task.completed);
+      case 'late':
+        return tasks.filter((task) => isTaskLate(task));
+      case 'all':
+      default:
+        return tasks;
+    }
+  }, [filter, tasks]);
+
+  const stats = useMemo(() => {
+    return {
+      total: tasks.length,
+      completed: filterCounts.completed,
+      pending: filterCounts.pending,
+      late: filterCounts.late,
     };
+  }, [filterCounts, tasks.length]);
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  const pushAction = (type, payload) => {
+  function appendLog(type, description, payload) {
     setActionLog((currentLog) => [
       {
-        id: crypto.randomUUID(),
         type,
-        timestamp: createTimestamp(),
+        description,
+        timestamp: new Date().toISOString(),
         payload,
       },
       ...currentLog,
-    ].slice(0, 24));
-  };
+    ]);
+  }
 
-  const commitChange = (updater, actionType, payload) => {
-    setHistory((currentHistory) => {
-      const nextPresent = updater(currentHistory.present);
+  function commitChange(updater, logEntry) {
+    const currentPresent = presentRef.current;
+    const nextPresent = updater(currentPresent);
+    if (nextPresent === currentPresent) {
+      return;
+    }
 
-      if (JSON.stringify(nextPresent) === JSON.stringify(currentHistory.present)) {
-        return currentHistory;
-      }
+    setHistory((currentHistory) => ({
+      past: [...currentHistory.past, currentHistory.present],
+      present: nextPresent,
+      future: [],
+    }));
 
-      return {
-        past: [...currentHistory.past, currentHistory.present].slice(-40),
-        present: nextPresent,
-        future: [],
-      };
-    });
+    appendLog(logEntry.type, logEntry.description, logEntry.payload);
+  }
 
-    pushAction(actionType, payload);
-  };
-
-  const handleCreateTask = (values) => {
-    const task = createTask(values);
+  function handleCreateTask({ title, date }) {
+    const newTask = createTask({ title, date });
     commitChange(
       (currentPresent) => ({
         ...currentPresent,
-        tasks: [task, ...currentPresent.tasks],
+        tasks: [newTask, ...currentPresent.tasks],
       }),
-      'ADD_TASK',
       {
-      id: task.id,
-      title: task.title,
-      date: task.date,
+        type: 'ADD_TASK',
+        description: `Added "${newTask.title}"`,
+        payload: { taskId: newTask.id, title, date },
       },
     );
-  };
+  }
 
-  const handleUpdateTask = (taskId, values) => {
+  function handleToggleTask(taskId) {
+    const taskToToggle = presentRef.current.tasks.find((task) => task.id === taskId);
+    if (!taskToToggle) {
+      return;
+    }
+
+    const updatedTask = { ...taskToToggle, completed: !taskToToggle.completed };
     commitChange(
       (currentPresent) => ({
         ...currentPresent,
-        tasks: currentPresent.tasks.map((task) =>
-          task.id === taskId
-            ? normalizeTask({
-                ...task,
-                ...values,
-              })
-            : task,
-        ),
+        tasks: currentPresent.tasks.map((task) => (task.id === taskId ? updatedTask : task)),
       }),
-      'UPDATE_TASK',
       {
-        id: taskId,
-        title: values.title,
-        date: values.date,
+        type: 'TOGGLE_TASK',
+        description: `${updatedTask.completed ? 'Completed' : 'Reopened'} "${updatedTask.title}"`,
+        payload: { taskId, completed: updatedTask.completed },
       },
     );
-  };
+  }
 
-  const handleDeleteTask = (taskId) => {
-    const taskToDelete = tasks.find((task) => task.id === taskId);
+  function handleDeleteTask(taskId) {
+    const taskToDelete = presentRef.current.tasks.find((task) => task.id === taskId);
+    if (!taskToDelete) {
+      return;
+    }
+
     commitChange(
       (currentPresent) => ({
         ...currentPresent,
         tasks: currentPresent.tasks.filter((task) => task.id !== taskId),
       }),
-      'DELETE_TASK',
-      taskToDelete ? { id: taskId, title: taskToDelete.title } : { id: taskId },
-    );
-  };
-
-  const handleToggleTask = (taskId) => {
-    const taskToToggle = tasks.find((task) => task.id === taskId);
-    commitChange(
-      (currentPresent) => ({
-        ...currentPresent,
-        tasks: currentPresent.tasks.map((task) =>
-          task.id === taskId
-            ? normalizeTask({
-                ...task,
-                completed: !task.completed,
-              })
-            : task,
-        ),
-      }),
-      'TOGGLE_TASK',
       {
-        id: taskId,
-        completed: taskToToggle ? !taskToToggle.completed : undefined,
+        type: 'DELETE_TASK',
+        description: `Deleted "${taskToDelete.title}"`,
+        payload: { taskId },
       },
     );
-  };
+  }
 
-  const handleFilterChange = (filterId) => {
-    commitChange(
-      (currentPresent) => ({
-        ...currentPresent,
-        activeFilter: filterId,
-      }),
-      'SET_FILTER',
-      {
-        filter: filterId,
-      },
-    );
-  };
-
-  const handleUndo = () => {
-    if (!historyRef.current.past.length) {
+  function handleEditTask(taskId, nextTitle) {
+    const taskToEdit = presentRef.current.tasks.find((task) => task.id === taskId);
+    if (!taskToEdit || taskToEdit.title === nextTitle) {
       return;
     }
 
-    setHistory((currentHistory) => {
-      const previousPresent = currentHistory.past[currentHistory.past.length - 1];
-      const nextPast = currentHistory.past.slice(0, -1);
+    const updatedTask = { ...taskToEdit, title: nextTitle };
+    commitChange(
+      (currentPresent) => ({
+        ...currentPresent,
+        tasks: currentPresent.tasks.map((task) => (task.id === taskId ? updatedTask : task)),
+      }),
+      {
+        type: 'EDIT_TASK',
+        description: `Renamed task to "${nextTitle}"`,
+        payload: { taskId, title: nextTitle },
+      },
+    );
+  }
 
-      return {
-        past: nextPast,
-        present: previousPresent,
-        future: [currentHistory.present, ...currentHistory.future].slice(0, 40),
-      };
-    });
-    pushAction('UNDO', {
-      remainingPast: Math.max(historyRef.current.past.length - 1, 0),
-    });
-  };
-
-  const handleRedo = () => {
-    if (!historyRef.current.future.length) {
-      return;
-    }
-
-    setHistory((currentHistory) => {
-      const nextPresent = currentHistory.future[0];
-
-      return {
-        past: [...currentHistory.past, currentHistory.present].slice(-40),
-        present: nextPresent,
-        future: currentHistory.future.slice(1),
-      };
-    });
-    pushAction('REDO', {
-      remainingFuture: Math.max(historyRef.current.future.length - 1, 0),
-    });
-  };
-
-  const handleReorderTasks = (sourceTaskId, targetTaskId, visibleTaskIds) => {
-    if (!sourceTaskId || !targetTaskId || sourceTaskId === targetTaskId) {
+  function handleSetFilter(nextFilter) {
+    if (!FILTERS.includes(nextFilter) || nextFilter === filter) {
       return;
     }
 
     commitChange(
       (currentPresent) => ({
         ...currentPresent,
-        tasks: reorderTasks(currentPresent.tasks, visibleTaskIds, sourceTaskId, targetTaskId),
+        filter: nextFilter,
       }),
-      'REORDER_TASKS',
       {
-        sourceTaskId,
-        targetTaskId,
+        type: 'SET_FILTER',
+        description: `Switched view to ${nextFilter}`,
+        payload: { filter: nextFilter },
       },
     );
-  };
+  }
+
+  function handleReorderTasks(sourceTaskId, targetTaskId) {
+    if (sourceTaskId === targetTaskId) {
+      return;
+    }
+
+    const reorderedTasks = reorderTasks(presentRef.current.tasks, sourceTaskId, targetTaskId);
+    if (reorderedTasks === presentRef.current.tasks) {
+      return;
+    }
+
+    commitChange(
+      (currentPresent) => ({
+        ...currentPresent,
+        tasks: reorderedTasks,
+      }),
+      {
+        type: 'REORDER',
+        description: 'Reordered tasks',
+        payload: { sourceTaskId, targetTaskId },
+      },
+    );
+  }
+
+  function handleUndo() {
+    if (history.past.length === 0) {
+      return;
+    }
+
+    const previousPresent = history.past[history.past.length - 1];
+    setHistory({
+      past: history.past.slice(0, -1),
+      present: previousPresent,
+      future: [history.present, ...history.future],
+    });
+    appendLog('UNDO', 'Undid the last change', null);
+  }
+
+  function handleRedo() {
+    if (history.future.length === 0) {
+      return;
+    }
+
+    const nextPresent = history.future[0];
+    setHistory({
+      past: [...history.past, history.present],
+      present: nextPresent,
+      future: history.future.slice(1),
+    });
+    appendLog('REDO', 'Redid the last undone change', null);
+  }
 
   return (
-    <div className="app-shell">
-      <div className="background-orb background-orb-left" />
-      <div className="background-orb background-orb-right" />
-      <main className="app-layout">
-        <Header />
-        <section className="workspace-grid">
-          <TaskBoard
-            activeFilter={activeFilter}
-            completedCount={completedCount}
-            lateCount={lateCount}
-            onCreateTask={handleCreateTask}
+    <main className="app-shell">
+      <div className="app-layout">
+        <section className="panel panel-hero">
+          <p className="eyebrow">Momentum Tasks</p>
+          <h1>Plan boldly. Finish calmly.</h1>
+          <p className="hero-copy">
+            A responsive to-do workspace for keeping due dates, progress, and priorities in one
+            focused view.
+          </p>
+
+          <dl className="stats-grid">
+            <div className="stat-card">
+              <dt>Total</dt>
+              <dd>{stats.total}</dd>
+            </div>
+            <div className="stat-card">
+              <dt>Pending</dt>
+              <dd>{stats.pending}</dd>
+            </div>
+            <div className="stat-card">
+              <dt>Completed</dt>
+              <dd>{stats.completed}</dd>
+            </div>
+            <div className="stat-card late-card">
+              <dt>Late</dt>
+              <dd>{stats.late}</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section className="panel panel-main">
+          <TaskForm onSubmit={handleCreateTask} />
+          <FilterBar
+            counts={filterCounts}
+            currentFilter={filter}
+            onRedo={handleRedo}
+            onSetFilter={handleSetFilter}
+            onUndo={handleUndo}
+          />
+          <TaskList
             onDeleteTask={handleDeleteTask}
-            onFilterChange={handleFilterChange}
+            onEditTask={handleEditTask}
             onReorderTasks={handleReorderTasks}
             onToggleTask={handleToggleTask}
-            onRedo={handleRedo}
-            onUndo={handleUndo}
-            onUpdateTask={handleUpdateTask}
-            redoDisabled={!history.future.length}
             tasks={visibleTasks}
-            totalCount={tasks.length}
-            undoDisabled={!history.past.length}
           />
-          <ActionLog actions={actionLog} />
+          <ActionLog actionLog={actionLog} />
         </section>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }
-
-export default App;

@@ -1,118 +1,95 @@
-import { decodeProtectedHeader, exportJWK, generateKeyPair, importJWK } from 'jose';
-import { all, get, run, withTransaction } from '../database/db.js';
+import crypto from 'node:crypto';
+import { exportJWK, generateKeyPair, importJWK } from 'jose';
+import { all, get, run } from '../db/sqlite.js';
 
-const ACTIVE_STATUS = 'active';
-const RETIRED_STATUS = 'retired';
-
-export async function ensureSigningKeys(database) {
-  const activeKey = await getActiveSigningKey(database);
-  if (activeKey) {
-    return activeKey;
-  }
-
-  return rotateSigningKeys(database);
+function generateKid() {
+  return crypto.randomUUID();
 }
 
-export async function getActiveSigningKey(database) {
-  const row = await get(
-    database,
-    'SELECT kid, public_jwk, private_jwk, status, created_at, activated_at FROM signing_keys WHERE status = ? ORDER BY activated_at DESC LIMIT 1',
-    [ACTIVE_STATUS],
-  );
-
-  return row ? hydrateSigningKey(row) : null;
-}
-
-export async function getPublicJwks(database) {
-  const rows = await all(
-    database,
-    'SELECT kid, public_jwk, private_jwk, status, created_at, activated_at FROM signing_keys WHERE status IN (?, ?) ORDER BY activated_at DESC',
-    [ACTIVE_STATUS, RETIRED_STATUS],
-  );
-
-  return {
-    keys: rows.map((row) => JSON.parse(row.public_jwk)),
-  };
-}
-
-export async function rotateSigningKeys(database) {
-  const keyPair = await generateKeyPair('RS256', { extractable: true });
-  const publicJwk = await exportJWK(keyPair.publicKey);
-  const privateJwk = await exportJWK(keyPair.privateKey);
-  const kid = crypto.randomUUID();
-  const activatedAt = new Date().toISOString();
-
-  publicJwk.use = 'sig';
-  publicJwk.alg = 'RS256';
-  publicJwk.kid = kid;
-
-  privateJwk.use = 'sig';
-  privateJwk.alg = 'RS256';
-  privateJwk.kid = kid;
-
-  await withTransaction(database, async () => {
-    await run(database, 'UPDATE signing_keys SET status = ? WHERE status = ?', [RETIRED_STATUS, ACTIVE_STATUS]);
-    await run(
-      database,
-      `
-        INSERT INTO signing_keys (kid, public_jwk, private_jwk, status, activated_at)
-        VALUES (?, ?, ?, ?, ?)
-      `,
-      [kid, JSON.stringify(publicJwk), JSON.stringify(privateJwk), ACTIVE_STATUS, activatedAt],
-    );
+async function createSigningKeyRecord(status = 'active') {
+  const { publicKey, privateKey } = await generateKeyPair('RS256', {
+    extractable: true,
   });
+  const publicJwk = await exportJWK(publicKey);
+  const privateJwk = await exportJWK(privateKey);
+  const kid = generateKid();
 
-  return {
+  const publicPayload = {
+    ...publicJwk,
     kid,
-    publicJwk,
-    privateJwk,
-    publicKey: await importJWK(publicJwk, 'RS256'),
-    privateKey: await importJWK(privateJwk, 'RS256'),
+    use: 'sig',
+    alg: 'RS256',
   };
-}
 
-export async function getActivePrivateKey(database) {
-  const activeKey = await getActiveSigningKey(database);
-  if (!activeKey) {
-    return null;
-  }
-
-  return {
-    kid: activeKey.kid,
-    privateKey: await importJWK(activeKey.privateJwk, 'RS256'),
-    publicKey: await importJWK(activeKey.publicJwk, 'RS256'),
+  const privatePayload = {
+    ...privateJwk,
+    kid,
+    use: 'sig',
+    alg: 'RS256',
   };
-}
 
-export async function getPublicKeyForToken(database, token) {
-  const { kid } = decodeProtectedHeader(token);
-  if (!kid) {
-    return null;
-  }
-
-  const row = await get(
-    database,
-    'SELECT public_jwk FROM signing_keys WHERE kid = ? AND status IN (?, ?)',
-    [kid, ACTIVE_STATUS, RETIRED_STATUS],
+  await run(
+    `INSERT INTO signing_keys (kid, public_jwk, private_jwk, status, rotated_at)
+     VALUES (?, ?, ?, ?, NULL)`,
+    [kid, JSON.stringify(publicPayload), JSON.stringify(privatePayload), status],
   );
 
-  if (!row) {
-    return null;
-  }
-
   return {
     kid,
-    publicKey: await importJWK(JSON.parse(row.public_jwk), 'RS256'),
+    publicJwk: publicPayload,
+    privateJwk: privatePayload,
+    status,
   };
 }
 
-function hydrateSigningKey(row) {
+export async function ensureActiveSigningKey() {
+  const activeKey = await get(
+    `SELECT kid, public_jwk, private_jwk, status
+     FROM signing_keys
+     WHERE status = 'active'
+     ORDER BY created_at DESC, id DESC
+     LIMIT 1`,
+  );
+
+  if (activeKey) {
+    return {
+      kid: activeKey.kid,
+      publicJwk: JSON.parse(activeKey.public_jwk),
+      privateJwk: JSON.parse(activeKey.private_jwk),
+      status: activeKey.status,
+    };
+  }
+
+  return createSigningKeyRecord();
+}
+
+export async function rotateSigningKey() {
+  await run(
+    `UPDATE signing_keys
+     SET status = 'retired', rotated_at = CURRENT_TIMESTAMP
+     WHERE status = 'active'`,
+  );
+
+  return createSigningKeyRecord('active');
+}
+
+export async function listPublicJwks() {
+  const rows = await all(
+    `SELECT public_jwk
+     FROM signing_keys
+     WHERE status IN ('active', 'retired')
+     ORDER BY created_at DESC, id DESC`,
+  );
+
+  return rows.map((row) => JSON.parse(row.public_jwk));
+}
+
+export async function getActiveSigningKey() {
+  const keyRecord = await ensureActiveSigningKey();
+
   return {
-    kid: row.kid,
-    publicJwk: JSON.parse(row.public_jwk),
-    privateJwk: JSON.parse(row.private_jwk),
-    status: row.status,
-    createdAt: row.created_at,
-    activatedAt: row.activated_at,
+    ...keyRecord,
+    privateKey: await importJWK(keyRecord.privateJwk, 'RS256'),
+    publicKey: await importJWK(keyRecord.publicJwk, 'RS256'),
   };
 }

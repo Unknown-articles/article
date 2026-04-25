@@ -1,47 +1,4 @@
 {
-  "_users": [
-    {
-      "id": "ad0c72c6-e55b-4cfd-875a-69e933780f51",
-      "username": "admin_1776215278827",
-      "password": "$2b$10$dPSaWfh6tfONlgY/kaTVYer./SbuGF2IT3fFj9xl3mUHyunm1dNhC",
-      "role": "user"
-    },
-    {
-      "id": "dd7e3cac-fc49-4bba-931e-f04ade980b5f",
-      "username": "user_1776215278827",
-      "password": "$2b$10$IWmwrEEqSjnZe86PdEfyhuUw3uqS20lpFYZnLNIl/zrBSF.lMQify",
-      "role": "user"
-    }
-  ],
-  "products": [
-    {
-      "name": "Owned by user",
-      "id": "a09f3d9d-1d63-41d9-9264-4027ee41c72a",
-      "ownerId": "dd7e3cac-fc49-4bba-931e-f04ade980b5f",
-      "sharedWith": []
-    },
-    {
-      "name": "ToDelete",
-      "id": "127522a5-6226-4045-bb12-a93b825dc666",
-      "ownerId": "dd7e3cac-fc49-4bba-931e-f04ade980b5f",
-      "sharedWith": []
-    }
-  ],
-  "widgets": [
-    {
-      "label": "adminDelete",
-      "id": "425204dc-2188-4238-a707-5b469678b073",
-      "ownerId": "dd7e3cac-fc49-4bba-931e-f04ade980b5f",
-      "sharedWith": []
-    }
-  ],
-  "items": [
-    {
-      "label": "test",
-      "id": "90b9487e-27d2-4de9-a1c9-f102fee65bb1",
-      "ownerId": "dd7e3cac-fc49-4bba-931e-f04ade980b5f",
-      "sharedWith": [],
-      "createdAt": "1970-01-01"
-    }
-  ]
+  "_users": [],
+  "_teams": []
 }

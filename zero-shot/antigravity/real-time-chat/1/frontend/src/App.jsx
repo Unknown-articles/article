@@ -1,56 +1,50 @@
-import { useState, useEffect } from 'react';
-import Auth from './components/Auth';
-import Chat from './components/Chat';
-import './App.css'; // We will put basic styling later
+import React, { useState, useEffect } from 'react';
+import { AuthForm } from './components/AuthForm.jsx';
+import { Chat } from './components/Chat.jsx';
+import './index.css'; // Add our modern styling
 
 function App() {
-  const [session, setSession] = useState(null);
+    const [session, setSession] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const token = localStorage.getItem('chat_token');
-    const userStr = localStorage.getItem('chat_user');
-    if (token && userStr) {
-      try {
-        setSession({ token, user: JSON.parse(userStr) });
-      } catch (e) {
+    useEffect(() => {
+        const token = localStorage.getItem('chat_token');
+        const userStr = localStorage.getItem('chat_user');
+        
+        if (token && userStr) {
+            try {
+                const user = JSON.parse(userStr);
+                setSession({ token, user });
+            } catch (err) {
+                console.error('Failed to parse user from local storage', err);
+            }
+        }
+        setLoading(false);
+    }, []);
+
+    const handleLogin = (newSession) => {
+        setSession(newSession);
+    };
+
+    const handleLogout = () => {
         localStorage.removeItem('chat_token');
         localStorage.removeItem('chat_user');
-      }
+        setSession(null);
+    };
+
+    if (loading) {
+        return <div className="app-container">Loading...</div>;
     }
-  }, []);
 
-  const handleLogin = (token, user) => {
-    localStorage.setItem('chat_token', token);
-    localStorage.setItem('chat_user', JSON.stringify(user));
-    setSession({ token, user });
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('chat_token');
-    localStorage.removeItem('chat_user');
-    setSession(null);
-  };
-
-  return (
-    <div className="app-container">
-      {!session ? (
-        <Auth onLogin={handleLogin} />
-      ) : (
-        <div className="chat-placeholder">
-          <header>
-            <h1>Real-Time Chat</h1>
-            <div className="user-info">
-              <span>Welcome, {session.user.username}</span>
-              <button onClick={handleLogout} className="btn-secondary">Logout</button>
-            </div>
-          </header>
-          <main className="chat-main">
-            <Chat session={session} />
-          </main>
+    return (
+        <div className="app-container">
+            {session ? (
+                <Chat session={session} onLogout={handleLogout} />
+            ) : (
+                <AuthForm onLogin={handleLogin} />
+            )}
         </div>
-      )}
-    </div>
-  );
+    );
 }
 
 export default App;
