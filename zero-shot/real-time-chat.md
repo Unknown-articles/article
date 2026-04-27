@@ -196,10 +196,10 @@ TESTABILITY — Backend
 
 Ports and CORS
 
-- Backend default port must be 3000 (configurable via PORT env var)
-- Frontend runs on port 5173 (Vite default)
-- Backend must accept CORS requests from http://localhost:5173
-  Use: FRONTEND_ORIGIN env var (default: "http://localhost:5173")
+- Backend default port must be 5000 (configurable via PORT env var)
+- Frontend runs on port 5273 (Vite default)
+- Backend must accept CORS requests from http://localhost:5273
+  Use: FRONTEND_ORIGIN env var (default: "http://localhost:5273")
   Example: app.use(cors({ origin: FRONTEND_ORIGIN, credentials: true }))
 
 Health Endpoint
@@ -228,7 +228,7 @@ General
 DEVELOPMENT PROCESS
 
 - Implement each feature incrementally
-- Each feature must correspond to a separate Git commit
+- Each feature must correspond to a separate Git commit, only one git repository for front-end and back-end
 - Each step must result in a working system
 
 OUTPUT

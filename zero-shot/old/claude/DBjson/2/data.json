@@ -1,0 +1,918 @@
+{
+  "_users": [
+    {
+      "id": "456b8c7d-46c3-470a-bce2-0aa92a1a7f2d",
+      "username": "dihh",
+      "password": "$2a$10$XY.ucTkbwXb.csZDXdoyrufA2DnjRfHKNDRGXr5RUQtmksPs385WO",
+      "role": "admin",
+      "createdAt": "2026-04-15T00:38:08.953Z"
+    },
+    {
+      "id": "a64a112f-cea6-47d6-944f-1e04edb837e9",
+      "username": "dihh2",
+      "password": "$2a$10$g/1qMVMJLUAvu/OOaNpbhuUmtc5cMsJP4zkKkB6J/JbapUIzUh8TO",
+      "role": "user",
+      "createdAt": "2026-04-15T00:38:17.065Z"
+    },
+    {
+      "id": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "username": "admin_1776214072584",
+      "password": "$2a$10$VhWydGUO3JVE82uNgelPtONaT.e1Ataol0NjlAKf0U1aAsjCyZyom",
+      "role": "user",
+      "createdAt": "2026-04-15T00:47:52.680Z"
+    },
+    {
+      "id": "35e197e1-c86a-4167-8330-4106c4625332",
+      "username": "user_1776214072584",
+      "password": "$2a$10$iGazhybsOVme/DHOCyefQ.7w9jdJTzLwkRwnKtsOsDF7vu3IApeoW",
+      "role": "user",
+      "createdAt": "2026-04-15T00:47:52.745Z"
+    },
+    {
+      "id": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "username": "admin_1776214979166",
+      "password": "$2a$10$gYI.UvYufYgPYheBTP/M1.jjKRoXRYbU4jeIXrhVnnnfkMD5Ny/Pi",
+      "role": "user",
+      "createdAt": "2026-04-15T01:02:59.260Z"
+    },
+    {
+      "id": "4e78dc79-5c8b-4ea3-86f6-e6d275d6e193",
+      "username": "user_1776214979166",
+      "password": "$2a$10$5f1Vx31PAo0lcBcpILNEkeGf6HeWad5R/kv6ulXgYoFHrznG24hBG",
+      "role": "user",
+      "createdAt": "2026-04-15T01:02:59.330Z"
+    }
+  ],
+  "_teams": [
+    {
+      "id": "99b3c4ca-0d3f-486b-8717-e12397b47412",
+      "name": "Team Alpha",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "members": [
+        "d6a47b7d-3949-428c-9914-f30b3ce06922"
+      ],
+      "createdAt": "2026-04-15T00:47:53.388Z"
+    },
+    {
+      "id": "019966a9-c6ab-427d-97fd-8a9ee98733e9",
+      "name": "Team Alpha",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "members": [
+        "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1"
+      ],
+      "createdAt": "2026-04-15T01:02:59.791Z"
+    }
+  ],
+  "products": [
+    {
+      "name": "Widget Pro",
+      "price": 24.99,
+      "category": "tech",
+      "id": "9ef5d044-5e97-4025-b036-ec34a4f72ad2",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.250Z",
+      "updatedAt": "2026-04-15T00:47:53.290Z"
+    },
+    {
+      "name": "Gadget",
+      "id": "0943c397-b2f5-42a8-a29a-e67caac3b451",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.259Z",
+      "updatedAt": "2026-04-15T00:47:53.259Z"
+    },
+    {
+      "name": "My Product v2",
+      "id": "fa9add9f-81ce-4cb3-a30e-c8eaa221460a",
+      "ownerId": "35e197e1-c86a-4167-8330-4106c4625332",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.263Z",
+      "updatedAt": "2026-04-15T00:47:53.340Z"
+    },
+    {
+      "name": "ToDelete",
+      "id": "f0473383-f774-4f95-9549-1ef2033b4739",
+      "ownerId": "35e197e1-c86a-4167-8330-4106c4625332",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.302Z",
+      "updatedAt": "2026-04-15T00:47:53.302Z"
+    },
+    {
+      "name": "Widget Pro",
+      "price": 24.99,
+      "category": "tech",
+      "id": "1e724349-f363-4cb0-853e-897c200f6dc9",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.632Z",
+      "updatedAt": "2026-04-15T01:02:59.662Z"
+    },
+    {
+      "name": "Gadget",
+      "id": "7eda67f8-c1cf-4166-b408-39ae06d094c0",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.639Z",
+      "updatedAt": "2026-04-15T01:02:59.639Z"
+    },
+    {
+      "name": "My Product v2",
+      "id": "9a09d47b-4833-47de-90a7-99e3e8e71053",
+      "ownerId": "4e78dc79-5c8b-4ea3-86f6-e6d275d6e193",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.643Z",
+      "updatedAt": "2026-04-15T01:02:59.717Z"
+    },
+    {
+      "name": "ToDelete",
+      "id": "a87ddf8e-cfc1-4236-bc1e-ba0b1d77b458",
+      "ownerId": "4e78dc79-5c8b-4ea3-86f6-e6d275d6e193",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.678Z",
+      "updatedAt": "2026-04-15T01:02:59.678Z"
+    }
+  ],
+  "posts": [
+    {
+      "title": "Test Post",
+      "tags": [
+        "a",
+        "b"
+      ],
+      "meta": {
+        "views": 0
+      },
+      "id": "adf60a17-ab52-4176-9899-b6172f994899",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.255Z",
+      "updatedAt": "2026-04-15T00:47:53.255Z"
+    },
+    {
+      "title": "Test Post",
+      "tags": [
+        "a",
+        "b"
+      ],
+      "meta": {
+        "views": 0
+      },
+      "id": "bcc3ee7d-4f19-4f60-b79d-eb5848a3dd3a",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.635Z",
+      "updatedAt": "2026-04-15T01:02:59.635Z"
+    }
+  ],
+  "widgets": [
+    {
+      "label": "adminDelete",
+      "id": "fab81ae1-6d75-48eb-b42f-6b0539ca63bf",
+      "ownerId": "35e197e1-c86a-4167-8330-4106c4625332",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.323Z",
+      "updatedAt": "2026-04-15T00:47:53.323Z"
+    },
+    {
+      "label": "adminDelete",
+      "id": "d053ab14-5dc1-4df6-94e6-96d08d1b6247",
+      "ownerId": "4e78dc79-5c8b-4ea3-86f6-e6d275d6e193",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.694Z",
+      "updatedAt": "2026-04-15T01:02:59.694Z"
+    }
+  ],
+  "private_col": [
+    {
+      "secret": "admin",
+      "id": "dab9873d-0c6f-420f-a758-0fc258f2c543",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.343Z",
+      "updatedAt": "2026-04-15T00:47:53.343Z"
+    },
+    {
+      "secret": "user",
+      "id": "85ec7a50-902f-4d55-a434-830d7f11f6a8",
+      "ownerId": "35e197e1-c86a-4167-8330-4106c4625332",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.345Z",
+      "updatedAt": "2026-04-15T00:47:53.345Z"
+    },
+    {
+      "secret": "admin",
+      "id": "652b3f7b-e544-44fa-b5ad-f2f9778d7e01",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.721Z",
+      "updatedAt": "2026-04-15T01:02:59.721Z"
+    },
+    {
+      "secret": "user",
+      "id": "bae45587-ba48-44b0-85f9-2893b33a0902",
+      "ownerId": "4e78dc79-5c8b-4ea3-86f6-e6d275d6e193",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.725Z",
+      "updatedAt": "2026-04-15T01:02:59.725Z"
+    }
+  ],
+  "notes": [
+    {
+      "text": "admin note",
+      "id": "9502ef6d-9fb9-4e47-80ed-5a1dc49e8a0f",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.350Z",
+      "updatedAt": "2026-04-15T00:47:53.350Z"
+    },
+    {
+      "text": "admin note",
+      "id": "0c11cd96-681f-417f-8f23-1e6240a8ae79",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.737Z",
+      "updatedAt": "2026-04-15T01:02:59.737Z"
+    }
+  ],
+  "docs": [],
+  "items": [
+    {
+      "label": "test",
+      "id": "5de178e3-d93d-4bd3-8772-082d8192e876",
+      "ownerId": "35e197e1-c86a-4167-8330-4106c4625332",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.364Z",
+      "updatedAt": "2026-04-15T00:47:53.366Z"
+    },
+    {
+      "label": "test",
+      "id": "71ff8cbe-c63e-4ac1-84eb-74e7897f655f",
+      "ownerId": "4e78dc79-5c8b-4ea3-86f6-e6d275d6e193",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.754Z",
+      "updatedAt": "2026-04-15T01:02:59.758Z"
+    }
+  ],
+  "shared_docs": [
+    {
+      "title": "Shared Read",
+      "sharedWith": [
+        {
+          "userId": "35e197e1-c86a-4167-8330-4106c4625332",
+          "access": "write"
+        }
+      ],
+      "id": "197fa3c9-f1b2-4071-903c-dbeb7b0cb57e",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.369Z",
+      "updatedAt": "2026-04-15T00:47:53.385Z"
+    },
+    {
+      "title": "Replaced",
+      "id": "f2dcaf37-ad54-44f7-812b-97458c4ee9d4",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [
+        {
+          "userId": "35e197e1-c86a-4167-8330-4106c4625332",
+          "access": "write"
+        }
+      ],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.376Z",
+      "updatedAt": "2026-04-15T00:47:53.382Z"
+    },
+    {
+      "title": "Shared Read",
+      "sharedWith": [
+        {
+          "userId": "4e78dc79-5c8b-4ea3-86f6-e6d275d6e193",
+          "access": "write"
+        }
+      ],
+      "id": "a1f0e730-4620-4888-a44e-b7b0a29e84f0",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.763Z",
+      "updatedAt": "2026-04-15T01:02:59.788Z"
+    },
+    {
+      "title": "Replaced",
+      "id": "266a3c30-3f63-4eb1-a784-cfb20ac5b351",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [
+        {
+          "userId": "4e78dc79-5c8b-4ea3-86f6-e6d275d6e193",
+          "access": "write"
+        }
+      ],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.775Z",
+      "updatedAt": "2026-04-15T01:02:59.783Z"
+    }
+  ],
+  "team_docs": [
+    {
+      "title": "Team Doc",
+      "sharedWithTeams": [
+        {
+          "access": "write"
+        }
+      ],
+      "id": "034873a1-cd6b-419b-8ce9-80d522538dfa",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "createdAt": "2026-04-15T00:47:53.392Z",
+      "updatedAt": "2026-04-15T00:47:53.398Z"
+    },
+    {
+      "title": "Team Doc",
+      "sharedWithTeams": [
+        {
+          "access": "write"
+        }
+      ],
+      "id": "d8908007-144b-412d-b9ba-caded2a522d5",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "createdAt": "2026-04-15T01:02:59.797Z",
+      "updatedAt": "2026-04-15T01:02:59.812Z"
+    }
+  ],
+  "catalog": [
+    {
+      "name": "Apple",
+      "price": 1.5,
+      "category": "fruit",
+      "stock": 100,
+      "active": true,
+      "id": "71a2b8ca-dfe9-4d6e-9784-c48fa6b8d585",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.416Z",
+      "updatedAt": "2026-04-15T00:47:53.416Z"
+    },
+    {
+      "name": "Banana",
+      "price": 0.5,
+      "category": "fruit",
+      "stock": 200,
+      "active": true,
+      "id": "23c54db0-dc47-4ed4-abe3-67fbe6cdb5ff",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.419Z",
+      "updatedAt": "2026-04-15T00:47:53.419Z"
+    },
+    {
+      "name": "Carrot",
+      "price": 2,
+      "category": "veggie",
+      "stock": 50,
+      "active": false,
+      "id": "98295276-3d41-4c70-aa7b-d69da4c1ccca",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.422Z",
+      "updatedAt": "2026-04-15T00:47:53.422Z"
+    },
+    {
+      "name": "Date",
+      "price": 5,
+      "category": "fruit",
+      "stock": 30,
+      "active": true,
+      "id": "229d2a10-a6ac-4e81-9ccd-85fea627a177",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.424Z",
+      "updatedAt": "2026-04-15T00:47:53.424Z"
+    },
+    {
+      "name": "Eggplant",
+      "price": 3.5,
+      "category": "veggie",
+      "stock": 80,
+      "active": true,
+      "id": "e8141905-96b1-4b0c-b9fd-19c79cf31513",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.426Z",
+      "updatedAt": "2026-04-15T00:47:53.426Z"
+    },
+    {
+      "name": "Apple",
+      "price": 1.5,
+      "category": "fruit",
+      "stock": 100,
+      "active": true,
+      "id": "979b5dbf-76a3-46e2-a804-b3788ac9b3f8",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.843Z",
+      "updatedAt": "2026-04-15T01:02:59.843Z"
+    },
+    {
+      "name": "Banana",
+      "price": 0.5,
+      "category": "fruit",
+      "stock": 200,
+      "active": true,
+      "id": "de79e4ef-3c12-402c-bfc6-ed82deb022e9",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.847Z",
+      "updatedAt": "2026-04-15T01:02:59.847Z"
+    },
+    {
+      "name": "Carrot",
+      "price": 2,
+      "category": "veggie",
+      "stock": 50,
+      "active": false,
+      "id": "885ef448-d2d0-4e5c-b884-e8bbaafb3668",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.853Z",
+      "updatedAt": "2026-04-15T01:02:59.853Z"
+    },
+    {
+      "name": "Date",
+      "price": 5,
+      "category": "fruit",
+      "stock": 30,
+      "active": true,
+      "id": "3c2aed1e-a183-4368-8cab-7297281ffc5d",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.858Z",
+      "updatedAt": "2026-04-15T01:02:59.858Z"
+    },
+    {
+      "name": "Eggplant",
+      "price": 3.5,
+      "category": "veggie",
+      "stock": 80,
+      "active": true,
+      "id": "0fc8f228-f82e-4f63-9e4c-3ed99cb83e33",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.862Z",
+      "updatedAt": "2026-04-15T01:02:59.863Z"
+    }
+  ],
+  "concurrent_items": [
+    {
+      "index": 0,
+      "value": 0.2533894539779501,
+      "id": "fdeed35d-5829-415e-b8fa-db60658885c4",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.523Z",
+      "updatedAt": "2026-04-15T00:47:53.523Z"
+    },
+    {
+      "index": 1,
+      "value": 0.9619098506354585,
+      "id": "c85224b4-0eb3-4312-9037-10c9ed1e446e",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.527Z",
+      "updatedAt": "2026-04-15T00:47:53.527Z"
+    },
+    {
+      "index": 2,
+      "value": 0.4395432203967008,
+      "id": "0c70c1be-633d-4081-a0c2-2b05b61c42c4",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.529Z",
+      "updatedAt": "2026-04-15T00:47:53.529Z"
+    },
+    {
+      "index": 3,
+      "value": 0.8739638743100298,
+      "id": "dd852ed0-286c-4c0c-959c-23dc947a40a9",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.529Z",
+      "updatedAt": "2026-04-15T00:47:53.529Z"
+    },
+    {
+      "index": 4,
+      "value": 0.2612256919492729,
+      "id": "33f15fa7-bbe3-47e8-9635-162674d9dfab",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.530Z",
+      "updatedAt": "2026-04-15T00:47:53.530Z"
+    },
+    {
+      "index": 5,
+      "value": 0.6484601774182418,
+      "id": "ff38937f-0dfd-4c88-969c-145de0c58b58",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.531Z",
+      "updatedAt": "2026-04-15T00:47:53.531Z"
+    },
+    {
+      "index": 6,
+      "value": 0.83333530349017,
+      "id": "04c7e377-be6a-4225-be4a-37cfe4dc748c",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.531Z",
+      "updatedAt": "2026-04-15T00:47:53.531Z"
+    },
+    {
+      "index": 7,
+      "value": 0.5964039470888903,
+      "id": "ceaf583f-4143-4723-a7d1-e0e94bafed35",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.532Z",
+      "updatedAt": "2026-04-15T00:47:53.532Z"
+    },
+    {
+      "index": 8,
+      "value": 0.12166325136411005,
+      "id": "cbf66e4d-0192-471c-b471-c788b9a5254e",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.533Z",
+      "updatedAt": "2026-04-15T00:47:53.533Z"
+    },
+    {
+      "index": 9,
+      "value": 0.0073668390581910215,
+      "id": "e0c51581-f75a-45c7-8ebe-53a47335cc30",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.534Z",
+      "updatedAt": "2026-04-15T00:47:53.534Z"
+    },
+    {
+      "index": 10,
+      "value": 0.6715186485947955,
+      "id": "6926679d-c8d9-4939-9c41-a122791d8192",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.535Z",
+      "updatedAt": "2026-04-15T00:47:53.535Z"
+    },
+    {
+      "index": 11,
+      "value": 0.48237953403260936,
+      "id": "5a607a31-db2e-41a5-ae7a-c992c0f134e3",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.535Z",
+      "updatedAt": "2026-04-15T00:47:53.535Z"
+    },
+    {
+      "index": 12,
+      "value": 0.2025912866391859,
+      "id": "f960e574-3bfc-4550-aea6-ba0c25280034",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.536Z",
+      "updatedAt": "2026-04-15T00:47:53.536Z"
+    },
+    {
+      "index": 14,
+      "value": 0.7971380050653714,
+      "id": "415ffcf7-1e4f-4b27-b391-248581e4145a",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.537Z",
+      "updatedAt": "2026-04-15T00:47:53.537Z"
+    },
+    {
+      "index": 13,
+      "value": 0.7534106413361112,
+      "id": "9e70401d-04ba-4ce6-a496-4e9e50d1ef68",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.538Z",
+      "updatedAt": "2026-04-15T00:47:53.538Z"
+    },
+    {
+      "index": 15,
+      "value": 0.12008369828152687,
+      "id": "7f9b1b38-4353-4cc2-9006-b96dd02235e7",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.539Z",
+      "updatedAt": "2026-04-15T00:47:53.539Z"
+    },
+    {
+      "index": 16,
+      "value": 0.823045015392488,
+      "id": "fc08347f-2c4f-49d0-9214-c190c07c31e4",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.540Z",
+      "updatedAt": "2026-04-15T00:47:53.540Z"
+    },
+    {
+      "index": 17,
+      "value": 0.4072593023531209,
+      "id": "113ff697-5eca-4e7f-9d64-c3bc39b15365",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.541Z",
+      "updatedAt": "2026-04-15T00:47:53.541Z"
+    },
+    {
+      "index": 18,
+      "value": 0.5672905648982044,
+      "id": "9cc7895e-abc0-419d-8471-b70aceb8cd98",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.542Z",
+      "updatedAt": "2026-04-15T00:47:53.542Z"
+    },
+    {
+      "index": 19,
+      "value": 0.23554536943105153,
+      "id": "c7d0251a-237a-4dff-8229-bb788b85f3fe",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.543Z",
+      "updatedAt": "2026-04-15T00:47:53.543Z"
+    },
+    {
+      "index": 0,
+      "value": 0.8202579762636374,
+      "id": "e11e8012-aab2-4e8f-a9d4-f127a21ba07f",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.970Z",
+      "updatedAt": "2026-04-15T01:02:59.970Z"
+    },
+    {
+      "index": 1,
+      "value": 0.31121732011764536,
+      "id": "6ee7e5ca-7b45-4160-ac4d-5fc5d59d6cfe",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.978Z",
+      "updatedAt": "2026-04-15T01:02:59.978Z"
+    },
+    {
+      "index": 2,
+      "value": 0.7402382063875339,
+      "id": "75500c04-af9b-4a27-be5f-e7af7aa82b85",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.980Z",
+      "updatedAt": "2026-04-15T01:02:59.980Z"
+    },
+    {
+      "index": 3,
+      "value": 0.4658136987497433,
+      "id": "1869b02d-6054-462d-b42d-e77a0c1d8aa1",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.983Z",
+      "updatedAt": "2026-04-15T01:02:59.983Z"
+    },
+    {
+      "index": 4,
+      "value": 0.2066621772691799,
+      "id": "fffa191c-b4c7-46ff-b8ab-2a973658567e",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.985Z",
+      "updatedAt": "2026-04-15T01:02:59.985Z"
+    },
+    {
+      "index": 5,
+      "value": 0.12460522178730338,
+      "id": "6239b430-a43b-4491-a3b4-b8fd86f6670d",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.987Z",
+      "updatedAt": "2026-04-15T01:02:59.987Z"
+    },
+    {
+      "index": 6,
+      "value": 0.08627953989992476,
+      "id": "4433362d-5944-4ce9-b9e5-3a583cf99042",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.988Z",
+      "updatedAt": "2026-04-15T01:02:59.988Z"
+    },
+    {
+      "index": 7,
+      "value": 0.7677576306660799,
+      "id": "b5c5421d-0dc2-4dc8-81ef-8a4e09d93c51",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.990Z",
+      "updatedAt": "2026-04-15T01:02:59.990Z"
+    },
+    {
+      "index": 8,
+      "value": 0.7875901586417247,
+      "id": "304e6a3a-8e8b-4c4c-82e9-eee7a0e578b0",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.992Z",
+      "updatedAt": "2026-04-15T01:02:59.992Z"
+    },
+    {
+      "index": 9,
+      "value": 0.7065046698721346,
+      "id": "187cb357-a98f-4212-a398-dd9a3a560e75",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.993Z",
+      "updatedAt": "2026-04-15T01:02:59.993Z"
+    },
+    {
+      "index": 10,
+      "value": 0.06909017866772915,
+      "id": "b15c7218-b6e2-46e0-8eee-f234362a9e98",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.995Z",
+      "updatedAt": "2026-04-15T01:02:59.995Z"
+    },
+    {
+      "index": 11,
+      "value": 0.1879070500879595,
+      "id": "27b2f255-ccb2-40d3-92d5-3b51886626eb",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:02:59.998Z",
+      "updatedAt": "2026-04-15T01:02:59.998Z"
+    },
+    {
+      "index": 12,
+      "value": 0.2621006233027847,
+      "id": "bcaf2fbb-e728-45e0-b3c6-850d0537cb94",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:03:00.001Z",
+      "updatedAt": "2026-04-15T01:03:00.001Z"
+    },
+    {
+      "index": 13,
+      "value": 0.1182148965322557,
+      "id": "08ade198-a904-4c8c-a008-af2e2364bd5a",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:03:00.003Z",
+      "updatedAt": "2026-04-15T01:03:00.003Z"
+    },
+    {
+      "index": 15,
+      "value": 0.5898629201171497,
+      "id": "d962e4f1-c749-4f6b-a521-aba72f70d8ed",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:03:00.004Z",
+      "updatedAt": "2026-04-15T01:03:00.004Z"
+    },
+    {
+      "index": 14,
+      "value": 0.2763883003992653,
+      "id": "17628291-e21f-47a6-aedf-292d687603a2",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:03:00.005Z",
+      "updatedAt": "2026-04-15T01:03:00.005Z"
+    },
+    {
+      "index": 16,
+      "value": 0.07937607428487248,
+      "id": "f03f7dfc-cece-4cd3-a59f-6279977a3db1",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:03:00.007Z",
+      "updatedAt": "2026-04-15T01:03:00.007Z"
+    },
+    {
+      "index": 17,
+      "value": 0.30015955098449,
+      "id": "c38b5b1f-5867-4b50-a5af-ff949b122179",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:03:00.008Z",
+      "updatedAt": "2026-04-15T01:03:00.008Z"
+    },
+    {
+      "index": 19,
+      "value": 0.2820983593589541,
+      "id": "9995d4ba-b378-4d72-9ec1-1931380f9ecf",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:03:00.009Z",
+      "updatedAt": "2026-04-15T01:03:00.009Z"
+    },
+    {
+      "index": 18,
+      "value": 0.5360319399041195,
+      "id": "db54ed52-ec52-418e-b293-1c9017be7f7b",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:03:00.011Z",
+      "updatedAt": "2026-04-15T01:03:00.011Z"
+    }
+  ],
+  "counters": [
+    {
+      "value": 14,
+      "id": "4244144f-83eb-4b05-bb48-cd45cacab4c5",
+      "ownerId": "d6a47b7d-3949-428c-9914-f30b3ce06922",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T00:47:53.554Z",
+      "updatedAt": "2026-04-15T00:47:53.570Z"
+    },
+    {
+      "value": 14,
+      "id": "51e1e056-635a-4d18-9df0-b989ba5dfcdd",
+      "ownerId": "152f07f8-23d8-4072-ae7e-69fe3bd6ebf1",
+      "sharedWith": [],
+      "sharedWithTeams": [],
+      "createdAt": "2026-04-15T01:03:00.040Z",
+      "updatedAt": "2026-04-15T01:03:00.088Z"
+    }
+  ],
+  "trash": []
+}

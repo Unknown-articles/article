@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(node:*)",
+      "Bash(git init:*)",
+      "Bash(git config:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m ':*)",
+      "Bash(git tag:*)",
+      "Bash(mkdir -p \"/c/Users/diegt/Documents/architecture-projects/zero-shot/tests/DBjson\")",
+      "Read(//c/Users/diegt/Documents/architecture-projects/zero-shot/tests/DBjson/**)",
+      "Bash(echo \"exit: $?\")"
+    ]
+  }
+}

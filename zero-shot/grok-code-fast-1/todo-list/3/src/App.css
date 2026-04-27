@@ -1,0 +1,178 @@
+.app {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.task-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.task-form input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.task-form input[type="date"] {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.task-form button {
+  padding: 10px 20px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filters button {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+  border-radius: 4px;
+  position: relative;
+}
+
+.filters button.active {
+  background: #007bff;
+  color: white;
+}
+
+.filters button span {
+  margin-left: 8px;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 0.8em;
+}
+
+.task-list {
+  margin-bottom: 20px;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  background: white;
+  transition: transform 0.2s;
+}
+
+.task-item.completed .task-title {
+  text-decoration: line-through;
+  color: #888;
+}
+
+.task-item.late {
+  border-color: #ff6b6b;
+}
+
+.task-title {
+  flex: 1;
+}
+
+.task-date {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.task-item button {
+  padding: 5px 10px;
+  border: none;
+  background: #f0f0f0;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.drag-handle {
+  cursor: grab;
+  font-size: 1.2em;
+  color: #ccc;
+}
+
+.inline-edit-form {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.inline-edit-form input {
+  flex: 1;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.action-log {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 4px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.log-entry {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.log-type {
+  font-weight: bold;
+  color: #007bff;
+}
+
+.log-timestamp {
+  font-size: 0.8em;
+  color: #666;
+}
+
+/* Mobile styles */
+@media (max-width: 600px) {
+  .app {
+    padding: 10px;
+  }
+
+  .task-form {
+    flex-direction: column;
+  }
+
+  .task-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .task-item button {
+    align-self: flex-end;
+  }
+
+  .filters {
+    justify-content: center;
+  }
+
+  .drag-handle {
+    order: -1;
+  }
+}
