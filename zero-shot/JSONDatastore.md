@@ -61,7 +61,7 @@ TESTABILITY
 Server Configuration
 
 - Server entry point: src/index.js
-- Default port: 3000, configurable via PORT env var
+- Default port: 4000, configurable via PORT env var
 - When the server is ready it must print a line to stdout that contains the word "running on"
   (the test harness waits for this string before starting tests)
 - The JSON database file path must be configurable via DB_PATH env var

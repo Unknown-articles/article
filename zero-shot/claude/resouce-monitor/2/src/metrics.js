@@ -44,7 +44,7 @@ function collectDisk() {
     if (process.platform === 'win32') {
       output = execSync(
         'powershell -NoProfile -Command "Get-PSDrive -PSProvider FileSystem | Select-Object -Property Used,Free | ConvertTo-Json"',
-        { encoding: 'utf8', timeout: 5000 }
+        { encoding: 'utf8', timeout: 3000 }
       );
       const drives = JSON.parse(output);
       const arr = Array.isArray(drives) ? drives : [drives];

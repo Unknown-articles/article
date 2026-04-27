@@ -71,7 +71,7 @@ TESTABILITY
 
 Server
 
-- Server must listen on port 3000 (configurable via PORT env var)
+- Server must listen on port 5000 (configurable via PORT env var)
 - All JSON responses must set Content-Type: application/json
 - Unknown routes must return 404
 

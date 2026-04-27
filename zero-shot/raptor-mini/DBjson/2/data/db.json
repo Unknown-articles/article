@@ -1,0 +1,13 @@
+{
+  "_users": [
+    {
+      "id": "c9722bf4-5cae-4607-a7d4-519588fec1c5",
+      "username": "admin",
+      "role": "admin",
+      "passwordHash": "$2a$10$X6XVT1QDFATumEafSNJcVOcCJIbFJ7AMBORcZMCLZXN195nNbdRu.",
+      "createdAt": "2026-04-27T01:48:24.557Z",
+      "updatedAt": "2026-04-27T01:48:24.557Z"
+    }
+  ],
+  "_teams": []
+}

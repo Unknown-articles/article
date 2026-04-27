@@ -3,7 +3,7 @@ import { createServer } from 'http';
 import router from './routes.js';
 import { attachWebSocket } from './ws.js';
 
-const PORT = process.env.PORT ?? 5000;
+const PORT = process.env.PORT ?? 3000;
 
 const app = express();
 app.use(express.json());
