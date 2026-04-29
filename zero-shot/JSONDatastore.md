@@ -69,6 +69,7 @@ Server Configuration
 - The initial empty DB file will have the shape: { "_users": [], "_teams": [] }
   The server must handle this without error on startup
 
+
 Health Endpoint
 
   GET /health
