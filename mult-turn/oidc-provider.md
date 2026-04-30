@@ -4,7 +4,7 @@
 Create a Node.js project using ES Modules (not CommonJS) with Express and SQLite3.
 
 Project requirements:
-- Server listens on port 3000 (configurable via PORT env var)
+- Server listens on port 4000 (configurable via PORT env var)
 - All JSON responses must set Content-Type: application/json
 - Use Git for source control (one commit per feature)
 
@@ -46,7 +46,7 @@ Seed the database on startup (skip if already present):
   Client:
     client_id:     "test-client"
     client_secret: "test-secret"
-    redirect_uris: ["http://localhost:8080/callback", "http://localhost:3001/callback"]
+    redirect_uris: ["http://localhost:8080/callback", "http://localhost:4001/callback"]
 
   User:
     username: "testuser"
@@ -116,7 +116,7 @@ Implement:
 
 Rules:
 - base_url must be derived from the server's actual host and port
-  (e.g. http://localhost:3000 when running locally).
+  (e.g. http://localhost:4000 when running locally).
 - authorization_endpoint must include "/oauth2/authorize".
 - token_endpoint must include "/oauth2/token".
 - userinfo_endpoint must include "/userinfo".
@@ -158,7 +158,7 @@ GET /oauth2/authorize
 
 Both redirect URIs registered for "test-client" must be accepted:
   - http://localhost:8080/callback
-  - http://localhost:3001/callback
+  - http://localhost:4001/callback
 
 ```
 
@@ -375,7 +375,7 @@ Authorization endpoint:
 6. Confirm POST /oauth2/authorize returns a non-302 response with an error message
    containing "Invalid", "error", or "incorrect" on wrong credentials.
 7. Confirm both registered redirect URIs are accepted:
-   http://localhost:8080/callback and http://localhost:3001/callback.
+   http://localhost:8080/callback and http://localhost:4001/callback.
 
 Token endpoint:
 8. Confirm client authentication works via both body params and HTTP Basic auth.

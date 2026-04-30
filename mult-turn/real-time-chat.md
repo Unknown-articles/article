@@ -5,10 +5,10 @@ Create a Node.js backend using ES Modules (not CommonJS) with Express.
 
 Project requirements:
 - Entry point: src/index.js
-- Default port: 3000 (configurable via PORT env var)
+- Default port: 5000 (configurable via PORT env var)
 - All JSON responses must set Content-Type: application/json
-- Backend must accept CORS from http://localhost:5173
-  (configurable via FRONTEND_ORIGIN env var, default: "http://localhost:5173")
+- Backend must accept CORS from http://localhost:5273
+  (configurable via FRONTEND_ORIGIN env var, default: "http://localhost:5273")
   Use: app.use(cors({ origin: FRONTEND_ORIGIN, credentials: true }))
 
 Implement one endpoint:
@@ -200,7 +200,7 @@ Deliver all updated source files.
 The backend is fully working. Now create the React frontend.
 
 Project setup:
-- Use Vite as the build tool (default port 5173).
+- Use Vite as the build tool (default port 5273).
 - Place the frontend in a separate directory alongside the backend (e.g. client/).
 
 Implement an AuthForm with exactly these data-testid attributes:
@@ -238,8 +238,8 @@ Deliver the full frontend project structure with all source files.
 The auth form renders correctly. Now wire up the API calls and session management.
 
 On form submission:
-  - Login mode:    POST http://localhost:3000/auth/login    { username, password }
-  - Register mode: POST http://localhost:3000/auth/register { username, password }
+  - Login mode:    POST http://localhost:5000/auth/login    { username, password }
+  - Register mode: POST http://localhost:5000/auth/register { username, password }
   - On success: store credentials in localStorage using exactly these keys:
       "chat_token" → the JWT string
       "chat_user"  → JSON.stringify({ userId, username })
@@ -271,7 +271,7 @@ and WebSocket connection.
 
 WebSocket connection:
 - After authentication (or session restore), connect to:
-    ws://localhost:3000?token={chat_token}
+    ws://localhost:5000?token={chat_token}
 - On close code 4001 or 4002: clear localStorage ("chat_token" and "chat_user")
   and show the auth form.
 

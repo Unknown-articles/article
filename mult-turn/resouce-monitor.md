@@ -5,7 +5,7 @@ Create a Node.js project using ES Modules (not CommonJS) with Express.
 
 Project requirements:
 - Entry point: src/index.js
-- Server listens on port 3000 (configurable via PORT env var)
+- Server listens on port 3001 (configurable via PORT env var)
 - All JSON responses must set Content-Type: application/json
 - Unknown routes must return 404
 
