@@ -1,0 +1,39 @@
+06d2482931d93c17819db9bf0dc31b76d3e2febc 2026-04-29 22:37:04 -0300 Diegton Rodrigues
+1	0	backend/.gitignore
+-	-	backend/chat.db
+1	1	backend/server.js
+1	1	frontend/src/components/AuthForm.jsx
+1	1	frontend/src/components/Chat.jsx
+3	0	frontend/vite.config.js
+
+b771072250fa22a8820b2e668d88ed148ec9f438 2026-04-28 22:41:36 -0300 Diegton Rodrigues
+3	2	frontend/index.html
+
+c31facd7069777712c6318ac5cff6d14f2d244da 2026-04-28 22:41:20 -0300 Diegton Rodrigues
+24	0	frontend/.gitignore
+16	0	frontend/README.md
+21	0	frontend/eslint.config.js
+13	0	frontend/index.html
+2458	0	frontend/package-lock.json
+27	0	frontend/package.json
+1	0	frontend/public/favicon.svg
+24	0	frontend/public/icons.svg
+66	0	frontend/src/App.jsx
+-	-	frontend/src/assets/hero.png
+1	0	frontend/src/assets/react.svg
+1	0	frontend/src/assets/vite.svg
+99	0	frontend/src/components/AuthForm.jsx
+108	0	frontend/src/components/Chat.jsx
+36	0	frontend/src/components/Message.jsx
+42	0	frontend/src/components/MessageInput.jsx
+33	0	frontend/src/components/MessageList.jsx
+383	0	frontend/src/index.css
+10	0	frontend/src/main.jsx
+7	0	frontend/vite.config.js
+
+25f6ca3c49e858fc566e61fcf0a6bf59bacfe642 2026-04-28 22:39:19 -0300 Diegton Rodrigues
+-	-	backend/chat.db
+68	0	backend/db.js
+1693	0	backend/package-lock.json
+21	0	backend/package.json
+143	0	backend/server.js

@@ -1,0 +1,45 @@
+25598cf1aa59057143e1cf8c090e28dc1219f777 2026-04-29 22:43:09 -0300 Diegton Rodrigues
+
+1	1	server.js
+4	4	src/db.js
+2	2	src/keys.js
+21	21	src/routes/authorize.js
+5	5	src/routes/discovery.js
+3	3	src/routes/token.js
+2ff126e309e308caae981d8ba9cd288b089e4b57 2026-04-29 22:41:44 -0300 Diegton Rodrigues
+
+2	0	server.js
+45	0	src/routes/userinfo.js
+6ac350975eb93f62c5ba274c1ccf4880f5006302 2026-04-29 22:41:21 -0300 Diegton Rodrigues
+
+2	0	server.js
+2	0	src/keys.js
+117	0	src/routes/token.js
+36e3b9ab83232767af7a4a1bd8413ffc754da9a5 2026-04-29 22:40:39 -0300 Diegton Rodrigues
+
+2	0	server.js
+101	0	src/routes/authorize.js
+ac76f02df40dbbdd6918f7624411fd710d9e7bc8 2026-04-29 22:40:12 -0300 Diegton Rodrigues
+
+3	0	server.js
+52	0	src/keys.js
+10	0	src/routes/jwks.js
+d0fc00cf4bfd0c964d7c6643983847a1207d7e5b 2026-04-29 22:39:42 -0300 Diegton Rodrigues
+
+3	0	server.js
+20	0	src/routes/discovery.js
+3c49c5402f5bb0132cdb0ec79eddcc97d447e572 2026-04-29 22:39:20 -0300 Diegton Rodrigues
+
+352	0	package-lock.json
+5	1	package.json
+88	0	routes/authorize.js
+20	24	server.js
+164	0	src/db.js
+8993e1bfc1949c2d30932f9a5ca21df6b734da0c 2026-04-28 22:36:16 -0300 Diegton Rodrigues
+
+3	0	.gitignore
+52	0	crypto.js
+91	0	db.js
+1658	0	package-lock.json
+20	0	package.json
+35	0	server.js

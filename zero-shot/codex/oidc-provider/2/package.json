@@ -1,0 +1,26 @@
+{
+  "name": "oidc-provider-rest-api",
+  "version": "1.0.0",
+  "description": "Minimal OpenID Connect Provider REST API using Express and SQLite.",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test"
+  },
+  "keywords": [
+    "oauth2",
+    "openid-connect",
+    "oidc",
+    "express",
+    "sqlite"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.3",
+    "jose": "^5.2.4",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {}
+}

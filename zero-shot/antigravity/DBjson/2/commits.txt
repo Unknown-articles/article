@@ -1,0 +1,22 @@
+9e7de17d0af6bf8924428b80b205bf66545e9df8 2026-04-28 21:30:54 -0300 Diegton Rodrigues
+
+161	24	src/resource.js
+cbf2c776403594654f4ca741af9f9260c100d6e0 2026-04-28 21:29:57 -0300 Diegton Rodrigues
+
+2	0	src/index.js
+156	0	src/teams.js
+7b93503276ab98cdee1cca0c4d506b193be686ee 2026-04-28 21:29:17 -0300 Diegton Rodrigues
+
+2	0	src/index.js
+177	0	src/resource.js
+bc46b7b6f3a628c185cefd1899a7c4e750cd9303 2026-04-28 21:28:27 -0300 Diegton Rodrigues
+
+131	0	src/auth.js
+3	0	src/index.js
+d7aef4198af2e4110f42253c639e28b2a7a052f0 2026-04-28 21:28:06 -0300 Diegton Rodrigues
+
+3	0	.gitignore
+1009	0	package-lock.json
+19	0	package.json
+88	0	src/db.js
+20	0	src/index.js

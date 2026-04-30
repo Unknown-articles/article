@@ -1,0 +1,275 @@
+:root {
+  color-scheme: light;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #f5f7fa;
+  color: #111827;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.app-shell {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+}
+
+.task-form-section,
+.filters-section,
+.task-list-section,
+.action-log-section {
+  margin-bottom: 24px;
+}
+
+.task-form {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+.form-row {
+  display: grid;
+  gap: 12px;
+}
+
+.task-form label {
+  display: grid;
+  gap: 6px;
+  color: #334155;
+}
+
+.task-form input[type='text'],
+.task-form input[type='date'],
+.inline-input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  transition: border-color 0.2s ease;
+}
+
+.task-form input:focus,
+.inline-input:focus {
+  outline: none;
+  border-color: #7c3aed;
+  background: #ffffff;
+}
+
+.task-form button,
+.filters-section button,
+.task-actions button,
+.inline-actions button {
+  cursor: pointer;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 16px;
+  background: #7c3aed;
+  color: white;
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+
+.task-form button:hover,
+.filters-section button:hover,
+.task-actions button:hover,
+.inline-actions button:hover {
+  transform: translateY(-1px);
+  background: #5b21b6;
+}
+
+.filters-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.filters-section button {
+  background: #e2e8f0;
+  color: #0f172a;
+  padding: 10px 14px;
+}
+
+.filters-section button.active {
+  background: #7c3aed;
+  color: white;
+}
+
+.filter-count {
+  margin-left: 8px;
+  font-weight: 700;
+}
+
+.task-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.task-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 14px;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.task-item:hover {
+  transform: translateY(-1px);
+}
+
+.task-item.completed {
+  opacity: 0.78;
+}
+
+.task-item.late {
+  border: 1px solid #dc2626;
+}
+
+.drag-handle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.task-main {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+}
+
+.task-main input[type='checkbox'] {
+  width: 20px;
+  height: 20px;
+  accent-color: #7c3aed;
+}
+
+.task-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.task-title {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.task-meta {
+  font-size: 0.88rem;
+  color: #64748b;
+}
+
+.task-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.task-actions button {
+  padding: 10px 14px;
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.inline-edit {
+  display: grid;
+  gap: 10px;
+}
+
+.inline-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.action-log {
+  padding: 18px;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+.action-log ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.log-entry {
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+.log-type {
+  font-weight: 700;
+}
+
+.log-timestamp {
+  color: #64748b;
+  font-size: 0.86rem;
+}
+
+.empty-state,
+.empty-log {
+  padding: 20px;
+  color: #475569;
+}
+
+@media (max-width: 760px) {
+  .task-item {
+    grid-template-columns: 1fr;
+  }
+
+  .task-actions {
+    justify-content: flex-end;
+  }
+
+  .task-form,
+  .action-log {
+    padding: 16px;
+  }
+}

@@ -1,0 +1,11 @@
+cb06a27e56f84b72cd0601c1a2f5c9afa76293c0 2026-04-29 00:02:34 -0300 Diegton Rodrigues
+
+4	0	.gitignore
+e4d1390a4afdba6f5e4a57e8644ce98fe0b11ff3 2026-04-29 00:02:34 -0300 Diegton Rodrigues
+
+12	0	index.html
+19	0	package.json
+443	0	src/App.jsx
+10	0	src/main.jsx
+275	0	src/styles.css
+9	0	vite.config.js

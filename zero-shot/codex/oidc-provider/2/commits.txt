@@ -1,0 +1,44 @@
+a3e56a213d2c71cd78a8ab30d83caba99b6763e6 2026-04-29 20:10:24 -0300 Diegton Rodrigues
+
+8	0	README.md
+50	0	db/schema.sql
+6986af698821f19cce49063da70f7afc0a7a634e 2026-04-29 20:09:49 -0300 Diegton Rodrigues
+
+18	0	src/db.js
+211	0	test/oidc-flow.test.js
+f33d897ed9a9e58138e11b8497dce295858930ef 2026-04-29 20:07:58 -0300 Diegton Rodrigues
+
+50	0	src/routes/userinfo.js
+2	0	src/server.js
+12	0	src/services/oauth.js
+628d21a81125c4986fbae04e049f8c5d294f99e5 2026-04-29 20:07:38 -0300 Diegton Rodrigues
+
+1	1	README.md
+1	1	src/config.js
+125	0	src/routes/token.js
+2	0	src/server.js
+54	1	src/services/oauth.js
+627459d263c768f26f637f8c0e5b069d2ede6048 2026-04-29 20:05:29 -0300 Diegton Rodrigues
+
+127	0	src/routes/authorize.js
+2	0	src/server.js
+53	0	src/services/oauth.js
+d866043b727f60ea4a2e68c42cb27b3fa5e3935d 2026-04-29 20:04:49 -0300 Diegton Rodrigues
+
+14	0	src/routes/jwks.js
+4	0	src/server.js
+49	0	src/services/keys.js
+6d68e66b310102a3f21bb4b8559005e5e0ba3940 2026-04-29 20:04:25 -0300 Diegton Rodrigues
+
+22	0	src/routes/discovery.js
+3	0	src/server.js
+a8517a18819b3147359ca0547a180034a04c7967 2026-04-29 20:04:11 -0300 Diegton Rodrigues
+
+5	0	.gitignore
+29	0	README.md
+2327	0	package-lock.json
+26	0	package.json
+6	0	src/config.js
+146	0	src/db.js
+8	0	src/errors.js
+43	0	src/server.js

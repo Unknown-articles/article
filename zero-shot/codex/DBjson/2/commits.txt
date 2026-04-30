@@ -1,0 +1,36 @@
+8b3c72c80bc8162a2cb8dfe2290e9c582c3be437 2026-04-29 20:09:26 -0300 Diegton Rodrigues
+
+82	0	README.md
+950d566df0e759b86f25fc6e29919a558d4ba069 2026-04-29 20:09:02 -0300 Diegton Rodrigues
+
+18	8	test/integration.test.js
+9b9adbf2d7c5e9f93053198b8e1598aa6bc77cd9 2026-04-29 20:07:41 -0300 Diegton Rodrigues
+
+192	0	test/integration.test.js
+053ed4b4fddd03a4963da030056206010350da4b 2026-04-29 20:06:57 -0300 Diegton Rodrigues
+
+1	1	src/auth.js
+1	1	src/index.js
+15	3	src/resources.js
+45edd10ad6080b7d88a10da6d9201aec6fdec922 2026-04-29 20:05:25 -0300 Diegton Rodrigues
+
+2	0	src/index.js
+299	0	src/resources.js
+1bce4e0eb507df37e55d43797c533c0c50aabca9 2026-04-29 20:04:24 -0300 Diegton Rodrigues
+
+140	0	src/auth.js
+24e6cdeef1ac245f5e2bbac4f74f0483c109f9c0 2026-04-29 20:03:53 -0300 Diegton Rodrigues
+
+130	0	src/auth.js
+3	0	src/index.js
+17	0	src/utils.js
+5d78a2118cd2b0765678cbc71a52dd70f1da905c 2026-04-29 20:03:20 -0300 Diegton Rodrigues
+
+55	0	src/db.js
+12	3	src/index.js
+4d2bec4b542494375ed9d9b969895072203a4bad 2026-04-29 20:03:05 -0300 Diegton Rodrigues
+
+4	0	.gitignore
+970	0	package-lock.json
+19	0	package.json
+14	0	src/index.js

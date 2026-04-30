@@ -1,0 +1,31 @@
+847f9d65f7fcc0662571ac8c9a05867a03601e6b 2026-04-28 21:48:58 -0300 Diegton Rodrigues
+c80329e064ca395685bcada85dce5fa37c2ebef4 2026-04-28 21:48:58 -0300 Diegton Rodrigues
+4e07dc7482a529c8cf168534e921d95415c67af1 2026-04-28 21:48:58 -0300 Diegton Rodrigues
+
+288	146	src/App.css
+89	112	src/App.jsx
+193	0	src/TodoContext.jsx
+23	0	src/components/ActionLog.jsx
+39	0	src/components/Filters.jsx
+56	0	src/components/TaskForm.jsx
+157	0	src/components/TaskItem.jsx
+45	88	src/index.css
+4	1	src/main.jsx
+aa85d506fcf1ffcc628295e0d3e9cf394e7272e4 2026-04-28 21:46:18 -0300 Diegton Rodrigues
+
+24	0	.gitignore
+16	0	README.md
+21	0	eslint.config.js
+13	0	index.html
+2482	0	package-lock.json
+29	0	package.json
+1	0	public/favicon.svg
+24	0	public/icons.svg
+184	0	src/App.css
+122	0	src/App.jsx
+-	-	src/assets/hero.png
+1	0	src/assets/react.svg
+1	0	src/assets/vite.svg
+111	0	src/index.css
+10	0	src/main.jsx
+7	0	vite.config.js

@@ -1,0 +1,24 @@
+a2c56c9e2d59bfb399e3cdd5762f2bac4803adfc 2026-04-28 21:33:17 -0300 Diegton Rodrigues
+
+6	6	server.js
+b1ac729387195e03f8be9a43d7b37af7cc6be41d 2026-04-28 21:32:00 -0300 Diegton Rodrigues
+
+33	0	server.js
+f030f3627451e666b884fdebb0e22aa22098d6c5 2026-04-28 21:31:42 -0300 Diegton Rodrigues
+
+81	1	server.js
+4e94dd227a098d379ee1540ec6789381bc0e83d6 2026-04-28 21:31:06 -0300 Diegton Rodrigues
+
+63	1	server.js
+31	0	views/login.ejs
+85efa4ef46509cbf8a5b7afed4ce89951d023b7b 2026-04-28 21:29:59 -0300 Diegton Rodrigues
+
+31	0	keys.js
+5	0	server.js
+a1aa7c5f190fcc07a08e98a3068132712a81adca 2026-04-28 21:29:28 -0300 Diegton Rodrigues
+
+3	0	.gitignore
+72	0	db.js
+1631	0	package-lock.json
+19	0	package.json
+28	0	server.js

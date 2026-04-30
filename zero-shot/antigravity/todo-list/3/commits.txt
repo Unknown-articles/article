@@ -1,0 +1,18 @@
+273ae839f0d3c71a506b5fc97fd2e7028b13ee8f 2026-04-29 22:48:50 -0300 Diegton Rodrigues
+
+24	0	.gitignore
+16	0	README.md
+21	0	eslint.config.js
+13	0	index.html
+2547	0	package-lock.json
+33	0	package.json
+1	0	public/favicon.svg
+24	0	public/icons.svg
+184	0	src/App.css
+122	0	src/App.jsx
+-	-	src/assets/hero.png
+1	0	src/assets/react.svg
+1	0	src/assets/vite.svg
+111	0	src/index.css
+10	0	src/main.jsx
+7	0	vite.config.js

@@ -1,0 +1,13 @@
+9924c115d1f5e9cc0c691b939257a4023e9b1b0f 2026-04-29 00:09:58 -0300 Diegton Rodrigues
+
+282	0	src/index.js
+01e59af68973f7d0de384cf2a89a0baea242975a 2026-04-29 00:09:41 -0300 Diegton Rodrigues
+
+2325	0	package-lock.json
+187	0	src/db.js
+58	0	src/keys.js
+a4b71cd3bfcbbbb2ea7cc273c425cf9eb8a18ccc 2026-04-29 00:09:30 -0300 Diegton Rodrigues
+
+3	0	.gitignore
+32	0	README.md
+15	0	package.json

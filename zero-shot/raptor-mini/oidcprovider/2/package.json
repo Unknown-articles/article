@@ -1,0 +1,14 @@
+{
+  "name": "oidc-provider",
+  "version": "1.0.0",
+  "description": "Minimal OpenID Connect provider with authorization code flow, PKCE, JWKS, and SQLite storage.",
+  "type": "module",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.4",
+    "sqlite3": "^5.1.6"
+  }
+}

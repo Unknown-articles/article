@@ -1,0 +1,26 @@
+30e698833b8579f88f9ccd5a3c434f26184194af 2026-04-29 20:09:59 -0300 Diegton Rodrigues
+
+16	1	src/App.jsx
+47d738d08f2ca1caf89bc9a31f4069a95b8eb41c 2026-04-29 20:09:46 -0300 Diegton Rodrigues
+
+130	17	src/App.jsx
+59	0	src/styles.css
+eb67a3a049e830ef735ba182c2b571f905c27b57 2026-04-29 20:08:41 -0300 Diegton Rodrigues
+
+28	0	src/App.jsx
+c63a5baab1394ca79c6aa9b6731a1eb8e01d95b1 2026-04-29 20:08:21 -0300 Diegton Rodrigues
+
+47	2	src/App.jsx
+653e7e54bbd95c220e1b1b156240a0c463a10a89 2026-04-29 20:07:58 -0300 Diegton Rodrigues
+
+41	2	src/App.jsx
+32	0	src/styles.css
+ea063d7979a05ef77eaeacadb6914807ae025df4 2026-04-29 20:07:24 -0300 Diegton Rodrigues
+
+4	0	.gitignore
+12	0	index.html
+928	0	package-lock.json
+19	0	package.json
+186	0	src/App.jsx
+10	0	src/main.jsx
+205	0	src/styles.css

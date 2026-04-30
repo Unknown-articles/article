@@ -1,0 +1,42 @@
+e9a20088370755dc3cac31e8484d73fe38502e61 2026-04-29 21:14:36 -0300 Diegton Rodrigues
+
+205	233	src/styles.css
+e4b7139c91e48ea7d8022c7f9bd06f01df943c5b 2026-04-29 21:14:16 -0300 Diegton Rodrigues
+
+381	0	src/styles.css
+d60cb4b333abc96568213570118cc5568df81702 2026-04-29 21:13:31 -0300 Diegton Rodrigues
+
+0	1	public/favicon.svg
+0	24	public/icons.svg
+0	184	src/App.css
+442	95	src/App.jsx
+-	-	src/assets/hero.png
+0	1	src/assets/react.svg
+0	1	src/assets/vite.svg
+0	111	src/index.css
+1	1	src/main.jsx
+0	210	src/styles.css
+c32ab25a88a91412cdb57cbb9d615f83afaacc96 2026-04-29 21:12:12 -0300 Diegton Rodrigues
+
+177	113	src/App.jsx
+1	12	src/main.jsx
+175	28	src/styles.css
+8b484755db1d985a6509285565b15be25375e77c 2026-04-29 21:10:35 -0300 Diegton Rodrigues
+
+24	0	.gitignore
+16	0	README.md
+21	0	eslint.config.js
+12	0	index.html
+2458	0	package-lock.json
+18	0	package.json
+1	0	public/favicon.svg
+24	0	public/icons.svg
+184	0	src/App.css
+122	0	src/App.jsx
+-	-	src/assets/hero.png
+1	0	src/assets/react.svg
+1	0	src/assets/vite.svg
+111	0	src/index.css
+21	0	src/main.jsx
+63	0	src/styles.css
+7	0	vite.config.js
